@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Car Calculator">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>ניתוח השוואתי: ליסינג תפעולי מול רכב יד שנייה</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Simple icon replacements
+        const Car = ({ className }) => <div className={`${className} bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold`}>🚗</div>;
+        const Trophy = ({ className }) => <div className={`${className} bg-yellow-500 rounded-full flex items-center justify-center text-2xl`}>🏆</div>;
+        const Settings = ({ className }) => <div className={`${className} bg-indigo-600 rounded text-white text-xs flex items-center justify-center`}>⚙️</div>;
+        const ChevronUp = ({ className }) => <span className={className}>▲</span>;
+        const ChevronDown = ({ className }) => <span className={className}>▼</span>;
+
+        const CarComparison = () => {
+            // Basic parameters
+            const [kmPerYear, setKmPerYear] = useState(20000);
+            const [usedCarPrice, setUsedCarPrice] = useState(134000);
+            const [sp500Return, setSp500Return] = useState(8);
+            const [monthlyLease, setMonthlyLease] = useState(3450);
+           // const [yearlyInsurance, setYearlyInsurance] = useState(600);
+            const [taxRate, setTaxRate] = useState(25);
+            const [oldCarValue, setOldCarValue] = useState(38000);
+            const [isBusinessOwner, setIsBusinessOwner] = useState(true);
+            const [availableCash, setAvailableCash] = useState(134000);
+            const [loanInterestRate, setLoanInterestRate] = useState(6);
+
+            // Missing parameters from original version
+            const [leaseDownPayment, setLeaseDownPayment] = useState(4900);
+            const [showAdvanced, setShowAdvanced] = useState(false);
+
+            // Advanced configurable parameters
+            const [fuelPrice, setFuelPrice] = useState(7);
+            const [yearlyMaintenance, setYearlyMaintenance] = useState(1800);
+
+            // Helper function for registration tax calculation
+            const calculateRegistrationTax = (carValue) => {
+                if (carValue <= 100000) return 2200;
+                if (carValue <= 150000) return 2394;
+                if (carValue <= 200000) return 2394;
+                if (carValue <= 250000) return 3600;
+                return 4200;
+            };
+
+            // Registration and Insurance - user input with auto-updating defaults
+            const [leaseYearlyLicense, setLeaseYearlyLicense] = useState(calculateRegistrationTax(180000));
+            const [usedYearlyLicense, setUsedYearlyLicense] = useState(calculateRegistrationTax(180000));
+            const [leaseYearlyInsurance, setLeaseYearlyInsurance] = useState(6500);
+            const [usedYearlyInsurance, setUsedYearlyInsurance] = useState(6500);
+
+            // Lease inclusion flags
+            const [leaseIncludesLicense, setLeaseIncludesLicense] = useState(true);
+            const [leaseIncludesCoverageInsurance, setLeaseIncludesCoverageInsurance] = useState(true);
+            const [leaseIncludesThirdParty, setLeaseIncludesThirdParty] = useState(true);
+            const [leaseIncludesMaintenance, setLeaseIncludesMaintenance] = useState(true);
+
+            // Investment strategy toggle
+            const [useFullLoanStrategy, setUseFullLoanStrategy] = useState(false);
+
+            // Car-specific parameters
+            const [leaseCarValue, setLeaseCarValue] = useState(180000);
+            const [usedCarValue, setUsedCarValue] = useState(180000);
+            const [leaseCarFuelType, setLeaseCarFuelType] = useState('hybrid');
+            const [usedCarFuelType, setUsedCarFuelType] = useState('gasoline');
+
+            // Fuel consumption - user configurable with defaults
+            const [leaseCarFuelConsumption, setLeaseCarFuelConsumption] = useState(22);
+            const [usedCarFuelConsumption, setUsedCarFuelConsumption] = useState(14);
+
+            // Auto-update registration tax when car values change
+            useEffect(() => {
+                setLeaseYearlyLicense(calculateRegistrationTax(leaseCarValue));
+            }, [leaseCarValue]);
+
+            useEffect(() => {
+                setUsedYearlyLicense(calculateRegistrationTax(usedCarValue));
+            }, [usedCarValue]);
+
+            // Auto-calculate maintenance multiplier based on fuel type
+            const getMaintenanceMultiplier = (fuelType) => {
+                switch(fuelType) {
+                    case 'hybrid': return 1.2;
+                    case 'gasoline': return 1.0;
+                    case 'electric': return 0.8;
+                    default: return 1.0;
+                }
+            };
+
+            // Get insurance cost - user input
+            const getInsuranceCost = (isLeased) => {
+                return isLeased ? leaseYearlyInsurance : usedYearlyInsurance;
+            };
+
+            const calcFuelCost = (km, fuelType, fuelConsumption) => {
+                if (fuelType === 'electric') {
+                    return 0; // Electric cars have no fuel cost
+                }
+                return (km / fuelConsumption) * fuelPrice;
+            };
+
+            const calcDepreciation = (years, initialPrice) => {
+                let value = initialPrice;
+                for (let i = 0; i < years; i++) {
+                    if (i === 0) value *= 0.85;
+                    else if (i === 1) value *= 0.88;
+                    else value *= 0.90;
+                }
+                return initialPrice - value;
+            };
+
+            const calcInvestmentReturn = (principal, years, rate) => {
+                return principal * Math.pow(1 + rate/100, years) - principal;
+            };
+
+            const calcMonthlyInvestmentReturn = (monthlyAmount, years, annualRate) => {
+                const monthlyRate = annualRate / 100 / 12;
+                const months = years * 12;
+                const futureValue = monthlyAmount * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate);
+                const totalInvested = monthlyAmount * months;
+                return {
+                    profit: futureValue - totalInvested,
+                    futureValue: futureValue,
+                    totalInvested: totalInvested
+                };
+            };
+
+            const calcOperationalLease = (years) => {
+                const monthlyPayments = monthlyLease * 12 * years;
+                const totalPaid = monthlyPayments + leaseDownPayment;
+                const fuelCost = calcFuelCost(kmPerYear * years, leaseCarFuelType, leaseCarFuelConsumption);
+
+                // Calculate additional costs based on what's NOT included in lease
+                let additionalCosts = 0;
+                let additionalCostsBreakdown = {};
+
+                if (!leaseIncludesLicense) {
+                    additionalCosts += leaseYearlyLicense * years;
+                    additionalCostsBreakdown.license = leaseYearlyLicense * years;
+                }
+
+                const leaseInsuranceCost = getInsuranceCost(true) * years;
+                if (!leaseIncludesCoverageInsurance || !leaseIncludesThirdParty) {
+                    additionalCosts += leaseInsuranceCost;
+                    additionalCostsBreakdown.insurance = leaseInsuranceCost;
+                }
+
+                if (!leaseIncludesMaintenance) {
+                    const maintenanceCost = yearlyMaintenance * getMaintenanceMultiplier(leaseCarFuelType) * years;
+                    additionalCosts += maintenanceCost;
+                    additionalCostsBreakdown.maintenance = maintenanceCost;
+                }
+
+                const totalExpenses = totalPaid + fuelCost + additionalCosts;
+                const recognizedExpenses = totalExpenses * 0.45;
+                const taxReturn = isBusinessOwner ? (recognizedExpenses * (taxRate / 100)) : 0;
+
+                // Investment calculation - full value accounting
+                const investmentCapital = Math.round(availableCash + oldCarValue);
+                const investmentGain = Math.round(calcInvestmentReturn(investmentCapital, years, sp500Return));
+                const fullInvestmentValue = investmentCapital + investmentGain;
+
+                // Calculate direct costs and final position
+                const directCosts = totalExpenses - taxReturn;
+                const finalLiquidCash = fullInvestmentValue;
+                const finalCarValue = 0;
+                const finalNetWorth = finalLiquidCash;
+
+                return {
+                    monthlyPayment: monthlyLease,
+                    monthlyPayments,
+                    downPayment: leaseDownPayment,
+                    totalPaid,
+                    fuelCost,
+                    additionalCosts,
+                    additionalCostsBreakdown,
+                    totalExpenses,
+                    recognizedExpenses,
+                    taxReturn,
+                    investmentCapital,
+                    investmentGain,
+                    fullInvestmentValue,
+                    directCost: directCosts,
+                    finalLiquidCash,
+                    finalCarValue,
+                    finalNetWorth,
+                    netCost: directCosts
+                };
+            };
+
+            const calcUsedCar = (years) => {
+                const actualCarCost = Math.round(usedCarPrice - oldCarValue);
+
+                let effectiveCash, loanAmount, needsLoan;
+
+                if (useFullLoanStrategy) {
+                    // Strategy: Take full loan, invest all cash
+                    effectiveCash = 0;
+                    loanAmount = actualCarCost;
+                    needsLoan = true;
+                } else {
+                    // Strategy: Use cash first
+                    effectiveCash = Math.round(availableCash);
+                    needsLoan = effectiveCash < actualCarCost;
+                    loanAmount = needsLoan ? Math.round(actualCarCost - effectiveCash) : 0;
+                }
+
+                let monthlyLoanPayment = 0, totalInterest = 0, interestTaxReturn = 0;
+
+                if (needsLoan && loanAmount > 0) {
+                    const months = years * 12;
+                    const monthlyRate = loanInterestRate / 100 / 12;
+                    monthlyLoanPayment = monthlyRate > 0 ?
+                        loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1) :
+                        loanAmount / months;
+                    totalInterest = monthlyLoanPayment * months - loanAmount;
+                    interestTaxReturn = isBusinessOwner ? (totalInterest * (taxRate / 100)) : 0;
+                }
+
+                // Use car-specific calculations
+                const insurance = getInsuranceCost(false) * years;
+                const license = usedYearlyLicense * years;
+                const maintenance = yearlyMaintenance * getMaintenanceMultiplier(usedCarFuelType) * years;
+                const fuelCost = calcFuelCost(kmPerYear * years, usedCarFuelType, usedCarFuelConsumption);
+                const depreciation = calcDepreciation(years, usedCarPrice);
+                const remainingValue = usedCarPrice - depreciation;
+
+                const totalExpensesForTax = insurance + license + maintenance + fuelCost + depreciation;
+                const recognizedExpenses = totalExpensesForTax * 0.45;
+                const taxReturn = isBusinessOwner ? (recognizedExpenses * (taxRate / 100)) : 0;
+
+                // Investment calculation depends on strategy
+                let monthlyInvestmentGain = 0;
+                let lumpSumInvestmentGain = 0;
+                let totalInvestmentValue = 0;
+                let availableMonthlyForInvestment = 0;
+
+                if (useFullLoanStrategy) {
+                    // Strategy: Invest only הון זמין, ignore lease money completely
+                    const investmentCapital = Math.round(availableCash); // Only available cash, not old car
+                    lumpSumInvestmentGain = Math.round(calcInvestmentReturn(investmentCapital, years, sp500Return));
+                    totalInvestmentValue = lumpSumInvestmentGain;
+                    availableMonthlyForInvestment = 0; // No lease money consideration
+                } else {
+                    // Strategy: Treat saved lease money as כסף נזיל (no investment gains)
+                    availableMonthlyForInvestment = monthlyLease - monthlyLoanPayment;
+                    if (availableMonthlyForInvestment > 0) {
+                        monthlyInvestmentGain = availableMonthlyForInvestment * years * 12; // Raw cash saved from not paying lease
+                        totalInvestmentValue = monthlyInvestmentGain;
+                    }
+                }
+
+                // Calculate direct costs and final position
+                const directCosts = actualCarCost + insurance + license + maintenance + fuelCost + totalInterest - taxReturn - interestTaxReturn- remainingValue;
+                const finalLiquidCash = useFullLoanStrategy ? (availableCash + totalInvestmentValue) : totalInvestmentValue;
+                const finalCarValue = remainingValue;
+                const finalNetWorth = finalLiquidCash; // Include car value in final assets
+
+                return {
+                    actualCarCost,
+                    effectiveCash,
+                    needsLoan,
+                    loanAmount,
+                    monthlyLoanPayment,
+                    totalLoanPayments: monthlyLoanPayment * years * 12,
+                    totalInterest,
+                    interestTaxReturn,
+                    insurance,
+                    license,
+                    maintenance,
+                    fuelCost,
+                    depreciation,
+                    remainingValue,
+                    taxReturn,
+                    availableMonthlyForInvestment,
+                    monthlyInvestmentGain,
+                    lumpSumInvestmentGain,
+                    totalInvestmentValue,
+                    directCost: directCosts,
+                    finalLiquidCash,
+                    finalCarValue,
+                    finalNetWorth,
+                    investmentCapital: useFullLoanStrategy ? Math.round(availableCash) : 0,
+                    netCost: directCosts
+                };
+            };
+
+            const scenarios = [{ years: 3, label: '3 שנים' }, { years: 5, label: '5 שנים' }, { years: 10, label: '10 שנים' }];
+
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 md:p-8" dir="rtl">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8 mb-8">
+                            <div className="flex items-center gap-4 mb-6">
+                                <Car className="w-10 h-10 md:w-12 md:h-12 text-indigo-600" />
+                                <h1 className="text-2xl md:text-4xl font-bold text-gray-800">ניתוח השוואתי: ליסינג תפעולי מול רכב יד שנייה</h1>
+                            </div>
+
+                            <div className="mb-6">
+                                <h3 className="text-lg font-bold text-gray-700 mb-4">⚙️ הגדרות בסיסיות</h3>
+                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-gradient-to-r from-indigo-50 to-purple-50 p-4 md:p-6 rounded-xl border-2 border-indigo-200">
+                                    <div>
+                                        <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">ק"מ שנתי</label>
+                                        <input type="number" value={kmPerYear} onChange={(e) => setKmPerYear(+e.target.value)} className="w-full px-3 py-2 text-sm md:text-base border-2 border-indigo-200 rounded-lg focus:border-indigo-500 focus:outline-none" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">מחיר יד 2 (₪)</label>
+                                        <input type="number" value={usedCarPrice} onChange={(e) => setUsedCarPrice(+e.target.value)} className="w-full px-3 py-2 text-sm md:text-base border-2 border-indigo-200 rounded-lg focus:border-indigo-500 focus:outline-none" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">תשואת S&P (%)</label>
+                                        <input type="number" step="0.5" value={sp500Return} onChange={(e) => setSp500Return(+e.target.value)} className="w-full px-3 py-2 text-sm md:text-base border-2 border-indigo-200 rounded-lg focus:border-indigo-500 focus:outline-none" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">ליסינג חודשי (₪)</label>
+                                        <input type="number" value={monthlyLease} onChange={(e) => setMonthlyLease(+e.target.value)} className="w-full px-3 py-2 text-sm md:text-base border-2 border-indigo-200 rounded-lg focus:border-indigo-500 focus:outline-none" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">מקדמת ליסינג (₪)</label>
+                                        <input type="number" value={leaseDownPayment} onChange={(e) => setLeaseDownPayment(+e.target.value)} className="w-full px-3 py-2 text-sm md:text-base border-2 border-indigo-200 rounded-lg focus:border-indigo-500 focus:outline-none" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">מס שולי (%)</label>
+                                        <input type="number" step="1" value={taxRate} onChange={(e) => setTaxRate(+e.target.value)} className="w-full px-3 py-2 text-sm md:text-base border-2 border-indigo-200 rounded-lg focus:border-indigo-500 focus:outline-none" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">שווי רכב ישן (₪)</label>
+                                        <input type="number" value={oldCarValue} onChange={(e) => setOldCarValue(+e.target.value)} className="w-full px-3 py-2 text-sm md:text-base border-2 border-indigo-200 rounded-lg focus:border-indigo-500 focus:outline-none" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">💰 הון זמין (₪)</label>
+                                        <input type="number" value={availableCash} onChange={(e) => setAvailableCash(+e.target.value)} className="w-full px-3 py-2 text-sm md:text-base border-2 border-indigo-200 rounded-lg focus:border-indigo-500 focus:outline-none" />
+                                        <div className="text-xs text-gray-500 mt-1">כמה כסף יש לכם פנוי?</div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">📊 ריבית הלוואה (%)</label>
+                                        <input type="number" step="0.1" value={loanInterestRate} onChange={(e) => setLoanInterestRate(+e.target.value)} className="w-full px-3 py-2 text-sm md:text-base border-2 border-indigo-200 rounded-lg focus:border-indigo-500 focus:outline-none" />
+                                        <div className="text-xs text-gray-500 mt-1">במקרה שההון הזמין קטן ממחיר הרכב</div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">ביטוח ליסינג שנתי (₪)</label>
+                                        <input type="number" value={leaseYearlyInsurance} onChange={(e) => setLeaseYearlyInsurance(+e.target.value)} className="w-full px-3 py-2 text-sm md:text-base border-2 border-indigo-200 rounded-lg focus:border-indigo-500 focus:outline-none" />
+                                        <div className="text-xs text-gray-500 mt-1">מקיף + צד ג</div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">ביטוח יד 2 שנתי (₪)</label>
+                                        <input type="number" value={usedYearlyInsurance} onChange={(e) => setUsedYearlyInsurance(+e.target.value)} className="w-full px-3 py-2 text-sm md:text-base border-2 border-indigo-200 rounded-lg focus:border-indigo-500 focus:outline-none" />
+                                        <div className="text-xs text-gray-500 mt-1">מקיף + צד ג</div>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <label className="flex items-center gap-2 cursor-pointer">
+                                            <input type="checkbox" checked={isBusinessOwner} onChange={(e) => setIsBusinessOwner(e.target.checked)} className="w-5 h-5" />
+                                            <span className="text-xs md:text-sm font-semibold text-gray-700">עוסק מורשה/פטור<div className="text-xs text-gray-500 font-normal">(זכאי להחזר מס)</div></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Car Specifications Section */}
+                            <div className="mb-6">
+                                <h3 className="text-lg font-bold text-gray-700 mb-4">🚗 מפרטי רכב</h3>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    {/* Lease Car Specs */}
+                                    <div className="bg-blue-50 p-4 rounded-xl border-2 border-blue-200">
+                                        <h4 className="font-bold text-blue-700 mb-3">רכב בליסינג</h4>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-xs font-semibold text-gray-700 mb-2">שווי רכב (₪)</label>
+                                                <input type="number" value={leaseCarValue} onChange={(e) => setLeaseCarValue(+e.target.value)} className="w-full px-3 py-2 text-sm border-2 border-blue-200 rounded-lg focus:border-blue-500 focus:outline-none" />
+                                                <div className="text-xs text-gray-500 mt-1">לחישוב ביטוח ואגרת רישוי</div>
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-semibold text-gray-700 mb-2">סוג דלק</label>
+                                                <select value={leaseCarFuelType} onChange={(e) => setLeaseCarFuelType(e.target.value)} className="w-full px-3 py-2 text-sm border-2 border-blue-200 rounded-lg focus:border-blue-500 focus:outline-none">
+                                                    <option value="hybrid">היברידי</option>
+                                                    <option value="gasoline">בנזין</option>
+                                                    <option value="electric">חשמלי</option>
+                                                </select>
+                                            </div>
+                                            <div className="md:col-span-2">
+                                                <label className="block text-xs font-semibold text-gray-700 mb-2">צריכת דלק (ק"מ/ליטר)</label>
+                                                <input
+                                                    type="number"
+                                                    step="0.1"
+                                                    value={leaseCarFuelConsumption}
+                                                    onChange={(e) => setLeaseCarFuelConsumption(+e.target.value)}
+                                                    className="w-full px-3 py-2 text-sm border-2 border-blue-200 rounded-lg focus:border-blue-500 focus:outline-none"
+                                                    disabled={leaseCarFuelType === 'electric'}
+                                                />
+                                                <div className="text-xs text-gray-500 mt-1">{leaseCarFuelType === 'electric' ? 'לא רלוונטי לרכב חשמלי' : 'צריכת דלק בפועל'}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Used Car Specs */}
+                                    <div className="bg-green-50 p-4 rounded-xl border-2 border-green-200">
+                                        <h4 className="font-bold text-green-700 mb-3">רכב יד שנייה</h4>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-xs font-semibold text-gray-700 mb-2">שווי רכב (₪)</label>
+                                                <input type="number" value={usedCarValue} onChange={(e) => setUsedCarValue(+e.target.value)} className="w-full px-3 py-2 text-sm border-2 border-green-200 rounded-lg focus:border-green-500 focus:outline-none" />
+                                                <div className="text-xs text-gray-500 mt-1">לחישוב ביטוח ואגרת רישוי</div>
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-semibold text-gray-700 mb-2">סוג דלק</label>
+                                                <select value={usedCarFuelType} onChange={(e) => setUsedCarFuelType(e.target.value)} className="w-full px-3 py-2 text-sm border-2 border-green-200 rounded-lg focus:border-green-500 focus:outline-none">
+                                                    <option value="gasoline">בנזין</option>
+                                                    <option value="hybrid">היברידי</option>
+                                                    <option value="electric">חשמלי</option>
+                                                </select>
+                                            </div>
+                                            <div className="md:col-span-2">
+                                                <label className="block text-xs font-semibold text-gray-700 mb-2">צריכת דלק (ק"מ/ליטר)</label>
+                                                <input
+                                                    type="number"
+                                                    step="0.1"
+                                                    value={usedCarFuelConsumption}
+                                                    onChange={(e) => setUsedCarFuelConsumption(+e.target.value)}
+                                                    className="w-full px-3 py-2 text-sm border-2 border-green-200 rounded-lg focus:border-green-500 focus:outline-none"
+                                                    disabled={usedCarFuelType === 'electric'}
+                                                />
+                                                <div className="text-xs text-gray-500 mt-1">{usedCarFuelType === 'electric' ? 'לא רלוונטי לרכב חשמלי' : 'צריכת דלק בפועל'}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Lease Inclusions Section */}
+                            <div className="mb-6">
+                                <h3 className="text-lg font-bold text-gray-700 mb-4">📋 מה כולל הליסינג?</h3>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-blue-50 p-4 rounded-xl border-2 border-blue-200">
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                        <input type="checkbox" checked={leaseIncludesLicense} onChange={(e) => setLeaseIncludesLicense(e.target.checked)} className="w-5 h-5" />
+                                        <span className="text-sm font-semibold">אגרת רישוי</span>
+                                    </label>
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                        <input type="checkbox" checked={leaseIncludesCoverageInsurance} onChange={(e) => setLeaseIncludesCoverageInsurance(e.target.checked)} className="w-5 h-5" />
+                                        <span className="text-sm font-semibold">ביטוח מקיף</span>
+                                    </label>
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                        <input type="checkbox" checked={leaseIncludesThirdParty} onChange={(e) => setLeaseIncludesThirdParty(e.target.checked)} className="w-5 h-5" />
+                                        <span className="text-sm font-semibold">ביטוח צד ג</span>
+                                    </label>
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                        <input type="checkbox" checked={leaseIncludesMaintenance} onChange={(e) => setLeaseIncludesMaintenance(e.target.checked)} className="w-5 h-5" />
+                                        <span className="text-sm font-semibold">טיפולים</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            {/* Advanced Settings */}
+                            <div className="mb-8">
+                                <button onClick={() => setShowAdvanced(!showAdvanced)} className="flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-800 transition-colors">
+                                    <Settings className="w-5 h-5" />
+                                    <span>הגדרות מתקדמות</span>
+                                    {showAdvanced ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                                </button>
+                                {showAdvanced && (
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 bg-gray-50 p-4 rounded-xl border-2 border-gray-200">
+                                        <div>
+                                            <label className="block text-xs font-semibold text-gray-700 mb-2">מחיר דלק (₪/ליטר)</label>
+                                            <input type="number" step="0.1" value={fuelPrice} onChange={(e) => setFuelPrice(+e.target.value)} className="w-full px-3 py-2 text-sm border-2 border-gray-200 rounded-lg focus:border-gray-400 focus:outline-none" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-semibold text-gray-700 mb-2">טיפולים שנתיים (₪)</label>
+                                            <input type="number" value={yearlyMaintenance} onChange={(e) => setYearlyMaintenance(+e.target.value)} className="w-full px-3 py-2 text-sm border-2 border-gray-200 rounded-lg focus:border-gray-400 focus:outline-none" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-semibold text-gray-700 mb-2">אגרת רישוי ליסינג (₪)</label>
+                                            <input type="number" value={leaseYearlyLicense} onChange={(e) => setLeaseYearlyLicense(+e.target.value)} className="w-full px-3 py-2 text-sm border-2 border-gray-200 rounded-lg focus:border-gray-400 focus:outline-none" />
+                                            <div className="text-xs text-gray-500 mt-1">ברירת מחדל לפי שווי רכב</div>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-semibold text-gray-700 mb-2">אגרת רישוי יד 2 (₪)</label>
+                                            <input type="number" value={usedYearlyLicense} onChange={(e) => setUsedYearlyLicense(+e.target.value)} className="w-full px-3 py-2 text-sm border-2 border-gray-200 rounded-lg focus:border-gray-400 focus:outline-none" />
+                                            <div className="text-xs text-gray-500 mt-1">ברירת מחדל לפי שווי רכב</div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Investment Strategy Toggle */}
+                            <div className="mb-6 bg-yellow-50 border-2 border-yellow-300 rounded-xl p-4">
+                                <h3 className="text-lg font-bold text-gray-700 mb-3">📈 אסטרטגיית רכב יד שנייה</h3>
+                                <div className="flex items-center gap-6">
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                        <input
+                                            type="radio"
+                                            checked={!useFullLoanStrategy}
+                                            onChange={() => setUseFullLoanStrategy(false)}
+                                            className="w-4 h-4"
+                                        />
+                                        <span className="text-sm font-semibold">💰 השתמש בהון לרכב</span>
+                                    </label>
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                        <input
+                                            type="radio"
+                                            checked={useFullLoanStrategy}
+                                            onChange={() => setUseFullLoanStrategy(true)}
+                                            className="w-4 h-4"
+                                        />
+                                        <span className="text-sm font-semibold">📊 השקע הכל + הלוואה מלאה</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div className="space-y-8">
+                                {scenarios.map((scenario) => {
+                                    const lease = calcOperationalLease(scenario.years);
+                                    const used = calcUsedCar(scenario.years);
+
+                                    // Compare net financial gains
+                                    const leaseNetGain = lease.finalNetWorth - lease.directCost;
+                                    const usedNetGain = used.finalNetWorth - used.directCost;
+                                    const diff = leaseNetGain - usedNetGain;
+                                    const winner = diff > 0 ? 'lease' : 'used';
+                                    const savingsPercent = Math.abs((diff / Math.max(Math.abs(leaseNetGain), Math.abs(usedNetGain))) * 100);
+
+                                    return (
+                                        <div key={scenario.years} className="bg-white rounded-2xl shadow-xl border-2 border-gray-200 overflow-hidden">
+                                            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-4 md:p-6">
+                                                <h2 className="text-2xl md:text-3xl font-bold">תרחיש: {scenario.label}</h2>
+                                            </div>
+
+                                            <div className={`p-6 ${winner === 'lease' ? 'bg-blue-50' : 'bg-green-50'}`}>
+                                                <div className="flex items-center justify-center gap-4 mb-4">
+                                                    <Trophy className="w-12 h-12 text-yellow-500" />
+                                                    <div className="text-center">
+                                                        <div className="text-sm text-gray-600 mb-1">🏆 המשתלם ביותר:</div>
+                                                        <div className={`text-3xl font-black ${winner === 'lease' ? 'text-blue-700' : 'text-green-700'}`}>
+                                                            {winner === 'lease' ? 'ליסינג תפעולי' : 'רכב יד שנייה'}
+                                                        </div>
+                                                        <div className="text-lg font-bold text-gray-700 mt-2">
+                                                            רווח נוסף: ₪{Math.abs(Math.round(diff)).toLocaleString()}
+                                                            <span className="text-sm mr-2">({savingsPercent.toFixed(1)}%)</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="overflow-x-auto p-6">
+                                                <table className="w-full border-collapse">
+                                                    <thead>
+                                                        <tr className="bg-gray-100">
+                                                            <th className="p-3 text-right border font-bold">פריט</th>
+                                                            <th className={`p-3 text-center border font-bold ${winner === 'lease' ? 'bg-blue-100' : ''}`}>ליסינג תפעולי</th>
+                                                            <th className={`p-3 text-center border font-bold ${winner === 'used' ? 'bg-green-100' : ''}`}>
+                                                                רכב יד שנייה
+                                                                <div className="text-xs font-normal text-gray-600">
+                                                                    {useFullLoanStrategy ? '📊 השקעה מלאה' : '💰 רגילה'}
+                                                                </div>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="text-sm">
+                                                        <tr className="bg-white">
+                                                            <td className="p-3 border font-semibold">💰 השקעה ראשונית</td>
+                                                            <td className="p-3 border text-center">
+                                                                {lease.downPayment > 0 ? `₪${lease.downPayment.toLocaleString()}` : '-'}
+                                                            </td>
+                                                            <td className="p-3 border text-center">
+                                                                {useFullLoanStrategy ?
+                                                                    <span>₪0<div className="text-xs text-blue-600">(הכל בהלוואה)</div></span> :
+                                                                    <span>₪{used.actualCarCost.toLocaleString()}</span>
+                                                                }
+                                                                {oldCarValue > 0 && <div className="text-xs text-gray-600">(₪{usedCarPrice.toLocaleString()} - ₪{oldCarValue.toLocaleString()})</div>}
+                                                                <div className="text-xs text-orange-600 mt-1">⚠️ לא מוכר לניכוי במס</div>
+                                                            </td>
+                                                        </tr>
+                                                        {used.needsLoan && (
+                                                            <>
+                                                                <tr className="bg-red-50">
+                                                                    <td className="p-3 border font-semibold">💳 הלוואה נדרשת</td>
+                                                                    <td className="p-3 border text-center">-</td>
+                                                                    <td className="p-3 border text-center text-red-600 font-bold">
+                                                                        ₪{used.loanAmount.toLocaleString()}
+                                                                        <div className="text-xs text-gray-600">(ריבית {loanInterestRate}%)</div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr className="bg-red-50">
+                                                                    <td className="p-3 border font-semibold">📅 תשלום הלוואה חודשי</td>
+                                                                    <td className="p-3 border text-center">-</td>
+                                                                    <td className="p-3 border text-center text-red-600 font-bold">
+                                                                        ₪{Math.round(used.monthlyLoanPayment).toLocaleString()}
+                                                                        <div className="text-xs text-gray-600">סה"כ: ₪{Math.round(used.totalLoanPayments).toLocaleString()}</div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr className="bg-red-50">
+                                                                    <td className="p-3 border font-semibold">💸 סה"כ ריבית</td>
+                                                                    <td className="p-3 border text-center">-</td>
+                                                                    <td className="p-3 border text-center text-red-600 font-bold">
+                                                                        ₪{Math.round(used.totalInterest).toLocaleString()}
+                                                                    </td>
+                                                                </tr>
+                                                                {used.interestTaxReturn > 0 && (
+                                                                    <tr className="bg-green-50">
+                                                                        <td className="p-3 border font-semibold">💵 החזר מס על ריבית</td>
+                                                                        <td className="p-3 border text-center">-</td>
+                                                                        <td className="p-3 border text-center text-green-600 font-bold">
+                                                                            -₪{Math.round(used.interestTaxReturn).toLocaleString()}
+                                                                        </td>
+                                                                    </tr>
+                                                                )}
+                                                            </>
+                                                        )}
+                                                        <tr className="bg-gray-50">
+                                                            <td className="p-3 border font-semibold">📅 תשלומים חודשיים</td>
+                                                            <td className="p-3 border text-center text-red-600 font-bold">
+                                                                ₪{lease.monthlyPayments.toLocaleString()}
+                                                            </td>
+                                                            <td className="p-3 border text-center">-</td>
+                                                        </tr>
+                                                        <tr className="bg-white">
+                                                            <td className="p-3 border font-semibold">🛡️ ביטוח</td>
+                                                            <td className="p-3 border text-center">
+                                                                {(leaseIncludesCoverageInsurance && leaseIncludesThirdParty) ?
+                                                                    <span className="text-green-600">✓ כלול</span> :
+                                                                    <span className="text-red-600">₪{(lease.additionalCostsBreakdown.insurance || 0).toLocaleString()}</span>
+                                                                }
+                                                                <div className="text-xs text-gray-500">₪{leaseYearlyInsurance.toLocaleString()}/שנה</div>
+                                                            </td>
+                                                            <td className="p-3 border text-center text-red-600">
+                                                                ₪{used.insurance.toLocaleString()}
+                                                                <div className="text-xs text-gray-500">₪{usedYearlyInsurance.toLocaleString()}/שנה</div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr className="bg-gray-50">
+                                                            <td className="p-3 border font-semibold">📋 אגרת רישוי</td>
+                                                            <td className="p-3 border text-center">
+                                                                {leaseIncludesLicense ?
+                                                                    <span className="text-green-600">✓ כלול</span> :
+                                                                    <span className="text-red-600">₪{(lease.additionalCostsBreakdown.license || 0).toLocaleString()}</span>
+                                                                }
+                                                                <div className="text-xs text-gray-500">₪{leaseYearlyLicense.toLocaleString()}/שנה</div>
+                                                            </td>
+                                                            <td className="p-3 border text-center text-red-600">
+                                                                ₪{used.license.toLocaleString()}
+                                                                <div className="text-xs text-gray-500">₪{usedYearlyLicense.toLocaleString()}/שנה</div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr className="bg-white">
+                                                            <td className="p-3 border font-semibold">🔧 טיפולים</td>
+                                                            <td className="p-3 border text-center">
+                                                                {leaseIncludesMaintenance ?
+                                                                    <span className="text-green-600">✓ כלול</span> :
+                                                                    <span className="text-red-600">₪{(lease.additionalCostsBreakdown.maintenance || 0).toLocaleString()}</span>
+                                                                }
+                                                            </td>
+                                                            <td className="p-3 border text-center text-red-600">
+                                                                ₪{used.maintenance.toLocaleString()}
+                                                                <div className="text-xs text-gray-500">{usedCarFuelType === 'hybrid' ? 'היברידי +20%' : usedCarFuelType === 'electric' ? 'חשמלי -20%' : 'בנזין'}</div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr className="bg-gray-50">
+                                                            <td className="p-3 border font-semibold">⛽ דלק</td>
+                                                            <td className="p-3 border text-center text-red-600">
+                                                                ₪{Math.round(lease.fuelCost).toLocaleString()}
+                                                                <div className="text-xs text-gray-500">
+                                                                    {leaseCarFuelType === 'electric' ? 'חשמלי - ללא עלות דלק' :
+                                                                    `${leaseCarFuelConsumption} ק"מ/ליטר × ₪${fuelPrice}`}
+                                                                </div>
+                                                            </td>
+                                                            <td className="p-3 border text-center text-red-600">
+                                                                ₪{Math.round(used.fuelCost).toLocaleString()}
+                                                                <div className="text-xs text-gray-500">
+                                                                    {usedCarFuelType === 'electric' ? 'חשמלי - ללא עלות דלק' :
+                                                                    `${usedCarFuelConsumption} ק"מ/ליטר × ₪${fuelPrice}`}
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr className="bg-white">
+                                                            <td className="p-3 border font-semibold">📉 פחת</td>
+                                                            <td className="p-3 border text-center">-</td>
+                                                            <td className="p-3 border text-center text-orange-600">
+                                                                ₪{Math.round(used.depreciation).toLocaleString()}
+                                                                <div className="text-xs text-blue-600 mt-1">✓ מוכר לניכוי במס</div>
+                                                                <div className="text-xs text-gray-500 mt-1">15% שנה ראשונה, 12% שנייה, 10% בהמשך</div>
+                                                                <div className="text-xs text-orange-600 mt-1">📝 לחישוב מס בלבד - לא נכלל בעלות הסופית</div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr className="bg-green-50 border-2 border-green-300">
+                                                            <td className="p-3 border font-semibold">💵 החזר מס (45%)</td>
+                                                            <td className="p-3 border text-center text-green-600 font-bold">
+                                                                {isBusinessOwner ?
+                                                                    <span>-₪{Math.round(lease.taxReturn).toLocaleString()}</span> :
+                                                                    <span className="text-gray-500">לא רלוונטי</span>
+                                                                }
+                                                            </td>
+                                                            <td className="p-3 border text-center text-green-600 font-bold">
+                                                                {isBusinessOwner ?
+                                                                    <span>-₪{Math.round(used.taxReturn).toLocaleString()}</span> :
+                                                                    <span className="text-gray-500">לא רלוונטי</span>
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                        <tr className="bg-purple-100 border-2 border-purple-400">
+                                                            <td className="p-3 border font-semibold">🚗 שווי נותר</td>
+                                                            <td className="p-3 border text-center">-</td>
+                                                            <td className="p-3 border text-center text-green-600 font-bold">
+                                                                -₪{Math.round(used.remainingValue).toLocaleString()}
+                                                                <div className="text-xs text-gray-600 mt-1">💡 כסף במכירה</div>
+                                                            </td>
+                                                        </tr>
+
+                                                        {/* Direct Costs Summary */}
+                                                        <tr className="bg-gray-200 border-t-4 border-gray-400">
+                                                            <td className="p-4 border font-black text-lg">💰 עלות ישירה</td>
+                                                            <td className="p-4 border text-center font-bold text-lg text-red-600">
+                                                                ₪{Math.round(lease.directCost).toLocaleString()}
+                                                            </td>
+                                                            <td className="p-4 border text-center font-bold text-lg text-red-600">
+                                                                ₪{Math.round(used.directCost).toLocaleString()}
+                                                            </td>
+                                                        </tr>
+
+                                                        {/* Investment/Savings Analysis */}
+                                                        <tr className="bg-blue-50 border-2 border-blue-300">
+                                                            <td className="p-3 border font-semibold">📈 רווח השקעות / כסף חסוך</td>
+                                                            <td className="p-3 border text-center text-green-600 font-bold">
+                                                                +₪{Math.round(lease.investmentGain).toLocaleString()}
+                                                                <div className="text-xs text-gray-600">
+                                                                    (השקעה: ₪{lease.investmentCapital.toLocaleString()})
+                                                                </div>
+                                                            </td>
+                                                            <td className="p-3 border text-center">
+                                                                {useFullLoanStrategy ? (
+                                                                    <>
+                                                                        <span className="text-green-600 font-bold">
+                                                                            +₪{Math.round(used.lumpSumInvestmentGain).toLocaleString()}
+                                                                        </span>
+                                                                        <div className="text-xs text-gray-600">
+                                                                            (השקעה: ₪{used.investmentCapital.toLocaleString()})
+                                                                        </div>
+                                                                        <div className="text-xs text-blue-600">
+                                                                            💡 השקעה חד-פעמית של הון זמין בלבד
+                                                                        </div>
+                                                                    </>
+                                                                ) : used.availableMonthlyForInvestment > 0 ? (
+                                                                    <>
+                                                                        <span className="text-blue-600 font-bold">
+                                                                            +₪{Math.round(used.monthlyInvestmentGain).toLocaleString()}
+                                                                        </span>
+                                                                        <div className="text-xs text-gray-600">
+                                                                            (חיסכון: ₪{Math.round(used.availableMonthlyForInvestment).toLocaleString()}/חודש)
+                                                                        </div>
+                                                                        <div className="text-xs text-blue-600">
+                                                                            💰 כסף חסוך מאי תשלום ליסינג
+                                                                        </div>
+                                                                    </>
+                                                                ) : used.availableMonthlyForInvestment < 0 ? (
+                                                                    <>
+                                                                        <span className="text-red-600 font-bold">-</span>
+                                                                        <div className="text-xs text-red-600 mt-1">⚠️ יקר מליסינג</div>
+                                                                    </>
+                                                                ) : (
+                                                                    <span className="text-gray-500">-</span>
+                                                                )}
+                                                            </td>
+                                                        </tr>
+
+                                                        {/* Total Amount 5ined */}
+                                                        <tr className="bg-green-100 border-2 border-green-300">
+                                                            <td className="p-3 border font-semibold text-green-800">💰 סה"כ נכסים נזילים</td>
+                                                            <td className="p-3 border text-center text-green-600 font-bold">
+                                                                ₪{Math.round(lease.investmentCapital + lease.investmentGain).toLocaleString()}
+                                                                <div className="text-xs text-gray-600">
+                                                                    (₪{lease.investmentCapital.toLocaleString()} + ₪{lease.investmentGain.toLocaleString()})
+                                                                </div>
+                                                            </td>
+                                                            <td className="p-3 border text-center text-blue-600 font-bold">
+                                                                ₪{Math.round(used.finalLiquidCash).toLocaleString()}
+                                                                <div className="text-xs text-gray-600">
+                                                                    {useFullLoanStrategy ?
+                                                                        `(רווח השקעה: ₪${Math.round(used.lumpSumInvestmentGain).toLocaleString()} + הון: ₪${Math.round(used.investmentCapital).toLocaleString()})` :
+                                                                        '(כסף חסוך מליסינג)'
+                                                                    }
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+                                
+                                                        {/* Final Financial Position Comparison */}
+                                                        <tr className={`${(lease.finalNetWorth - lease.directCost) > (used.finalNetWorth - used.directCost) ? 'bg-blue-200 border-blue-600' : 'bg-green-200 border-green-600'} border-4`}>
+                                                            <td className="p-4 border font-black text-lg">🏆 רווח נטו סופי</td>
+                                                            <td className={`p-4 border text-center font-black text-xl ${leaseNetGain > usedNetGain ? 'text-blue-800' : 'text-gray-700'}`}>
+                                                                ₪{Math.round(leaseNetGain).toLocaleString()}
+                                                                <div className="text-xs font-normal text-gray-600">(נכסים - הוצאות)</div>
+                                                            </td>
+                                                            <td className={`p-4 border text-center font-black text-xl ${usedNetGain > leaseNetGain ? 'text-green-800' : 'text-gray-700'}`}>
+                                                                ₪{Math.round(usedNetGain).toLocaleString()}
+                                                                <div className="text-xs font-normal text-gray-600">(נכסים - הוצאות)</div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <div className="bg-yellow-50 border-t-4 border-yellow-400 p-6">
+                                                <div className="text-center">
+                                                    <div className="text-lg font-bold text-gray-700 mb-2">
+                                                        💡 מסקנה: אם תבחרו ב{winner === 'lease' ? 'ליסינג תפעולי' : 'רכב יד שנייה'}
+                                                    </div>
+                                                    <div className="text-2xl font-black text-green-600">
+                                                        תרוויחו ₪{Math.abs(Math.round(diff)).toLocaleString()} יותר על פני {scenario.label}!
+                                                    </div>
+                                                    <div className="text-sm text-gray-600 mt-2">
+                                                        (זה ₪{Math.abs(Math.round(diff / scenario.years)).toLocaleString()} נוסף בממוצע לשנה)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* Educational Content */}
+                        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl shadow-2xl p-6 md:p-8 text-white mb-8">
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">⚠️</div>
+                                <h2 className="text-2xl md:text-3xl font-bold">💼 הסבר על החישובים</h2>
+                            </div>
+
+                            <div className="space-y-4 bg-white/10 rounded-xl p-6">
+                                <div className="space-y-3">
+                                    <h3 className="font-bold text-xl">🔵 ליסינג תפעולי:</h3>
+                                    <ul className="space-y-2 mr-4 text-sm md:text-base">
+                                        <li>✓ התשלומים החודשיים + המקדמה + דלק</li>
+                                        <li>✓ עלויות נוספות (אם לא כלולות בליסינג)</li>
+                                        <li>✓ <strong>45%</strong> מכל ההוצאות מוכרות לניכוי במס</li>
+                                        <li>✓ החזר מס של {taxRate}% על ההוצאות המוכרות</li>
+                                        <li>✓ <strong>כל ההון הזמין + רכב ישן → השקעה!</strong></li>
+                                        <li>✓ רווח השקעה חד-פעמית על כל הסכום</li>
+                                    </ul>
+                                </div>
+
+                                <div className="space-y-3 mt-6">
+                                    <h3 className="font-bold text-xl">🟢 רכב יד שנייה:</h3>
+                                    <ul className="space-y-2 mr-4 text-sm md:text-base">
+                                        <li>✓ העלות: מחיר הרכב פחות שווי הרכב הישן</li>
+                                        <li>✓ כל ההוצאות (ביטוח, רישוי, טיפולים, דלק, פחת)</li>
+                                        <li>✓ <strong>45%</strong> מכל ההוצאות (כולל פחת!) מוכרות לניכוי</li>
+                                        <li>✓ החזר מס של {taxRate}% על ההוצאות המוכרות</li>
+                                        <li>✓ הרכב שווה משהו בסוף - מנכים את השווי הנותר</li>
+                                        <li>⚠️ <strong>ההון קשור ברכב</strong> - לא מושקע בשוק ההון</li>
+                                        <li>⚠️ אם צריך הלוואה - יש עלות ריבית</li>
+                                        <li>✓ אפשר להשקיע את ההפרש החודשי (ליסינג - הלוואה)</li>
+                                    </ul>
+                                </div>
+
+                                <div className="bg-red-500/20 rounded-lg p-4 mt-4 border-2 border-red-300">
+                                    <div className="font-bold text-lg mb-2">⚠️ חשוב לדעת:</div>
+                                    <p className="text-sm">
+                                        החישובים כאן הם הערכה כללית. אחוז ההכרה במס (45%) יכול להשתנות בהתאם למצב האישי שלכם.
+                                        <strong className="block mt-2">👉 חובה להתייעץ עם רואה חשבון לפני קבלת החלטה!</strong>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mt-8 text-center text-gray-600 text-xs md:text-sm bg-white rounded-xl p-6 shadow-lg">
+                            <p className="font-semibold mb-2">📌 הערות חשובות:</p>
+                            <p>* החישובים מבוססים על הנחות ממוצעות ועשויים להשתנות בהתאם לנסיבות האישיות שלכם</p>
+                            <p>* ביטוח מחושב לפי גיל הנהג ושווי הרכב</p>
+                            <p>* אגרת רישוי מחושבת לפי שווי הרכב על בסיס טבלת המחירים הישראלית</p>
+                            <p>* יש להתייעץ עם יועץ פיננסי או רואה חשבון לפני קבלת החלטה סופית</p>
+                            <p>* תשואות עבר אינן ערובה לתשואות עתיד - השקעות כרוכות בסיכון</p>
+                            <p>* עלויות טיפולים משתנות לפי סוג דלק: היברידי +20%, חשמלי -20%</p>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<CarComparison />, document.getElementById('root'));
+    </script>
+</body>
+</html>
