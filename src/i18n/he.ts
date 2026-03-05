@@ -8,6 +8,7 @@ const he = {
     calculator: "מחשבון",
     about: "אודות",
     language: "English",
+    privacy: "מדיניות פרטיות",
   },
   sections: {
     inputTitle: "הזינו את הפרטים",

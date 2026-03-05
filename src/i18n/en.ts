@@ -8,6 +8,7 @@ const en = {
     calculator: "Calculator",
     about: "About",
     language: "עברית",
+    privacy: "Privacy Policy",
   },
   sections: {
     inputTitle: "Enter Your Details",

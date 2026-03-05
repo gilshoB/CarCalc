@@ -10,6 +10,7 @@ import CostBreakdownChart from "./CostBreakdownChart";
 import CumulativeCostChart from "./CumulativeCostChart";
 import DepreciationOverride from "./DepreciationOverride";
 import PeriodSelector from "./PeriodSelector";
+import AdUnit from "@/components/AdUnit";
 
 interface ResultsDashboardProps {
   t: ReturnType<typeof getTranslations>;
@@ -64,6 +65,9 @@ export default function ResultsDashboard({
       {/* Main results */}
       <RecommendationCard t={t} locale={locale} results={results} />
       <ComparisonTable t={t} locale={locale} results={results} input={input} />
+
+      {/* Ad */}
+      <AdUnit slot="results-top" format="horizontal" className="my-4" />
 
       {/* Charts */}
       <div className="grid gap-6 lg:grid-cols-2">
