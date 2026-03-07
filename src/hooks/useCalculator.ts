@@ -26,6 +26,7 @@ export interface UseCalculatorReturn {
   depreciationOverride: DepreciationOverrideValues | null;
   setDepreciationOverride: (v: DepreciationOverrideValues | null) => void;
 
+  backToForm: () => void;
   resetAll: () => void;
 }
 
@@ -78,6 +79,12 @@ function validateStep(step: number, input: CalculatorInput): FormErrors {
       }
       if (input.buy.isUsed && (!input.buy.usedCarAge || input.buy.usedCarAge <= 0)) {
         errors["buy.usedCarAge"] = "required";
+      }
+      if (!input.mandatoryInsuranceQuote || input.mandatoryInsuranceQuote <= 0) {
+        errors["mandatoryInsuranceQuote"] = "required";
+      }
+      if (!input.comprehensiveInsuranceQuote || input.comprehensiveInsuranceQuote <= 0) {
+        errors["comprehensiveInsuranceQuote"] = "required";
       }
       break;
   }
@@ -186,6 +193,10 @@ export function useCalculator(): UseCalculatorReturn {
     await doCalculate(updatedInput);
   }, [input, doCalculate]);
 
+  const backToForm = useCallback(() => {
+    setShowResults(false);
+  }, []);
+
   const resetAll = useCallback(() => {
     setInput(DEFAULT_INPUT);
     setCurrentStep(1);
@@ -211,6 +222,7 @@ export function useCalculator(): UseCalculatorReturn {
     changePeriod,
     depreciationOverride,
     setDepreciationOverride,
+    backToForm,
     resetAll,
   };
 }

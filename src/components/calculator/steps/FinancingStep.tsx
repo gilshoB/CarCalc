@@ -24,10 +24,13 @@ export default function FinancingStep({
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">{f.title}</h2>
+      <div>
+        <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">{f.title}</h2>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{f.subtitle}</p>
+      </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <FormField label={f.cashOnHand} hint={f.cashOnHandHint} error={errors["cashOnHand"]}>
+        <FormField label={f.cashOnHand} hint={f.cashOnHandHint} error={errors["cashOnHand"]} required>
           <NumberInput
             value={cashOnHand}
             onChange={(v) => onChange("cashOnHand", v)}
@@ -36,11 +39,12 @@ export default function FinancingStep({
           />
         </FormField>
 
-        <FormField label={f.oldCarValue} hint={f.oldCarValueHint}>
+        <FormField label={f.oldCarValue} hint={f.oldCarValueHint} error={errors["oldCarValue"]} required>
           <NumberInput
             value={oldCarValue}
             onChange={(v) => onChange("oldCarValue", v)}
             prefix="₪"
+            error={!!errors["oldCarValue"]}
           />
         </FormField>
       </div>

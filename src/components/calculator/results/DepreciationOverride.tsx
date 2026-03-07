@@ -25,7 +25,7 @@ export default function DepreciationOverride({
 
   return (
     <div className="rounded-2xl bg-white shadow-md ring-1 ring-zinc-200/60 p-5 dark:bg-zinc-900 dark:ring-zinc-700/50">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-1">
         <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-50">{d.title}</h3>
         {isOverriding && (
           <button
@@ -36,6 +36,7 @@ export default function DepreciationOverride({
           </button>
         )}
       </div>
+      <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4">{d.subtitle}</p>
 
       <Toggle
         checked={isOverriding}

@@ -49,21 +49,13 @@ export default function RecommendationCard({ t, locale, results }: Recommendatio
             </p>
           </div>
 
-          {/* Savings badge */}
-          <div className={`shrink-0 rounded-xl px-5 py-3.5 text-center shadow-sm ${
-            isBuy
-              ? "bg-blue-50 dark:bg-blue-950/40"
-              : "bg-amber-50 dark:bg-amber-950/40"
-          }`}>
-            <div className="text-[11px] font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500 mb-1">{r.savings}</div>
-            <div className={`text-2xl sm:text-3xl font-extrabold tracking-tight ${
-              isBuy
-                ? "text-blue-700 dark:text-blue-300"
-                : "text-amber-700 dark:text-amber-300"
-            }`}>
+          {/* Savings badge — always green */}
+          <div className="shrink-0 rounded-xl px-5 py-3.5 text-center shadow-sm bg-emerald-50 dark:bg-emerald-950/40">
+            <div className="text-[11px] font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-400 mb-1">{r.savings}</div>
+            <div className="text-2xl sm:text-3xl font-extrabold tracking-tight text-emerald-700 dark:text-emerald-300 whitespace-nowrap">
               {formatNumber(recommendation.savingsAmount, locale)} ₪
             </div>
-            <div className="text-[11px] text-zinc-400 dark:text-zinc-500 mt-0.5">
+            <div className="text-[11px] text-emerald-500 dark:text-emerald-500 mt-0.5">
               {r.overPeriod} {periodYears} {t.results.years}
             </div>
           </div>
@@ -71,31 +63,29 @@ export default function RecommendationCard({ t, locale, results }: Recommendatio
 
         {/* Monthly comparison */}
         <div className="mt-5 grid grid-cols-2 gap-3">
-          <div className={`rounded-xl px-4 py-3 text-center transition-shadow ${
+          <div className={`rounded-xl px-4 py-4 text-center transition-shadow ${
             isBuy
               ? "bg-blue-50/80 shadow-sm ring-1 ring-blue-200/50 dark:bg-blue-950/30 dark:ring-blue-800/30"
               : "bg-zinc-50 dark:bg-zinc-800/40"
           }`}>
-            <div className="text-[11px] font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500 mb-1">{t.results.comparison.buy}</div>
-            <div className={`text-xl font-bold tabular-nums ${
+            <div className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mb-1.5">{r.monthlyCostBuy}</div>
+            <div className={`text-2xl sm:text-3xl font-extrabold tabular-nums whitespace-nowrap ${
               isBuy ? "text-blue-700 dark:text-blue-300" : "text-zinc-700 dark:text-zinc-300"
             }`}>
               {formatNumber(buy.monthlyCost, locale)} ₪
             </div>
-            <div className="text-[10px] text-zinc-400 dark:text-zinc-500">{r.perMonth}</div>
           </div>
-          <div className={`rounded-xl px-4 py-3 text-center transition-shadow ${
+          <div className={`rounded-xl px-4 py-4 text-center transition-shadow ${
             !isBuy
               ? "bg-amber-50/80 shadow-sm ring-1 ring-amber-200/50 dark:bg-amber-950/30 dark:ring-amber-800/30"
               : "bg-zinc-50 dark:bg-zinc-800/40"
           }`}>
-            <div className="text-[11px] font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500 mb-1">{t.results.comparison.lease}</div>
-            <div className={`text-xl font-bold tabular-nums ${
+            <div className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mb-1.5">{r.monthlyCostLease}</div>
+            <div className={`text-2xl sm:text-3xl font-extrabold tabular-nums whitespace-nowrap ${
               !isBuy ? "text-amber-700 dark:text-amber-300" : "text-zinc-700 dark:text-zinc-300"
             }`}>
               {formatNumber(lease.monthlyCost, locale)} ₪
             </div>
-            <div className="text-[10px] text-zinc-400 dark:text-zinc-500">{r.perMonth}</div>
           </div>
         </div>
       </div>

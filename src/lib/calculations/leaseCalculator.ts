@@ -108,7 +108,8 @@ export function calcLeaseScenario(
     fuel +
     testFees -
     taxBenefits -
-    investmentResult; // investment gain reduces effective cost
+    investmentResult - // investment gain reduces effective cost
+    input.oldCarValue; // subtract: old car sold, reduces effective cost
 
   const monthlyCost = Math.round(totalCost / (years * 12));
 

@@ -93,23 +93,14 @@ export function calcBuyScenario(
     taxBenefits = calcBusinessTaxBenefits(deductibleExpenses, input.marginalTaxRate);
   }
 
-  // 6. Investment opportunity cost / gain
+  // 6. Investment gain on free capital
+  // Only count what's actually free to invest (capital not spent on the car)
   let investmentResult = 0;
   if (input.includeInvestment) {
     const returnRate = input.investmentReturnRate ?? marketData.defaultInvestmentReturn;
-
-    // Capital tied in car = what user actually pays upfront (not loaned)
-    const capitalTiedInCar = Math.min(availableCapital, buy.carPrice);
-
-    // Opportunity cost: what this capital could have earned
-    const opportunityCost = calcInvestmentReturn(capitalTiedInCar, years, returnRate);
-    investmentResult = -opportunityCost.gain; // negative = cost to buyer
-
-    // If there's excess capital (available > car price), that can be invested
-    const excessCapital = Math.max(0, availableCapital - buy.carPrice);
-    if (excessCapital > 0) {
-      const excessGain = calcInvestmentReturn(excessCapital, years, returnRate);
-      investmentResult += excessGain.gain; // positive = gain
+    const freeCapital = Math.max(0, availableCapital - buy.carPrice);
+    if (freeCapital > 0) {
+      investmentResult = calcInvestmentReturn(freeCapital, years, returnRate).gain;
     }
   }
 
@@ -125,8 +116,9 @@ export function calcBuyScenario(
     fuel +
     maintenance -
     depreciation.residualValue - // subtract: car still has value
-    taxBenefits + // subtract: tax savings
-    Math.abs(investmentResult) * (investmentResult < 0 ? 1 : -1); // add opportunity cost or subtract investment gain
+    taxBenefits -
+    investmentResult - // subtract: investment gain on free capital
+    input.oldCarValue; // subtract: old car sold, reduces effective cost
 
   const monthlyCost = Math.round(totalCost / (years * 12));
 

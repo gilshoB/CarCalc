@@ -164,8 +164,7 @@ export default function LeasingStep({
       {/* Insurance for lease car — only fields not included in lease */}
       {(needsMandatoryInsurance || needsComprehensiveInsurance) && (
         <div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-          <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-1">{f.insuranceSection}</h3>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-3">{f.insuranceSectionHint}</p>
+          <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-3">{f.insuranceSection}</h3>
           <div className="grid gap-4 sm:grid-cols-2">
             {needsMandatoryInsurance && (
               <FormField label={f.mandatoryInsuranceQuote}>

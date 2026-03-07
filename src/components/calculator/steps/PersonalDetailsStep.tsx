@@ -29,7 +29,10 @@ export default function PersonalDetailsStep({
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">{f.title}</h2>
+      <div>
+        <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">{f.title}</h2>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{f.subtitle}</p>
+      </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <FormField label={f.name} error={errors["name"]}>
@@ -67,6 +70,9 @@ export default function PersonalDetailsStep({
           onChange={(v) => onChange("isBusinessUse", v)}
           label={f.isOsekMurshe}
         />
+        {isBusinessUse && (
+          <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">{f.isOsekMursheHint}</p>
+        )}
       </div>
 
       {isBusinessUse && (

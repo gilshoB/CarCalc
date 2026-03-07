@@ -131,7 +131,7 @@ function buildFormulas(
   if (buyBreak.investmentResult !== 0 || leaseBreak.investmentResult !== 0) {
     const rate = input.investmentReturnRate ?? 10.5;
     formulas.investment = {
-      buy: buyBreak.investmentResult !== 0 ? tpl(f.opportunityCost, { rate }) : "",
+      buy: buyBreak.investmentResult !== 0 ? tpl(f.investmentGain, { rate, amount: fmt(buyBreak.investmentResult) }) : f.noFreeCapital,
       lease: leaseBreak.investmentResult !== 0 ? tpl(f.investmentGain, { rate, amount: fmt(leaseBreak.investmentResult) }) : "",
     };
   }
@@ -142,10 +142,19 @@ function buildFormulas(
 export default function ComparisonTable({ t, locale, results, input }: ComparisonTableProps) {
   const c = t.results.comparison;
   const { buy, lease, recommendation } = results;
-  const [hoveredRow, setHoveredRow] = useState<string | null>(null);
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const buyWins = recommendation.winner === "buy";
 
   const formulas = buildFormulas(t, input, results);
+
+  const toggleRow = (key: string) => {
+    setExpandedRows((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
 
   const rows: Row[] = [
     { key: "carPayment", label: c.carPayment, buyValue: buy.breakdown.carPayment, leaseValue: lease.breakdown.carPayment, buyFormula: formulas.carPayment?.buy, leaseFormula: formulas.carPayment?.lease },
@@ -210,39 +219,34 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
           </thead>
           <tbody>
             {visibleRows.map((row, i) => {
-              const isHovered = hoveredRow === row.key;
               const hasFormula = row.buyFormula || row.leaseFormula;
+              const isExpanded = expandedRows.has(row.key);
 
               return (
                 <tr
                   key={row.key}
-                  className={`transition-colors border-b border-zinc-100/80 dark:border-zinc-800/50 ${hasFormula ? "cursor-help" : ""} ${
-                    isHovered
-                      ? "bg-blue-50/50 dark:bg-blue-950/20"
-                      : i % 2 === 0
-                        ? "bg-white dark:bg-zinc-900"
-                        : "bg-zinc-50/40 dark:bg-zinc-800/20"
+                  className={`border-b border-zinc-100/80 dark:border-zinc-800/50 ${hasFormula ? "cursor-pointer" : ""} ${
+                    i % 2 === 0
+                      ? "bg-white dark:bg-zinc-900"
+                      : "bg-zinc-50/40 dark:bg-zinc-800/20"
                   }`}
-                  onMouseEnter={() => hasFormula && setHoveredRow(row.key)}
-                  onMouseLeave={() => setHoveredRow(null)}
+                  onClick={() => hasFormula && toggleRow(row.key)}
                 >
                   {/* Category label */}
-                  <td className="ps-6 pe-4 py-3 align-top">
+                  <td className="ps-6 pe-4 py-3.5 align-top">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-sm text-zinc-700 dark:text-zinc-300">{row.label}</span>
+                      <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{row.label}</span>
                       {hasFormula && (
-                        <svg className={`h-3.5 w-3.5 shrink-0 transition-colors ${
-                          isHovered
-                            ? "text-blue-500 dark:text-blue-400"
-                            : "text-zinc-300 dark:text-zinc-600"
+                        <svg className={`h-3.5 w-3.5 shrink-0 transition-transform ${
+                          isExpanded ? "rotate-180 text-blue-500 dark:text-blue-400" : "text-zinc-300 dark:text-zinc-600"
                         }`} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                         </svg>
                       )}
                     </div>
 
-                    {/* Tooltip — inline formula explanation */}
-                    {isHovered && hasFormula && (
+                    {/* Collapsible formula */}
+                    {isExpanded && hasFormula && (
                       <div className="mt-2 rounded-lg bg-zinc-100/80 dark:bg-zinc-800/60 px-3 py-2 text-[11px] leading-relaxed space-y-1">
                         {row.buyFormula && (
                           <div className="flex gap-1.5">
@@ -261,7 +265,7 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
                   </td>
 
                   {/* Buy value */}
-                  <td className={`text-end px-4 py-3 align-top text-sm tabular-nums font-medium ${
+                  <td className={`text-end px-4 py-3.5 align-top text-sm tabular-nums font-bold ${
                     row.isSubtraction && row.buyValue < 0
                       ? "text-emerald-600 dark:text-emerald-400"
                       : "text-zinc-800 dark:text-zinc-200"
@@ -270,7 +274,7 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
                   </td>
 
                   {/* Lease value */}
-                  <td className={`text-end ps-4 pe-6 py-3 align-top text-sm tabular-nums font-medium ${
+                  <td className={`text-end ps-4 pe-6 py-3.5 align-top text-sm tabular-nums font-bold ${
                     row.isSubtraction && row.leaseValue < 0
                       ? "text-emerald-600 dark:text-emerald-400"
                       : "text-zinc-800 dark:text-zinc-200"
@@ -288,12 +292,12 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
               <td className="ps-6 pe-4 py-4">
                 <span className="text-sm font-bold text-zinc-900 dark:text-zinc-50">{c.total}</span>
               </td>
-              <td className={`text-end px-4 py-4 text-lg tabular-nums font-bold ${
+              <td className={`text-end px-4 py-4 text-lg tabular-nums font-extrabold whitespace-nowrap ${
                 buyWins ? "text-blue-700 dark:text-blue-300" : "text-zinc-800 dark:text-zinc-200"
               }`}>
                 {formatNumber(buy.totalCost, locale)} ₪
               </td>
-              <td className={`text-end ps-4 pe-6 py-4 text-lg tabular-nums font-bold ${
+              <td className={`text-end ps-4 pe-6 py-4 text-lg tabular-nums font-extrabold whitespace-nowrap ${
                 !buyWins ? "text-amber-700 dark:text-amber-300" : "text-zinc-800 dark:text-zinc-200"
               }`}>
                 {formatNumber(lease.totalCost, locale)} ₪
@@ -303,10 +307,10 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
               <td className="ps-6 pe-4 pb-4">
                 <span className="text-xs text-zinc-400 dark:text-zinc-500">{c.monthlyCost}</span>
               </td>
-              <td className="text-end px-4 pb-4 text-sm tabular-nums text-zinc-500 dark:text-zinc-400">
+              <td className="text-end px-4 pb-4 text-sm tabular-nums font-semibold text-zinc-500 dark:text-zinc-400 whitespace-nowrap">
                 {formatNumber(buy.monthlyCost, locale)} ₪
               </td>
-              <td className="text-end ps-4 pe-6 pb-4 text-sm tabular-nums text-zinc-500 dark:text-zinc-400">
+              <td className="text-end ps-4 pe-6 pb-4 text-sm tabular-nums font-semibold text-zinc-500 dark:text-zinc-400 whitespace-nowrap">
                 {formatNumber(lease.monthlyCost, locale)} ₪
               </td>
             </tr>

@@ -168,13 +168,15 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
       {/* Results */}
       {calc.showResults && calc.results && (
         <div className="mt-8">
-          <button
-            type="button"
-            onClick={calc.resetAll}
-            className="mb-6 rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
-          >
-            {t.wizard.back}
-          </button>
+          <div className="mb-6">
+            <button
+              type="button"
+              onClick={calc.backToForm}
+              className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            >
+              {t.wizard.back}
+            </button>
+          </div>
 
           <ResultsDashboard
             t={t}
@@ -188,6 +190,16 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
             onDepreciationChange={calc.setDepreciationOverride}
             depreciationDefaults={depDefaults}
           />
+
+          <div className="mt-10 flex justify-center">
+            <button
+              type="button"
+              onClick={calc.resetAll}
+              className="rounded-xl bg-blue-600 px-8 py-3 text-base font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-blue-500 dark:hover:bg-blue-600"
+            >
+              {t.wizard.startOver}
+            </button>
+          </div>
         </div>
       )}
     </div>

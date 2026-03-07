@@ -32,6 +32,7 @@ const en = {
     next: "Next",
     back: "Back",
     calculate: "Calculate",
+    startOver: "Start Over",
     calculating: "Calculating...",
     letsStart: "Let's Start",
     instructions: {
@@ -49,15 +50,18 @@ const en = {
   form: {
     personalDetails: {
       title: "Personal Details",
+      subtitle: "Personal details are optional",
       name: "Full Name",
       email: "Email",
-      emailHint: "To receive your comparison results",
+      emailHint: "Coming soon — results sent to email",
       isOsekMurshe: "Are you a licensed business (Osek Murshe)?",
+      isOsekMursheHint: "As a licensed business, 45% of car expenses (lease, insurance, fuel, maintenance) are recognized as business expenses, reducing your tax",
       marginalTaxRate: "Marginal Tax Rate (%)",
-      marginalTaxRateHint: "For calculating tax benefits",
+      marginalTaxRateHint: "The highest tax bracket applied to your income — check your pay slip",
     },
     financing: {
       title: "Financial Situation",
+      subtitle: "Needed to calculate required loan and opportunity cost of capital",
       cashOnHand: "Available Cash",
       cashOnHandHint: "How much cash do you have for purchase or investment?",
       oldCarValue: "Current Car Value",
@@ -138,6 +142,8 @@ const en = {
       perMonth: "/month",
       overPeriod: "over",
       monthlyCost: "Monthly Cost",
+      monthlyCostBuy: "Monthly Cost — Buying",
+      monthlyCostLease: "Monthly Cost — Leasing",
     },
     comparison: {
       title: "Cost Comparison",
@@ -170,11 +176,12 @@ const en = {
     },
     depreciation: {
       title: "Depreciation Adjustment",
+      subtitle: "The depreciation rate determines how much the car loses in value each year. These are default values by fuel type — you can change them if you have a different estimate",
       override: "Override depreciation rates",
       reset: "Reset to defaults",
       year1: "Year 1 (%)",
       year2: "Year 2 (%)",
-      year3Plus: "Year 3+ (%)",
+      year3Plus: "Year 3 and onwards (%)",
     },
     formulas: {
       purchasePrice: "Purchase price",
@@ -195,6 +202,7 @@ const en = {
       taxFormula: "45% recognized × {rate}% tax rate = {amount} ₪ back",
       opportunityCost: "Opportunity cost: capital in car × {rate}% return",
       investmentGain: "Available capital invested at {rate}% = +{amount} ₪",
+      noFreeCapital: "No free capital to invest — used for car purchase",
     },
     marketData: {
       source: "Market Data",

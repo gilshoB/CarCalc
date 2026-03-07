@@ -32,6 +32,7 @@ const he = {
     next: "הבא",
     back: "חזרה",
     calculate: "חשב",
+    startOver: "התחל מחדש",
     calculating: "מחשב...",
     letsStart: "בואו נתחיל",
     instructions: {
@@ -49,15 +50,18 @@ const he = {
   form: {
     personalDetails: {
       title: "פרטים אישיים",
+      subtitle: "הפרטים האישיים הם אופציונליים",
       name: "שם מלא",
       email: "אימייל",
-      emailHint: "לשליחת תוצאות ההשוואה",
+      emailHint: "בקרוב — שליחת תוצאות למייל",
       isOsekMurshe: "האם אתה עוסק מורשה?",
+      isOsekMursheHint: "כעוסק מורשה, 45% מהוצאות הרכב (ליסינג, ביטוח, דלק, אחזקה) מוכרות כהוצאה עסקית ומפחיתות את המס שתשלמו",
       marginalTaxRate: "שיעור מס שולי (%)",
-      marginalTaxRateHint: "לחישוב הטבות מס (סעיף 77)",
+      marginalTaxRateHint: "אחוז המס הגבוה ביותר שמנוכה מההכנסה שלכם — ניתן לראות בתלוש המשכורת",
     },
     financing: {
       title: "מצב פיננסי",
+      subtitle: "נדרש כדי לחשב את ההלוואה הנדרשת ואת עלות ההזדמנות של ההון",
       cashOnHand: "הון עצמי זמין",
       cashOnHandHint: "כמה מזומן יש לכם לרכישה או השקעה?",
       oldCarValue: "שווי רכב ישן",
@@ -138,6 +142,8 @@ const he = {
       perMonth: "לחודש",
       overPeriod: "על פני",
       monthlyCost: "עלות חודשית",
+      monthlyCostBuy: "עלות חודשית לקנייה",
+      monthlyCostLease: "עלות חודשית לליסינג",
     },
     comparison: {
       title: "השוואת עלויות",
@@ -170,11 +176,12 @@ const he = {
     },
     depreciation: {
       title: "התאמת פחת",
+      subtitle: "שיעור הפחת קובע כמה הרכב מאבד מערכו בכל שנה. הערכים כאן הם ברירת מחדל לפי סוג הדלק — ניתן לשנות אם יש לכם הערכה אחרת",
       override: "שנה שיעורי פחת",
       reset: "אפס לברירת מחדל",
       year1: "שנה ראשונה (%)",
       year2: "שנה שנייה (%)",
-      year3Plus: "שנה שלישית+ (%)",
+      year3Plus: "שנה שלישית ואילך (%)",
     },
     formulas: {
       purchasePrice: "מחיר רכישה",
@@ -195,6 +202,7 @@ const he = {
       taxFormula: "45% הכרה × {rate}% מס = {amount} ₪ החזר",
       opportunityCost: "עלות הזדמנות: הון תפוס ברכב × {rate}% תשואה",
       investmentGain: "הון פנוי מושקע ב-{rate}% תשואה = +{amount} ₪",
+      noFreeCapital: "אין הון פנוי להשקעה — ההון שימש לרכישת הרכב",
     },
     marketData: {
       source: "נתוני שוק",

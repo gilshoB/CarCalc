@@ -134,18 +134,20 @@ export default function BuyingStep({
       <div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
         <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-3">{f.insuranceSection}</h3>
         <div className="grid gap-4 sm:grid-cols-2">
-          <FormField label={f.mandatoryInsuranceQuote}>
+          <FormField label={f.mandatoryInsuranceQuote} error={errors["mandatoryInsuranceQuote"]} required>
             <NumberInput
               value={mandatoryInsuranceQuote}
               onChange={(v) => onChange("mandatoryInsuranceQuote", v)}
               prefix="₪"
+              error={!!errors["mandatoryInsuranceQuote"]}
             />
           </FormField>
-          <FormField label={f.comprehensiveInsuranceQuote}>
+          <FormField label={f.comprehensiveInsuranceQuote} error={errors["comprehensiveInsuranceQuote"]} required>
             <NumberInput
               value={comprehensiveInsuranceQuote}
               onChange={(v) => onChange("comprehensiveInsuranceQuote", v)}
               prefix="₪"
+              error={!!errors["comprehensiveInsuranceQuote"]}
             />
           </FormField>
         </div>
