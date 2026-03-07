@@ -22,8 +22,11 @@ export function calcDepreciation(
   fuelType: FuelType,
   isUsed: boolean,
   usedCarAge: number = 0,
+  overrideRates?: { yr1: number; yr2: number; yr3Plus: number },
 ): DepreciationResult {
-  const curve = DEPRECIATION_CURVES[fuelType];
+  const curve = overrideRates
+    ? { yr1: overrideRates.yr1 / 100, yr2: overrideRates.yr2 / 100, yr3Plus: overrideRates.yr3Plus / 100 }
+    : DEPRECIATION_CURVES[fuelType];
   const startAge = isUsed ? usedCarAge : 0;
 
   // Calculate value from new to determine starting value

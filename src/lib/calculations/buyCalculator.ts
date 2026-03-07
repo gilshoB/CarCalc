@@ -46,6 +46,7 @@ export function calcBuyScenario(
     buy.fuelType,
     buy.isUsed,
     buy.usedCarAge,
+    input.depreciationOverride,
   );
 
   // 4. Annual recurring costs

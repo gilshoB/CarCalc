@@ -64,6 +64,9 @@ export interface CalculatorInput {
   comparisonPeriodYears: number; // e.g. 3, 5, 7
   includeInvestment: boolean;
   investmentReturnRate?: number; // annual %, fetched default or user override
+
+  // Depreciation override (from results page)
+  depreciationOverride?: { yr1: number; yr2: number; yr3Plus: number };
 }
 
 // ---- Market Data (live/dynamic) ----

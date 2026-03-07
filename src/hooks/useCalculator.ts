@@ -25,6 +25,7 @@ export interface UseCalculatorReturn {
 
   depreciationOverride: DepreciationOverrideValues | null;
   setDepreciationOverride: (v: DepreciationOverrideValues | null) => void;
+  recalculate: () => Promise<void>;
 
   backToForm: () => void;
   resetAll: () => void;
@@ -132,7 +133,7 @@ export function useCalculator(): UseCalculatorReturn {
     setCurrentStep((s) => Math.max(s - 1, 1));
   }, []);
 
-  const doCalculate = useCallback(async (inputData: CalculatorInput) => {
+  const doCalculate = useCallback(async (inputData: CalculatorInput, depOverride?: DepreciationOverrideValues | null) => {
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
@@ -141,10 +142,13 @@ export function useCalculator(): UseCalculatorReturn {
     setApiError(null);
 
     try {
+      const payload = depOverride
+        ? { ...inputData, depreciationOverride: depOverride }
+        : inputData;
       const response = await fetch("/api/calculate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(inputData),
+        body: JSON.stringify(payload),
         signal: controller.signal,
       });
 
@@ -184,14 +188,18 @@ export function useCalculator(): UseCalculatorReturn {
       return;
     }
     setErrors({});
-    await doCalculate(input);
-  }, [input, doCalculate]);
+    await doCalculate(input, depreciationOverride);
+  }, [input, depreciationOverride, doCalculate]);
 
   const changePeriod = useCallback(async (years: number) => {
     const updatedInput = { ...input, comparisonPeriodYears: years };
     setInput(updatedInput);
-    await doCalculate(updatedInput);
-  }, [input, doCalculate]);
+    await doCalculate(updatedInput, depreciationOverride);
+  }, [input, depreciationOverride, doCalculate]);
+
+  const recalculate = useCallback(async () => {
+    await doCalculate(input, depreciationOverride);
+  }, [input, depreciationOverride, doCalculate]);
 
   const backToForm = useCallback(() => {
     setShowResults(false);
@@ -222,6 +230,7 @@ export function useCalculator(): UseCalculatorReturn {
     changePeriod,
     depreciationOverride,
     setDepreciationOverride,
+    recalculate,
     backToForm,
     resetAll,
   };

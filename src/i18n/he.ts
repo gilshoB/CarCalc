@@ -136,8 +136,8 @@ const he = {
     years: "שנים",
     recommendation: {
       title: "המלצה",
-      buyWins: "קנייה משתלמת יותר",
-      leaseWins: "ליסינג משתלם יותר",
+      buyWins: "🏆 המשתלם ביותר: קנייה",
+      leaseWins: "🏆 המשתלם ביותר: ליסינג",
       savings: "חיסכון של",
       perMonth: "לחודש",
       overPeriod: "על פני",

@@ -22,6 +22,7 @@ interface ResultsDashboardProps {
   isRecalculating: boolean;
   depreciationOverride: DepreciationOverrideValues | null;
   onDepreciationChange: (values: DepreciationOverrideValues | null) => void;
+  onRecalculate: () => void;
   depreciationDefaults: DepreciationOverrideValues;
 }
 
@@ -35,6 +36,7 @@ export default function ResultsDashboard({
   isRecalculating,
   depreciationOverride,
   onDepreciationChange,
+  onRecalculate,
   depreciationDefaults,
 }: ResultsDashboardProps) {
   return (
@@ -92,6 +94,19 @@ export default function ResultsDashboard({
         onChange={onDepreciationChange}
         defaults={depreciationDefaults}
       />
+
+      {depreciationOverride && (
+        <div className="flex justify-center">
+          <button
+            type="button"
+            onClick={onRecalculate}
+            disabled={isRecalculating}
+            className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+          >
+            {isRecalculating ? t.wizard.calculating : t.wizard.calculate}
+          </button>
+        </div>
+      )}
 
       {/* Data source */}
       <div className="text-center text-[11px] text-zinc-400 dark:text-zinc-500 pt-2">

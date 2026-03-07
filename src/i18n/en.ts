@@ -136,8 +136,8 @@ const en = {
     years: "years",
     recommendation: {
       title: "Recommendation",
-      buyWins: "Buying is more cost-effective",
-      leaseWins: "Leasing is more cost-effective",
+      buyWins: "🏆 Best Option: Buying",
+      leaseWins: "🏆 Best Option: Leasing",
       savings: "Savings of",
       perMonth: "/month",
       overPeriod: "over",

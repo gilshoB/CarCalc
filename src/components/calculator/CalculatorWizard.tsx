@@ -188,6 +188,7 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
             isRecalculating={calc.isCalculating}
             depreciationOverride={calc.depreciationOverride}
             onDepreciationChange={calc.setDepreciationOverride}
+            onRecalculate={calc.recalculate}
             depreciationDefaults={depDefaults}
           />
 

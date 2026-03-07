@@ -57,6 +57,11 @@ const CalculatorInputSchema = z.object({
   comparisonPeriodYears: z.number().int().min(1).max(10),
   includeInvestment: z.boolean(),
   investmentReturnRate: z.number().min(0).optional(),
+  depreciationOverride: z.object({
+    yr1: z.number().min(0).max(100),
+    yr2: z.number().min(0).max(100),
+    yr3Plus: z.number().min(0).max(100),
+  }).optional(),
 });
 
 export async function POST(request: NextRequest) {

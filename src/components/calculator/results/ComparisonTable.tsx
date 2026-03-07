@@ -181,9 +181,9 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
   };
 
   return (
-    <div className="rounded-2xl bg-white shadow-md ring-1 ring-zinc-200/60 dark:bg-zinc-900 dark:ring-zinc-700/50 overflow-hidden">
+    <div className="rounded-2xl bg-white shadow-md ring-1 ring-zinc-200/60 dark:bg-zinc-900 dark:ring-zinc-700/50 overflow-hidden max-w-2xl mx-auto">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-zinc-100 dark:border-zinc-800">
+      <div className="px-4 py-4 border-b border-zinc-100 dark:border-zinc-800">
         <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50">{c.title}</h3>
       </div>
 
@@ -192,23 +192,23 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-zinc-50/80 dark:bg-zinc-800/40">
-              <th className="text-start text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 py-3 ps-6 pe-4">
+              <th className="text-start text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 py-3 ps-4 pe-3">
                 {c.category}
               </th>
-              <th className="text-end text-xs font-bold uppercase tracking-wider py-3 px-4 w-[130px]">
+              <th className="text-end text-xs font-bold uppercase tracking-wider py-3 px-3 w-[140px]">
                 <div className={`inline-flex items-center gap-1.5 ${buyWins ? "text-blue-600 dark:text-blue-400" : "text-zinc-400 dark:text-zinc-500"}`}>
                   {buyWins && (
-                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                     </svg>
                   )}
                   {c.buy}
                 </div>
               </th>
-              <th className="text-end text-xs font-bold uppercase tracking-wider py-3 ps-4 pe-6 w-[130px]">
+              <th className="text-end text-xs font-bold uppercase tracking-wider py-3 ps-3 pe-4 w-[140px]">
                 <div className={`inline-flex items-center gap-1.5 ${!buyWins ? "text-amber-600 dark:text-amber-400" : "text-zinc-400 dark:text-zinc-500"}`}>
                   {!buyWins && (
-                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                     </svg>
                   )}
@@ -233,13 +233,13 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
                   onClick={() => hasFormula && toggleRow(row.key)}
                 >
                   {/* Category label */}
-                  <td className="ps-6 pe-4 py-3.5 align-top">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{row.label}</span>
+                  <td className="ps-4 pe-3 py-3.5 align-top">
+                    <div className="flex items-center gap-2">
+                      <span className="text-base font-medium text-zinc-700 dark:text-zinc-300">{row.label}</span>
                       {hasFormula && (
-                        <svg className={`h-3.5 w-3.5 shrink-0 transition-transform ${
-                          isExpanded ? "rotate-180 text-blue-500 dark:text-blue-400" : "text-zinc-300 dark:text-zinc-600"
-                        }`} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                        <svg className={`h-5 w-5 shrink-0 transition-transform ${
+                          isExpanded ? "rotate-180 text-blue-500 dark:text-blue-400" : "text-zinc-400 dark:text-zinc-500"
+                        }`} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                         </svg>
                       )}
@@ -247,7 +247,7 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
 
                     {/* Collapsible formula */}
                     {isExpanded && hasFormula && (
-                      <div className="mt-2 rounded-lg bg-zinc-100/80 dark:bg-zinc-800/60 px-3 py-2 text-[11px] leading-relaxed space-y-1">
+                      <div className="mt-2 rounded-lg bg-zinc-100/80 dark:bg-zinc-800/60 px-3 py-2 text-xs leading-relaxed space-y-1">
                         {row.buyFormula && (
                           <div className="flex gap-1.5">
                             <span className="font-semibold text-blue-600 dark:text-blue-400 shrink-0">{c.buy}:</span>
@@ -265,7 +265,7 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
                   </td>
 
                   {/* Buy value */}
-                  <td className={`text-end px-4 py-3.5 align-top text-sm tabular-nums font-bold ${
+                  <td className={`text-end px-3 py-3.5 align-top text-base tabular-nums font-bold ${
                     row.isSubtraction && row.buyValue < 0
                       ? "text-emerald-600 dark:text-emerald-400"
                       : "text-zinc-800 dark:text-zinc-200"
@@ -274,7 +274,7 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
                   </td>
 
                   {/* Lease value */}
-                  <td className={`text-end ps-4 pe-6 py-3.5 align-top text-sm tabular-nums font-bold ${
+                  <td className={`text-end ps-3 pe-4 py-3.5 align-top text-base tabular-nums font-bold ${
                     row.isSubtraction && row.leaseValue < 0
                       ? "text-emerald-600 dark:text-emerald-400"
                       : "text-zinc-800 dark:text-zinc-200"
@@ -289,28 +289,28 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
           {/* Totals */}
           <tfoot>
             <tr className="bg-zinc-50 dark:bg-zinc-800/40 border-t-2 border-zinc-200 dark:border-zinc-700">
-              <td className="ps-6 pe-4 py-4">
-                <span className="text-sm font-bold text-zinc-900 dark:text-zinc-50">{c.total}</span>
+              <td className="ps-4 pe-3 py-4">
+                <span className="text-base font-bold text-zinc-900 dark:text-zinc-50">{c.total}</span>
               </td>
-              <td className={`text-end px-4 py-4 text-lg tabular-nums font-extrabold whitespace-nowrap ${
+              <td className={`text-end px-3 py-4 text-xl tabular-nums font-extrabold whitespace-nowrap ${
                 buyWins ? "text-blue-700 dark:text-blue-300" : "text-zinc-800 dark:text-zinc-200"
               }`}>
                 {formatNumber(buy.totalCost, locale)} ₪
               </td>
-              <td className={`text-end ps-4 pe-6 py-4 text-lg tabular-nums font-extrabold whitespace-nowrap ${
+              <td className={`text-end ps-3 pe-4 py-4 text-xl tabular-nums font-extrabold whitespace-nowrap ${
                 !buyWins ? "text-amber-700 dark:text-amber-300" : "text-zinc-800 dark:text-zinc-200"
               }`}>
                 {formatNumber(lease.totalCost, locale)} ₪
               </td>
             </tr>
             <tr className="bg-zinc-50 dark:bg-zinc-800/40">
-              <td className="ps-6 pe-4 pb-4">
-                <span className="text-xs text-zinc-400 dark:text-zinc-500">{c.monthlyCost}</span>
+              <td className="ps-4 pe-3 pb-4">
+                <span className="text-sm text-zinc-400 dark:text-zinc-500">{c.monthlyCost}</span>
               </td>
-              <td className="text-end px-4 pb-4 text-sm tabular-nums font-semibold text-zinc-500 dark:text-zinc-400 whitespace-nowrap">
+              <td className="text-end px-3 pb-4 text-base tabular-nums font-semibold text-zinc-500 dark:text-zinc-400 whitespace-nowrap">
                 {formatNumber(buy.monthlyCost, locale)} ₪
               </td>
-              <td className="text-end ps-4 pe-6 pb-4 text-sm tabular-nums font-semibold text-zinc-500 dark:text-zinc-400 whitespace-nowrap">
+              <td className="text-end ps-3 pe-4 pb-4 text-base tabular-nums font-semibold text-zinc-500 dark:text-zinc-400 whitespace-nowrap">
                 {formatNumber(lease.monthlyCost, locale)} ₪
               </td>
             </tr>
