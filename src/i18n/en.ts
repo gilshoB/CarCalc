@@ -9,6 +9,13 @@ const en = {
     about: "About",
     language: "עברית",
     privacy: "Privacy Policy",
+    guides: "Guides",
+    guideBuyVsLease: "Buying vs Leasing",
+    guideDepreciation: "Car Depreciation",
+    guideCarLoans: "Car Loans",
+    guideInsurance: "Car Insurance",
+    guideElectricVsGasoline: "Electric vs Gasoline",
+    guideTaxBenefits: "Tax Benefits for Businesses",
   },
   sections: {
     inputTitle: "Enter Your Details",

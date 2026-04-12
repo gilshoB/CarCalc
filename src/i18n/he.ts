@@ -9,6 +9,13 @@ const he = {
     about: "אודות",
     language: "English",
     privacy: "מדיניות פרטיות",
+    guides: "מדריכים",
+    guideBuyVsLease: "קנייה מול ליסינג",
+    guideDepreciation: "פחת רכב",
+    guideCarLoans: "הלוואת רכב",
+    guideInsurance: "ביטוח רכב",
+    guideElectricVsGasoline: "חשמלי מול בנזין",
+    guideTaxBenefits: "הטבות מס לעצמאים",
   },
   sections: {
     inputTitle: "הזינו את הפרטים",
