@@ -50,14 +50,14 @@ export default async function RootLayout({
       <body className={`${heebo.variable} font-sans antialiased`}>
         <header className="sticky top-0 z-50 border-b border-zinc-200/60 bg-white/80 backdrop-blur-md shadow-sm dark:border-zinc-800 dark:bg-zinc-950/80">
           <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-            <div className="flex items-center gap-3">
+            <a href="/" className="flex items-center gap-3">
               <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                 {t.app.title}
               </span>
               <span className="hidden text-sm text-zinc-500 sm:inline">
                 {t.app.subtitle}
               </span>
-            </div>
+            </a>
             <div className="flex items-center gap-3">
               <nav className="hidden sm:flex items-center gap-1">
                 <a href="/" className="rounded-md px-2.5 py-1.5 text-sm text-zinc-600 hover:text-blue-600 hover:bg-blue-50 dark:text-zinc-400 dark:hover:text-blue-400 dark:hover:bg-blue-950/30 transition-colors">
