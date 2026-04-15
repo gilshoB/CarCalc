@@ -59,6 +59,7 @@ export default async function RootLayout({
               </span>
             </a>
             <div className="flex items-center gap-3">
+              {/* Desktop nav */}
               <nav className="hidden sm:flex items-center gap-1">
                 <a href="/" className="rounded-md px-2.5 py-1.5 text-sm text-zinc-600 hover:text-blue-600 hover:bg-blue-50 dark:text-zinc-400 dark:hover:text-blue-400 dark:hover:bg-blue-950/30 transition-colors">
                   {t.nav.calculator}
@@ -82,6 +83,27 @@ export default async function RootLayout({
                 </a>
               </nav>
               <LanguageToggle locale={locale} label={t.nav.language} />
+              {/* Mobile hamburger menu */}
+              <details className="relative sm:hidden">
+                <summary className="list-none cursor-pointer rounded-md p-2 text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800 transition-colors">
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </summary>
+                <div className="absolute end-0 top-full mt-2 w-64 rounded-lg border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-900 z-50 py-2">
+                  <a href="/" className="block px-4 py-2.5 text-sm text-zinc-700 hover:bg-blue-50 hover:text-blue-600 dark:text-zinc-300 dark:hover:bg-blue-950/30 dark:hover:text-blue-400">{t.nav.calculator}</a>
+                  <div className="mx-3 my-1 border-t border-zinc-100 dark:border-zinc-800" />
+                  <p className="px-4 py-1.5 text-xs font-medium text-zinc-400 dark:text-zinc-500">{t.nav.guides}</p>
+                  <a href="/guides/buy-vs-lease" className="block px-6 py-2 text-sm text-zinc-700 hover:bg-blue-50 hover:text-blue-600 dark:text-zinc-300 dark:hover:bg-blue-950/30 dark:hover:text-blue-400">{t.nav.guideBuyVsLease}</a>
+                  <a href="/guides/depreciation" className="block px-6 py-2 text-sm text-zinc-700 hover:bg-blue-50 hover:text-blue-600 dark:text-zinc-300 dark:hover:bg-blue-950/30 dark:hover:text-blue-400">{t.nav.guideDepreciation}</a>
+                  <a href="/guides/car-loans" className="block px-6 py-2 text-sm text-zinc-700 hover:bg-blue-50 hover:text-blue-600 dark:text-zinc-300 dark:hover:bg-blue-950/30 dark:hover:text-blue-400">{t.nav.guideCarLoans}</a>
+                  <a href="/guides/insurance" className="block px-6 py-2 text-sm text-zinc-700 hover:bg-blue-50 hover:text-blue-600 dark:text-zinc-300 dark:hover:bg-blue-950/30 dark:hover:text-blue-400">{t.nav.guideInsurance}</a>
+                  <a href="/guides/electric-vs-gasoline" className="block px-6 py-2 text-sm text-zinc-700 hover:bg-blue-50 hover:text-blue-600 dark:text-zinc-300 dark:hover:bg-blue-950/30 dark:hover:text-blue-400">{t.nav.guideElectricVsGasoline}</a>
+                  <a href="/guides/tax-benefits" className="block px-6 py-2 text-sm text-zinc-700 hover:bg-blue-50 hover:text-blue-600 dark:text-zinc-300 dark:hover:bg-blue-950/30 dark:hover:text-blue-400">{t.nav.guideTaxBenefits}</a>
+                  <div className="mx-3 my-1 border-t border-zinc-100 dark:border-zinc-800" />
+                  <a href="/about" className="block px-4 py-2.5 text-sm text-zinc-700 hover:bg-blue-50 hover:text-blue-600 dark:text-zinc-300 dark:hover:bg-blue-950/30 dark:hover:text-blue-400">{t.nav.about}</a>
+                </div>
+              </details>
             </div>
           </div>
         </header>
