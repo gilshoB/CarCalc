@@ -145,7 +145,7 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
                   <button
                     type="button"
                     onClick={calc.nextStep}
-                    className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500"
                   >
                     {t.wizard.next}
                   </button>
@@ -154,7 +154,7 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
                     type="button"
                     onClick={calc.calculate}
                     disabled={calc.isCalculating}
-                    className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                    className="rounded-lg bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:opacity-50"
                   >
                     {calc.isCalculating ? t.wizard.calculating : t.wizard.calculate}
                   </button>
@@ -196,7 +196,7 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
             <button
               type="button"
               onClick={calc.resetAll}
-              className="rounded-xl bg-blue-600 px-8 py-3 text-base font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-blue-500 dark:hover:bg-blue-600"
+              className="rounded-xl bg-brand-600 px-8 py-3 text-base font-semibold text-white shadow-sm hover:bg-brand-700 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-brand-500 dark:hover:bg-brand-600"
             >
               {t.wizard.startOver}
             </button>

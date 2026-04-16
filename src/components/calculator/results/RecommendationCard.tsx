@@ -19,7 +19,7 @@ export default function RecommendationCard({ t, locale, results }: Recommendatio
   return (
     <div className={`relative rounded-2xl p-[1.5px] shadow-lg ${
       isBuy
-        ? "bg-gradient-to-br from-blue-500 via-blue-400 to-sky-500"
+        ? "bg-gradient-to-br from-brand-500 via-brand-400 to-sky-500"
         : "bg-gradient-to-br from-amber-500 via-amber-400 to-orange-500"
     }`}>
       <div className="rounded-[13px] bg-white dark:bg-zinc-900 p-5 sm:p-6">
@@ -28,7 +28,7 @@ export default function RecommendationCard({ t, locale, results }: Recommendatio
           <div className="flex-1 min-w-0">
             <h3 className={`text-xl font-bold ${
               isBuy
-                ? "text-blue-800 dark:text-blue-200"
+                ? "text-brand-800 dark:text-brand-200"
                 : "text-amber-800 dark:text-amber-200"
             }`}>
               {isBuy ? r.buyWins : r.leaseWins}
@@ -54,12 +54,12 @@ export default function RecommendationCard({ t, locale, results }: Recommendatio
         <div className="mt-5 grid grid-cols-2 gap-3">
           <div className={`rounded-xl px-4 py-4 text-center transition-shadow ${
             isBuy
-              ? "bg-blue-50/80 shadow-sm ring-1 ring-blue-200/50 dark:bg-blue-950/30 dark:ring-blue-800/30"
+              ? "bg-brand-50/80 shadow-sm ring-1 ring-brand-200/50 dark:bg-brand-950/30 dark:ring-brand-800/30"
               : "bg-zinc-50 dark:bg-zinc-800/40"
           }`}>
             <div className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mb-1.5">{r.monthlyCostBuy}</div>
             <div className={`text-2xl sm:text-3xl font-extrabold tabular-nums whitespace-nowrap ${
-              isBuy ? "text-blue-700 dark:text-blue-300" : "text-zinc-700 dark:text-zinc-300"
+              isBuy ? "text-brand-700 dark:text-brand-300" : "text-zinc-700 dark:text-zinc-300"
             }`}>
               {formatNumber(buy.monthlyCost, locale)} ₪
             </div>

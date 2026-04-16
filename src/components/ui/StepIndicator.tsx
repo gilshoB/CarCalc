@@ -23,7 +23,7 @@ export default function StepIndicator({ currentStep, stepLabel, ofLabel }: StepI
             className={`
               h-2 flex-1 rounded-full transition-colors duration-300
               ${step <= currentStep
-                ? "bg-blue-600"
+                ? "bg-brand-600"
                 : "bg-zinc-200 dark:bg-zinc-700"
               }
             `}

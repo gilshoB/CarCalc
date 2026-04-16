@@ -54,9 +54,9 @@ export default function CumulativeCostChart({
             <Line
               type="monotone"
               dataKey={t.results.charts.buyLabel}
-              stroke="#2563eb"
+              stroke="#5c8d89"
               strokeWidth={2.5}
-              dot={{ r: 4, fill: "#2563eb" }}
+              dot={{ r: 4, fill: "#5c8d89" }}
             />
             <Line
               type="monotone"

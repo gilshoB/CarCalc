@@ -70,7 +70,7 @@ export default function NumberInput({
         className={`
           w-full rounded-lg border bg-white px-3 py-2 text-sm
           dark:bg-zinc-900 dark:text-zinc-100
-          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+          focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500
           ${prefix ? "ps-8" : ""}
           ${suffix ? "pe-12" : ""}
           ${error

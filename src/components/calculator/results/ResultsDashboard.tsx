@@ -56,7 +56,7 @@ export default function ResultsDashboard({
 
       {isRecalculating && (
         <div className="flex items-center justify-center gap-2 py-3 text-sm text-zinc-400 dark:text-zinc-500">
-          <svg className="animate-spin h-4 w-4 text-blue-500" viewBox="0 0 24 24" fill="none">
+          <svg className="animate-spin h-4 w-4 text-brand-500" viewBox="0 0 24 24" fill="none">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
@@ -101,7 +101,7 @@ export default function ResultsDashboard({
             type="button"
             onClick={onRecalculate}
             disabled={isRecalculating}
-            className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+            className="rounded-lg bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:opacity-50"
           >
             {isRecalculating ? t.wizard.calculating : t.wizard.calculate}
           </button>

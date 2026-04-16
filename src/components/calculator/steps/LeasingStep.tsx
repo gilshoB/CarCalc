@@ -199,7 +199,7 @@ export default function LeasingStep({
         {includeInvestment && (
           <div className="mt-3 space-y-3">
             <p className="text-xs text-zinc-500 dark:text-zinc-400">{f.investmentExplain}</p>
-            <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
+            <p className="text-sm font-medium text-brand-600 dark:text-brand-400">
               {f.investmentAmount}: {formatNumber(investableAmount, locale)} ₪
             </p>
             <FormField label={f.investmentReturn} hint={f.investmentHint}>

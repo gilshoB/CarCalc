@@ -2,10 +2,21 @@
 
 @theme {
   --font-sans: var(--font-heebo);
+  --color-brand-50: #f4f9f4;
+  --color-brand-100: #d3e7d3;
+  --color-brand-200: #b0d4c8;
+  --color-brand-300: #76a6a2;
+  --color-brand-400: #5c8d89;
+  --color-brand-500: #5c8d89;
+  --color-brand-600: #486e6b;
+  --color-brand-700: #3a5956;
+  --color-brand-800: #2d4543;
+  --color-brand-900: #1f3130;
+  --color-brand-950: #142120;
 }
 
 :root {
-  --background: #f8f9fb;
+  --background: #f4f9f4;
   --foreground: #171717;
 }
 

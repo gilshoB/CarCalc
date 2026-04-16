@@ -13,7 +13,7 @@ export default function Checkbox({ checked, onChange, label }: CheckboxProps) {
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="h-4 w-4 rounded border-zinc-300 text-blue-600 focus:ring-blue-500 dark:border-zinc-600 dark:bg-zinc-800"
+        className="h-4 w-4 rounded border-zinc-300 text-brand-600 focus:ring-brand-500 dark:border-zinc-600 dark:bg-zinc-800"
       />
       <span className="text-sm text-zinc-700 dark:text-zinc-300">{label}</span>
     </label>

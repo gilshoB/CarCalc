@@ -89,7 +89,7 @@ export default function CostBreakdownChart({
               contentStyle={{ borderRadius: "12px", border: "1px solid #e4e4e7", fontSize: "12px", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.05)" }}
             />
             <Legend />
-            <Bar dataKey={t.results.charts.buyLabel} fill="#2563eb" radius={[0, 4, 4, 0]} />
+            <Bar dataKey={t.results.charts.buyLabel} fill="#5c8d89" radius={[0, 4, 4, 0]} />
             <Bar dataKey={t.results.charts.leaseLabel} fill="#f59e0b" radius={[0, 4, 4, 0]} />
           </BarChart>
         </ResponsiveContainer>

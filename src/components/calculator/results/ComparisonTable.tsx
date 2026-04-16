@@ -196,7 +196,7 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
                 {c.category}
               </th>
               <th className="text-end text-xs font-bold uppercase tracking-wider py-3 px-3 w-[140px]">
-                <div className={`inline-flex items-center gap-1.5 ${buyWins ? "text-blue-600 dark:text-blue-400" : "text-zinc-400 dark:text-zinc-500"}`}>
+                <div className={`inline-flex items-center gap-1.5 ${buyWins ? "text-brand-600 dark:text-brand-400" : "text-zinc-400 dark:text-zinc-500"}`}>
                   {buyWins && (
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
@@ -238,7 +238,7 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
                       <span className="text-base font-medium text-zinc-700 dark:text-zinc-300">{row.label}</span>
                       {hasFormula && (
                         <svg className={`h-5 w-5 shrink-0 transition-transform ${
-                          isExpanded ? "rotate-180 text-blue-500 dark:text-blue-400" : "text-zinc-400 dark:text-zinc-500"
+                          isExpanded ? "rotate-180 text-brand-500 dark:text-brand-400" : "text-zinc-400 dark:text-zinc-500"
                         }`} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                         </svg>
@@ -250,7 +250,7 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
                       <div className="mt-2 rounded-lg bg-zinc-100/80 dark:bg-zinc-800/60 px-3 py-2 text-xs leading-relaxed space-y-1">
                         {row.buyFormula && (
                           <div className="flex gap-1.5">
-                            <span className="font-semibold text-blue-600 dark:text-blue-400 shrink-0">{c.buy}:</span>
+                            <span className="font-semibold text-brand-600 dark:text-brand-400 shrink-0">{c.buy}:</span>
                             <span className="text-zinc-500 dark:text-zinc-400">{row.buyFormula}</span>
                           </div>
                         )}
@@ -293,7 +293,7 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
                 <span className="text-base font-bold text-zinc-900 dark:text-zinc-50">{c.total}</span>
               </td>
               <td className={`text-end px-3 py-4 text-xl tabular-nums font-extrabold whitespace-nowrap ${
-                buyWins ? "text-blue-700 dark:text-blue-300" : "text-zinc-800 dark:text-zinc-200"
+                buyWins ? "text-brand-700 dark:text-brand-300" : "text-zinc-800 dark:text-zinc-200"
               }`}>
                 {formatNumber(buy.totalCost, locale)} ₪
               </td>

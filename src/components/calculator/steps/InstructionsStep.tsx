@@ -19,7 +19,7 @@ export default function InstructionsStep({ t, onStart }: InstructionsStepProps) 
       <ul className="mx-auto max-w-md space-y-3 text-start">
         {t.wizard.instructions.items.map((item, i) => (
           <li key={i} className="flex items-start gap-3">
-            <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+            <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-bold text-brand-700 dark:bg-brand-900 dark:text-brand-300">
               {i + 1}
             </span>
             <span className="text-sm text-zinc-700 dark:text-zinc-300">{item}</span>
@@ -28,7 +28,7 @@ export default function InstructionsStep({ t, onStart }: InstructionsStepProps) 
       </ul>
       <button
         onClick={onStart}
-        className="mx-auto mt-4 rounded-xl bg-blue-600 px-8 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        className="mx-auto mt-4 rounded-xl bg-brand-600 px-8 py-3 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
       >
         {t.wizard.instructions.ready}
       </button>

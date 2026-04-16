@@ -30,7 +30,7 @@ export default function DepreciationOverride({
         {isOverriding && (
           <button
             onClick={() => onChange(null)}
-            className="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 transition-colors"
+            className="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400 transition-colors"
           >
             {d.reset}
           </button>

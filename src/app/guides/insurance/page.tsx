@@ -238,13 +238,13 @@ export default async function InsuranceGuidePage() {
         )}
       </div>
 
-      <div className="mt-8 rounded-xl border border-blue-200 bg-blue-50 p-6 dark:border-blue-900 dark:bg-blue-950/30">
-        <p className="font-semibold text-blue-800 dark:text-blue-300">
+      <div className="mt-8 rounded-xl border border-brand-200 bg-brand-50 p-6 dark:border-brand-900 dark:bg-brand-950/30">
+        <p className="font-semibold text-brand-800 dark:text-brand-300">
           {isHe
             ? "רוצים לראות איך הביטוח משפיע על העלות הכוללת?"
             : "Want to see how insurance affects the total cost?"}
         </p>
-        <p className="mt-1 text-blue-700 dark:text-blue-400">
+        <p className="mt-1 text-brand-700 dark:text-brand-400">
           <a href="/" className="underline hover:no-underline">
             {isHe
               ? "הזינו את הצעות הביטוח שלכם במחשבון ותראו את ההשפעה"

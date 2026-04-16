@@ -175,7 +175,7 @@ export default function BuyingStep({
                 {f.loanExplain}
               </p>
             )}
-            <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
+            <p className="text-sm font-medium text-brand-600 dark:text-brand-400">
               {f.loanAmount}: {formatNumber(loanAmount, locale)} ₪
             </p>
             <div className="grid gap-4 sm:grid-cols-2">

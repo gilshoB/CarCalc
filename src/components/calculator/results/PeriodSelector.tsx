@@ -26,7 +26,7 @@ export default function PeriodSelector({ t, selected, onChange, disabled }: Peri
             className={`
               rounded-lg px-3.5 py-1.5 text-sm font-semibold transition-all
               ${selected === years
-                ? "bg-white text-blue-700 shadow-sm dark:bg-zinc-700 dark:text-blue-300"
+                ? "bg-white text-brand-700 shadow-sm dark:bg-zinc-700 dark:text-brand-300"
                 : "text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-300"
               }
               disabled:opacity-50 disabled:cursor-not-allowed

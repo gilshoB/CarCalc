@@ -129,11 +129,11 @@ export default async function ElectricVsGasolinePage() {
               ההשוואה האישית היא הדרך הטובה ביותר לקבל החלטה מושכלת.
             </p>
 
-            <div className="mt-8 rounded-xl border border-blue-200 bg-blue-50 p-6 dark:border-blue-900 dark:bg-blue-950/30">
-              <p className="font-semibold text-blue-800 dark:text-blue-300">
+            <div className="mt-8 rounded-xl border border-brand-200 bg-brand-50 p-6 dark:border-brand-900 dark:bg-brand-950/30">
+              <p className="font-semibold text-brand-800 dark:text-brand-300">
                 רוצים להשוות חשמלי מול בנזין עם הנתונים שלכם?
               </p>
-              <p className="mt-1 text-blue-700 dark:text-blue-400">
+              <p className="mt-1 text-brand-700 dark:text-brand-400">
                 <a href="/" className="underline hover:no-underline">
                   הריצו את המחשבון פעמיים — פעם לכל סוג דלק — והשוו
                 </a>
@@ -275,11 +275,11 @@ export default async function ElectricVsGasolinePage() {
               more financial sense for your situation.
             </p>
 
-            <div className="mt-8 rounded-xl border border-blue-200 bg-blue-50 p-6 dark:border-blue-900 dark:bg-blue-950/30">
-              <p className="font-semibold text-blue-800 dark:text-blue-300">
+            <div className="mt-8 rounded-xl border border-brand-200 bg-brand-50 p-6 dark:border-brand-900 dark:bg-brand-950/30">
+              <p className="font-semibold text-brand-800 dark:text-brand-300">
                 Want to compare electric vs gasoline with your own numbers?
               </p>
-              <p className="mt-1 text-blue-700 dark:text-blue-400">
+              <p className="mt-1 text-brand-700 dark:text-brand-400">
                 <a href="/" className="underline hover:no-underline">
                   Run the calculator twice — once for each fuel type — and compare
                 </a>
