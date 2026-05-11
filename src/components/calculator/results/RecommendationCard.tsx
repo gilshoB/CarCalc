@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import type { getTranslations } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import type { CalculatorOutput } from "@/types/calculator";
@@ -10,19 +11,6 @@ interface RecommendationCardProps {
   t: ReturnType<typeof getTranslations>;
   locale: Locale;
   results: CalculatorOutput;
-}
-
-function TrophyIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M5 3h14a1 1 0 011 1v3a4 4 0 01-4 4h-1v2h1a1 1 0 011 1v2h2a1 1 0 110 2h-2v2a1 1 0 01-1 1h-4a1 1 0 01-1-1v-2H9a1 1 0 110-2h2v-2a1 1 0 011-1h1v-2h-1a4 4 0 01-4-4V4a1 1 0 011-1zm1 2v2a2 2 0 002 2h8a2 2 0 002-2V5H6z" />
-    </svg>
-  );
 }
 
 export default function RecommendationCard({ t, locale, results }: RecommendationCardProps) {
@@ -69,7 +57,13 @@ export default function RecommendationCard({ t, locale, results }: Recommendatio
         }`}>
           <div className="flex items-center justify-between gap-3 px-4 py-2.5">
             <div className="flex items-center gap-2 min-w-0">
-              <TrophyIcon className={`h-6 w-6 ${isBuy ? "text-brand-500" : "text-amber-500"}`} />
+              <Image 
+                src="/images/trophy.jpg" 
+                alt="Winner" 
+                width={32} 
+                height={32} 
+                className="h-8 w-8 object-contain"
+              />
               <div className="min-w-0 leading-tight">
                 <div className="text-[11px] text-zinc-500 dark:text-zinc-400">
                   {r.bestDeal}
@@ -101,15 +95,16 @@ export default function RecommendationCard({ t, locale, results }: Recommendatio
             ? "bg-gradient-to-b from-brand-50 to-white dark:from-brand-950/40 dark:to-zinc-900"
             : "bg-gradient-to-b from-amber-50 to-white dark:from-amber-950/40 dark:to-zinc-900"
         }`}>
-          {/* Trophy icon */}
-          <div className={`mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full ${
-            isBuy
-              ? "bg-brand-100 dark:bg-brand-900/50"
-              : "bg-amber-100 dark:bg-amber-900/50"
-          }`}>
-            <TrophyIcon className={`h-12 w-12 ${
-              isBuy ? "text-brand-600 dark:text-brand-400" : "text-amber-600 dark:text-amber-400"
-            }`} />
+          {/* Trophy image */}
+          <div className="mx-auto mb-5">
+            <Image 
+              src="/images/trophy.jpg" 
+              alt="Winner trophy" 
+              width={120} 
+              height={120} 
+              className="h-24 w-24 sm:h-28 sm:w-28 object-contain drop-shadow-lg"
+              priority
+            />
           </div>
 
           {/* Best deal label */}
