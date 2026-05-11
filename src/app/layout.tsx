@@ -50,8 +50,8 @@ export default async function RootLayout({
       </head>
       <body className={`${heebo.variable} font-sans antialiased bg-zinc-50`}>
         {/* Professional header with inline logo */}
-        <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white shadow-sm">
-          <div className="mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 h-16 gap-8">
+        <header className="sticky top-0 z-50 border-b border-zinc-200/80 bg-white/95 backdrop-blur-sm">
+          <div className="mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 h-16">
             {/* Logo - positioned at the start (right in RTL) */}
             <a href="/" className="flex items-center gap-3 group">
               <Image 
