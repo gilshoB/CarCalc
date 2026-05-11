@@ -49,11 +49,24 @@ export default async function RootLayout({
         )}
       </head>
       <body className={`${heebo.variable} font-sans antialiased`}>
-        {/* Brand banner */}
-        <div style={{ backgroundColor: "#639ba8" }}>
-          <a href="/" className="block mx-auto max-w-5xl px-4 py-3 text-center">
-            <Image src="/images/logo_new.png" alt="CarCalc" width={400} height={120} className="mx-auto h-24 sm:h-28 w-auto" priority />
+        {/* Brand banner - sophisticated gradient design */}
+        <div className="relative overflow-hidden bg-gradient-to-l from-brand-600 via-brand-500 to-brand-400">
+          {/* Subtle pattern overlay */}
+          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.4\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
+          <a href="/" className="relative block mx-auto max-w-5xl px-4 py-4 sm:py-5">
+            <div className="flex items-center justify-center gap-4">
+              <Image 
+                src="/images/logo_new.png" 
+                alt="CarCalc" 
+                width={400} 
+                height={120} 
+                className="h-20 sm:h-24 w-auto drop-shadow-lg" 
+                priority 
+              />
+            </div>
           </a>
+          {/* Bottom fade line */}
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-l from-transparent via-white/30 to-transparent" />
         </div>
         <header className="sticky top-0 z-50 border-b border-zinc-200/60 bg-white/80 backdrop-blur-md shadow-sm dark:border-zinc-800 dark:bg-zinc-950/80">
           <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-2">
