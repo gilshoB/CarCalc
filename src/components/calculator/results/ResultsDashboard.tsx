@@ -41,11 +41,8 @@ export default function ResultsDashboard({
 }: ResultsDashboardProps) {
   return (
     <section id="results" className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-          {t.results.title}
-        </h2>
+      {/* Period selector - centered and prominent */}
+      <div className="flex justify-center">
         <PeriodSelector
           t={t}
           selected={periodYears}
