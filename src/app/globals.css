@@ -4,32 +4,35 @@
   --font-sans: var(--font-heebo);
   
   /* Brand teal palette */
-  --color-brand-50: #f0f9f8;
-  --color-brand-100: #d3eeea;
-  --color-brand-200: #a7ddd6;
-  --color-brand-300: #74c4bb;
-  --color-brand-400: #4aa69c;
-  --color-brand-500: #328b82;
-  --color-brand-600: #266f68;
-  --color-brand-700: #225a55;
-  --color-brand-800: #1f4945;
-  --color-brand-900: #1d3d3a;
-  --color-brand-950: #0c2321;
+  --color-brand-50: #f0fdfa;
+  --color-brand-100: #ccfbf1;
+  --color-brand-200: #99f6e4;
+  --color-brand-300: #5eead4;
+  --color-brand-400: #2dd4bf;
+  --color-brand-500: #14b8a6;
+  --color-brand-600: #0d9488;
+  --color-brand-700: #0f766e;
+  --color-brand-800: #115e59;
+  --color-brand-900: #134e4a;
+  --color-brand-950: #042f2e;
 }
 
 :root {
-  --background: #f5f9f8;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #fafafa;
+  --foreground: #18181b;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+/* Smooth dropdown animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+details[open] > div {
+  animation: fadeIn 0.15s ease-out;
 }
