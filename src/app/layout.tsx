@@ -49,14 +49,15 @@ export default async function RootLayout({
         )}
       </head>
       <body className={`${heebo.variable} font-sans antialiased`}>
+        {/* Brand banner */}
+        <div style={{ backgroundColor: "#639ba8" }}>
+          <a href="/" className="block mx-auto max-w-5xl px-4 py-3 text-center">
+            <Image src="/images/logo_new.png" alt="CarCalc" width={400} height={120} className="mx-auto h-24 sm:h-28 w-auto" priority />
+          </a>
+        </div>
         <header className="sticky top-0 z-50 border-b border-zinc-200/60 bg-white/80 backdrop-blur-md shadow-sm dark:border-zinc-800 dark:bg-zinc-950/80">
-          <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-            <a href="/" className="flex items-center">
-              <Image src="/images/logo.jpeg" alt="CarCalc" width={120} height={40} className="rounded-md h-10 w-auto" />
-            </a>
-            <div className="flex items-center gap-3">
-              {/* Desktop nav */}
-              <nav className="hidden sm:flex items-center gap-1">
+          <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-2">
+            <nav className="hidden sm:flex items-center gap-1">
                 <a href="/" className="rounded-md px-2.5 py-1.5 text-sm text-zinc-600 hover:text-brand-600 hover:bg-brand-50 dark:text-zinc-400 dark:hover:text-brand-400 dark:hover:bg-brand-950/30 transition-colors">
                   {t.nav.calculator}
                 </a>
@@ -77,7 +78,8 @@ export default async function RootLayout({
                 <a href="/about" className="rounded-md px-2.5 py-1.5 text-sm text-zinc-600 hover:text-brand-600 hover:bg-brand-50 dark:text-zinc-400 dark:hover:text-brand-400 dark:hover:bg-brand-950/30 transition-colors">
                   {t.nav.about}
                 </a>
-              </nav>
+            </nav>
+            <div className="flex items-center gap-2">
               <LanguageToggle locale={locale} label={t.nav.language} />
               {/* Mobile hamburger menu */}
               <details className="relative sm:hidden">
