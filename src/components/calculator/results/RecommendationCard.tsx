@@ -12,12 +12,24 @@ interface RecommendationCardProps {
   results: CalculatorOutput;
 }
 
+function TrophyIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M5 3h14a1 1 0 011 1v3a4 4 0 01-4 4h-1v2h1a1 1 0 011 1v2h2a1 1 0 110 2h-2v2a1 1 0 01-1 1h-4a1 1 0 01-1-1v-2H9a1 1 0 110-2h2v-2a1 1 0 011-1h1v-2h-1a4 4 0 01-4-4V4a1 1 0 011-1zm1 2v2a2 2 0 002 2h8a2 2 0 002-2V5H6z" />
+    </svg>
+  );
+}
+
 export default function RecommendationCard({ t, locale, results }: RecommendationCardProps) {
   const { recommendation, buy, lease, periodYears } = results;
   const r = t.results.recommendation;
   const isBuy = recommendation.winner === "buy";
   const winnerName = isBuy ? r.buyName : r.leaseName;
-  const winnerColor = isBuy ? "brand" : "amber";
 
   const monthlyDelta = Math.round(
     Math.abs(buy.totalCost - lease.totalCost) / (periodYears * 12),
@@ -57,7 +69,7 @@ export default function RecommendationCard({ t, locale, results }: Recommendatio
         }`}>
           <div className="flex items-center justify-between gap-3 px-4 py-2.5">
             <div className="flex items-center gap-2 min-w-0">
-              <span className="text-xl">🏆</span>
+              <TrophyIcon className={`h-6 w-6 ${isBuy ? "text-brand-500" : "text-amber-500"}`} />
               <div className="min-w-0 leading-tight">
                 <div className="text-[11px] text-zinc-500 dark:text-zinc-400">
                   {r.bestDeal}
@@ -82,55 +94,72 @@ export default function RecommendationCard({ t, locale, results }: Recommendatio
       </div>
 
       {/* Main recommendation card */}
-      <div className={`relative rounded-2xl p-[1.5px] shadow-lg ${
-        isBuy
-          ? "bg-gradient-to-br from-brand-500 via-brand-400 to-sky-500"
-          : "bg-gradient-to-br from-amber-500 via-amber-400 to-orange-500"
-      }`}>
-        <div className="rounded-[13px] bg-white dark:bg-zinc-900 p-5 sm:p-6">
-          {/* Winner hero */}
-          <div className="flex flex-col sm:flex-row sm:items-end gap-4 sm:gap-6">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-2xl">🏆</span>
-                <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-                  {r.bestDeal}
-                </span>
-              </div>
-              <h3 className={`text-4xl sm:text-5xl font-extrabold tracking-tight leading-none ${
-                winnerColor === "brand"
-                  ? "text-brand-700 dark:text-brand-300"
-                  : "text-amber-700 dark:text-amber-300"
-              }`}>
-                {winnerName}
-              </h3>
-              <p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                {locale === "he" ? recommendation.explanationHe : recommendation.explanation}
-              </p>
-            </div>
-
-            {/* Savings badge */}
-            <div className="shrink-0 rounded-xl px-5 py-3.5 text-center shadow-sm bg-emerald-50 dark:bg-emerald-950/40 ring-1 ring-emerald-200/60 dark:ring-emerald-800/40">
-              <div className="text-[11px] font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-400 mb-1">
-                {r.savings}
-              </div>
-              <div className="text-2xl sm:text-3xl font-extrabold tracking-tight text-emerald-700 dark:text-emerald-300 whitespace-nowrap">
-                {formatNumber(recommendation.savingsAmount, locale)} ₪
-              </div>
-              <div className="text-[11px] text-emerald-600/80 dark:text-emerald-400/80 mt-0.5">
-                {r.overPeriod} {periodYears} {t.results.years}
-              </div>
-            </div>
+      <div className="rounded-2xl bg-white shadow-lg ring-1 ring-zinc-200/60 dark:bg-zinc-900 dark:ring-zinc-700/50 overflow-hidden">
+        {/* Trophy hero section */}
+        <div className={`px-6 py-8 text-center ${
+          isBuy
+            ? "bg-gradient-to-b from-brand-50 to-white dark:from-brand-950/40 dark:to-zinc-900"
+            : "bg-gradient-to-b from-amber-50 to-white dark:from-amber-950/40 dark:to-zinc-900"
+        }`}>
+          {/* Trophy icon */}
+          <div className={`mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full ${
+            isBuy
+              ? "bg-brand-100 dark:bg-brand-900/50"
+              : "bg-amber-100 dark:bg-amber-900/50"
+          }`}>
+            <TrophyIcon className={`h-12 w-12 ${
+              isBuy ? "text-brand-600 dark:text-brand-400" : "text-amber-600 dark:text-amber-400"
+            }`} />
           </div>
 
-          {/* Monthly comparison */}
-          <div className="mt-5 grid grid-cols-2 gap-3">
-            <div className={`rounded-xl px-4 py-4 text-center transition-shadow ${
+          {/* Best deal label */}
+          <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-2">
+            {r.bestDeal}
+          </div>
+
+          {/* Winner name - huge and bold */}
+          <h3 className={`text-5xl sm:text-6xl font-black tracking-tight leading-none mb-4 ${
+            isBuy
+              ? "text-brand-700 dark:text-brand-300"
+              : "text-amber-700 dark:text-amber-300"
+          }`}>
+            {winnerName}
+          </h3>
+
+          {/* Savings amount in green */}
+          <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 dark:bg-emerald-900/50 px-5 py-2.5 ring-1 ring-emerald-200/60 dark:ring-emerald-800/40">
+            <svg className="h-5 w-5 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+            </svg>
+            <span className="text-lg sm:text-xl font-bold text-emerald-700 dark:text-emerald-300">
+              {formatNumber(recommendation.savingsAmount, locale)} ₪ {r.savings}
+            </span>
+            <span className="text-sm text-emerald-600/80 dark:text-emerald-400/80">
+              {r.overPeriod} {periodYears} {t.results.years}
+            </span>
+          </div>
+        </div>
+
+        {/* Monthly cost comparison cards */}
+        <div className="p-4 sm:p-6">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            {/* Buy card */}
+            <div className={`relative rounded-xl px-4 py-5 text-center transition-all ${
               isBuy
-                ? "bg-brand-50/80 shadow-sm ring-1 ring-brand-200/50 dark:bg-brand-950/30 dark:ring-brand-800/30"
-                : "bg-zinc-50 dark:bg-zinc-800/40"
+                ? "bg-brand-50/80 ring-2 ring-brand-500 shadow-md dark:bg-brand-950/30 dark:ring-brand-400"
+                : "bg-zinc-50 ring-1 ring-zinc-200/60 dark:bg-zinc-800/40 dark:ring-zinc-700/50"
             }`}>
-              <div className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mb-1.5">
+              {/* Winner indicator ring */}
+              {isBuy && (
+                <div className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-brand-500 text-white shadow-sm">
+                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                  </svg>
+                </div>
+              )}
+              <div className={`text-xs font-semibold mb-2 ${
+                isBuy ? "text-brand-600 dark:text-brand-400" : "text-zinc-500 dark:text-zinc-400"
+              }`}>
                 {r.monthlyCostBuy}
               </div>
               <div className={`text-2xl sm:text-3xl font-extrabold tabular-nums whitespace-nowrap ${
@@ -139,12 +168,24 @@ export default function RecommendationCard({ t, locale, results }: Recommendatio
                 {formatNumber(buy.monthlyCost, locale)} ₪
               </div>
             </div>
-            <div className={`rounded-xl px-4 py-4 text-center transition-shadow ${
+
+            {/* Lease card */}
+            <div className={`relative rounded-xl px-4 py-5 text-center transition-all ${
               !isBuy
-                ? "bg-amber-50/80 shadow-sm ring-1 ring-amber-200/50 dark:bg-amber-950/30 dark:ring-amber-800/30"
-                : "bg-zinc-50 dark:bg-zinc-800/40"
+                ? "bg-amber-50/80 ring-2 ring-amber-500 shadow-md dark:bg-amber-950/30 dark:ring-amber-400"
+                : "bg-zinc-50 ring-1 ring-zinc-200/60 dark:bg-zinc-800/40 dark:ring-zinc-700/50"
             }`}>
-              <div className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mb-1.5">
+              {/* Winner indicator ring */}
+              {!isBuy && (
+                <div className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-white shadow-sm">
+                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                  </svg>
+                </div>
+              )}
+              <div className={`text-xs font-semibold mb-2 ${
+                !isBuy ? "text-amber-600 dark:text-amber-400" : "text-zinc-500 dark:text-zinc-400"
+              }`}>
                 {r.monthlyCostLease}
               </div>
               <div className={`text-2xl sm:text-3xl font-extrabold tabular-nums whitespace-nowrap ${
@@ -154,6 +195,11 @@ export default function RecommendationCard({ t, locale, results }: Recommendatio
               </div>
             </div>
           </div>
+
+          {/* Explanation */}
+          <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed text-center">
+            {locale === "he" ? recommendation.explanationHe : recommendation.explanation}
+          </p>
         </div>
       </div>
     </>
