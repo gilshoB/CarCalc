@@ -143,11 +143,11 @@ export default function RecommendationCard({ t, locale, results }: Recommendatio
         {/* Monthly cost comparison cards */}
         <div className="p-4 sm:p-6">
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            {/* Buy card */}
+            {/* Buy card - always teal/brand color */}
             <div className={`relative rounded-xl px-4 py-5 text-center transition-all ${
               isBuy
                 ? "bg-brand-50/80 ring-2 ring-brand-500 shadow-md dark:bg-brand-950/30 dark:ring-brand-400"
-                : "bg-zinc-50 ring-1 ring-zinc-200/60 dark:bg-zinc-800/40 dark:ring-zinc-700/50"
+                : "bg-brand-50/50 ring-1 ring-brand-200/60 dark:bg-brand-950/20 dark:ring-brand-700/50"
             }`}>
               {/* Winner indicator ring */}
               {isBuy && (
@@ -157,23 +157,21 @@ export default function RecommendationCard({ t, locale, results }: Recommendatio
                   </svg>
                 </div>
               )}
-              <div className={`text-xs font-semibold mb-2 ${
-                isBuy ? "text-brand-600 dark:text-brand-400" : "text-zinc-500 dark:text-zinc-400"
-              }`}>
+              <div className="text-xs font-semibold mb-2 text-brand-600 dark:text-brand-400">
                 {r.monthlyCostBuy}
               </div>
               <div className={`text-2xl sm:text-3xl font-extrabold tabular-nums whitespace-nowrap ${
-                isBuy ? "text-brand-700 dark:text-brand-300" : "text-zinc-700 dark:text-zinc-300"
+                isBuy ? "text-brand-700 dark:text-brand-300" : "text-brand-600 dark:text-brand-400"
               }`}>
                 {formatNumber(buy.monthlyCost, locale)} ₪
               </div>
             </div>
 
-            {/* Lease card */}
+            {/* Lease card - always amber color */}
             <div className={`relative rounded-xl px-4 py-5 text-center transition-all ${
               !isBuy
                 ? "bg-amber-50/80 ring-2 ring-amber-500 shadow-md dark:bg-amber-950/30 dark:ring-amber-400"
-                : "bg-zinc-50 ring-1 ring-zinc-200/60 dark:bg-zinc-800/40 dark:ring-zinc-700/50"
+                : "bg-amber-50/50 ring-1 ring-amber-200/60 dark:bg-amber-950/20 dark:ring-amber-700/50"
             }`}>
               {/* Winner indicator ring */}
               {!isBuy && (
@@ -183,13 +181,11 @@ export default function RecommendationCard({ t, locale, results }: Recommendatio
                   </svg>
                 </div>
               )}
-              <div className={`text-xs font-semibold mb-2 ${
-                !isBuy ? "text-amber-600 dark:text-amber-400" : "text-zinc-500 dark:text-zinc-400"
-              }`}>
+              <div className="text-xs font-semibold mb-2 text-amber-600 dark:text-amber-400">
                 {r.monthlyCostLease}
               </div>
               <div className={`text-2xl sm:text-3xl font-extrabold tabular-nums whitespace-nowrap ${
-                !isBuy ? "text-amber-700 dark:text-amber-300" : "text-zinc-700 dark:text-zinc-300"
+                !isBuy ? "text-amber-700 dark:text-amber-300" : "text-amber-600 dark:text-amber-400"
               }`}>
                 {formatNumber(lease.monthlyCost, locale)} ₪
               </div>

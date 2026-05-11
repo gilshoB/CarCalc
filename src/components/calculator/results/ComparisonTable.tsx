@@ -235,7 +235,7 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
           {c.category}
         </div>
         <div className={`w-24 sm:w-28 text-center text-xs font-bold uppercase tracking-wider ${
-          buyWins ? "text-brand-600 dark:text-brand-400" : "text-zinc-400 dark:text-zinc-500"
+          buyWins ? "text-brand-600 dark:text-brand-400" : "text-brand-500 dark:text-brand-500"
         }`}>
           <div className="flex items-center justify-center gap-1">
             {buyWins && <CheckIcon className="h-3.5 w-3.5" />}
@@ -243,7 +243,7 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
           </div>
         </div>
         <div className={`w-24 sm:w-28 text-center text-xs font-bold uppercase tracking-wider ${
-          !buyWins ? "text-amber-600 dark:text-amber-400" : "text-zinc-400 dark:text-zinc-500"
+          !buyWins ? "text-amber-600 dark:text-amber-400" : "text-amber-500 dark:text-amber-500"
         }`}>
           <div className="flex items-center justify-center gap-1">
             {!buyWins && <CheckIcon className="h-3.5 w-3.5" />}
@@ -307,7 +307,7 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
                 <div className={`w-24 sm:w-28 text-center text-sm tabular-nums font-semibold ${
                   isCredit && row.buyValue < 0
                     ? "text-emerald-600 dark:text-emerald-400"
-                    : "text-zinc-800 dark:text-zinc-200"
+                    : "text-brand-600 dark:text-brand-400"
                 }`}>
                   {fmtVal(row.buyValue, isCredit)}
                 </div>
@@ -316,7 +316,7 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
                 <div className={`w-24 sm:w-28 text-center text-sm tabular-nums font-semibold ${
                   isCredit && row.leaseValue < 0
                     ? "text-emerald-600 dark:text-emerald-400"
-                    : "text-zinc-800 dark:text-zinc-200"
+                    : "text-amber-600 dark:text-amber-400"
                 }`}>
                   {fmtVal(row.leaseValue, isCredit)}
                 </div>
@@ -358,12 +358,12 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
             {c.total}
           </div>
           <div className={`w-24 sm:w-28 text-center text-lg tabular-nums font-extrabold whitespace-nowrap ${
-            buyWins ? "text-brand-700 dark:text-brand-300" : "text-zinc-800 dark:text-zinc-200"
+            buyWins ? "text-brand-700 dark:text-brand-300" : "text-brand-600 dark:text-brand-400"
           }`}>
             {formatNumber(buy.totalCost, locale)} ₪
           </div>
           <div className={`w-24 sm:w-28 text-center text-lg tabular-nums font-extrabold whitespace-nowrap ${
-            !buyWins ? "text-amber-700 dark:text-amber-300" : "text-zinc-800 dark:text-zinc-200"
+            !buyWins ? "text-amber-700 dark:text-amber-300" : "text-amber-600 dark:text-amber-400"
           }`}>
             {formatNumber(lease.totalCost, locale)} ₪
           </div>
