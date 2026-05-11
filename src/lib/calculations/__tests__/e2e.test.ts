@@ -146,8 +146,7 @@ describe("e2e — exact numerical outputs", () => {
       buy.breakdown.maintenance -
       buy.breakdown.residualValue -
       buy.breakdown.taxBenefits -
-      buy.breakdown.investmentResult -
-      60000; // old car value
+      buy.breakdown.investmentResult;
 
     expect(buy.totalCost).toBe(Math.round(expectedBuyTotal));
 

@@ -118,8 +118,7 @@ export function calcBuyScenario(
     maintenance -
     depreciation.residualValue - // subtract: car still has value
     taxBenefits -
-    investmentResult - // subtract: investment gain on free capital
-    input.oldCarValue; // subtract: old car sold, reduces effective cost
+    investmentResult; // subtract: investment gain on free capital
 
   const monthlyCost = Math.round(totalCost / (years * 12));
 

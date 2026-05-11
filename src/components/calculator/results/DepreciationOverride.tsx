@@ -24,7 +24,7 @@ export default function DepreciationOverride({
   const values = override ?? defaults;
 
   return (
-    <div className="rounded-2xl bg-white shadow-md ring-1 ring-zinc-200/60 p-5 dark:bg-zinc-900 dark:ring-zinc-700/50">
+    <div id="depreciation-section" className="scroll-mt-20 rounded-2xl bg-white shadow-md ring-1 ring-zinc-200/60 p-5 dark:bg-zinc-900 dark:ring-zinc-700/50">
       <div className="flex items-center justify-between mb-1">
         <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-50">{d.title}</h3>
         {isOverriding && (

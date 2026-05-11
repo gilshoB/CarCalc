@@ -142,14 +142,16 @@ describe("calcBuyScenario", () => {
     expect(resultOverride.breakdown.residualValue).toBeLessThan(resultDefault.breakdown.residualValue);
   });
 
-  it("old car value reduces total cost", () => {
-    const inputNoOldCar = makeInput({ oldCarValue: 0 });
-    const inputWithOldCar = makeInput({ oldCarValue: 60000 });
+  it("old car value reduces total cost by reducing loan interest", () => {
+    // useLoan=true: old car reduces loan needed → less interest → lower total cost
+    const inputNoOldCar = makeInput({ oldCarValue: 0, useLoan: true });
+    const inputWithOldCar = makeInput({ oldCarValue: 60000, useLoan: true });
 
     const resultNoOldCar = calcBuyScenario(inputNoOldCar, market);
     const resultWithOldCar = calcBuyScenario(inputWithOldCar, market);
 
     expect(resultWithOldCar.totalCost).toBeLessThan(resultNoOldCar.totalCost);
+    expect(resultWithOldCar.breakdown.loanInterest).toBeLessThan(resultNoOldCar.breakdown.loanInterest);
   });
 
   it("yearly breakdown has correct number of entries", () => {

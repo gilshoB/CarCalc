@@ -132,13 +132,15 @@ describe("calcLeaseScenario", () => {
     expect(result.breakdown.investmentResult).toBeGreaterThan(0);
   });
 
-  it("old car value reduces total cost", () => {
-    const inputNoOldCar = makeInput({ oldCarValue: 0 });
-    const inputWithOldCar = makeInput({ oldCarValue: 60000 });
+  it("old car value reduces lease cost via investment returns when investment enabled", () => {
+    // With investment enabled, old car capital earns returns → reduces effective cost
+    const inputNoOldCar = makeInput({ oldCarValue: 0, includeInvestment: true, investmentReturnRate: 7 });
+    const inputWithOldCar = makeInput({ oldCarValue: 60000, includeInvestment: true, investmentReturnRate: 7 });
 
     const resultNoOldCar = calcLeaseScenario(inputNoOldCar, market);
     const resultWithOldCar = calcLeaseScenario(inputWithOldCar, market);
 
+    expect(resultWithOldCar.breakdown.investmentResult).toBeGreaterThan(resultNoOldCar.breakdown.investmentResult);
     expect(resultWithOldCar.totalCost).toBeLessThan(resultNoOldCar.totalCost);
   });
 

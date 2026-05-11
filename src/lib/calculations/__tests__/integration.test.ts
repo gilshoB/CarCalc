@@ -114,13 +114,18 @@ describe("integration — full pipeline", () => {
     expect(comparison.savingsAmount).toBe(Math.abs(buyResult.totalCost - leaseResult.totalCost));
   });
 
-  it("old car value reduces both buy and lease equally", () => {
-    const { buyResult: buyWith, leaseResult: leaseWith } = runFullComparison({ oldCarValue: 50000 });
-    const { buyResult: buyWithout, leaseResult: leaseWithout } = runFullComparison({ oldCarValue: 0 });
+  it("old car value reduces buy cost via loan savings, lease cost via investment returns", () => {
+    const { buyResult: buyWith } = runFullComparison({ oldCarValue: 50000, useLoan: true });
+    const { buyResult: buyWithout } = runFullComparison({ oldCarValue: 0, useLoan: true });
 
-    // Both should decrease by 50000 (old car value subtracted from both)
-    expect(buyWithout.totalCost - buyWith.totalCost).toBe(50000);
-    expect(leaseWithout.totalCost - leaseWith.totalCost).toBe(50000);
+    // Old car reduces buy cost by lowering loan interest
+    expect(buyWith.totalCost).toBeLessThan(buyWithout.totalCost);
+    expect(buyWith.breakdown.loanInterest).toBeLessThan(buyWithout.breakdown.loanInterest);
+
+    // Old car reduces lease cost when investment is enabled
+    const { leaseResult: leaseWith } = runFullComparison({ oldCarValue: 50000, includeInvestment: true, investmentReturnRate: 7 });
+    const { leaseResult: leaseWithout } = runFullComparison({ oldCarValue: 0, includeInvestment: true, investmentReturnRate: 7 });
+    expect(leaseWith.totalCost).toBeLessThan(leaseWithout.totalCost);
   });
 
   it("comparison period 1 year — everything works", () => {
