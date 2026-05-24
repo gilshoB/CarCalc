@@ -1,20 +1,17 @@
 "use client";
 
-const errorMessages: Record<string, string> = {
-  required: "שדה חובה",
-  positiveNumber: "יש להזין מספר חיובי",
-};
-
 interface FormFieldProps {
   label: string;
   hint?: string;
   error?: string;
   required?: boolean;
   children: React.ReactNode;
+  /** Translated validation messages keyed by error code (e.g. { required: "Required", positiveNumber: "..." }) */
+  validationMessages?: Record<string, string>;
 }
 
-export default function FormField({ label, hint, error, required, children }: FormFieldProps) {
-  const errorText = error ? (errorMessages[error] || error) : undefined;
+export default function FormField({ label, hint, error, required, children, validationMessages }: FormFieldProps) {
+  const errorText = error ? (validationMessages?.[error] || error) : undefined;
   return (
     <div className="space-y-1">
       <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">

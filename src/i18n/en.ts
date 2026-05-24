@@ -145,6 +145,7 @@ const en = {
       bestDeal: "Best deal",
       buyName: "Buy",
       leaseName: "Lease",
+      savesPerMonth: "saves {amount} ₪ {perMonth}",
       title: "Recommendation",
       buyWins: "🏆 Best Option: Buying",
       leaseWins: "🏆 Best Option: Leasing",

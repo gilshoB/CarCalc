@@ -148,6 +148,7 @@ const he = {
       bestDeal: "המשתלם ביותר",
       buyName: "קנייה",
       leaseName: "ליסינג",
+      savesPerMonth: "חוסך {amount} ₪ {perMonth}",
       savings: "חיסכון של",
       perMonth: "לחודש",
       overPeriod: "על פני",

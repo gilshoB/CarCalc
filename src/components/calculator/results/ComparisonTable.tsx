@@ -136,32 +136,13 @@ function buildFormulas(
   return formulas;
 }
 
-function InfoIcon({ className }: { className?: string }) {
+function ChevronToggleIcon({ expanded, className }: { expanded: boolean; className?: string }) {
   return (
     <svg
-      className={className}
+      className={`${className ?? ""} transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
       fill="none"
       viewBox="0 0 24 24"
-      strokeWidth={2}
-      stroke="currentColor"
-      aria-hidden="true"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-      />
-    </svg>
-  );
-}
-
-function ChevronIcon({ className, expanded }: { className?: string; expanded: boolean }) {
-  return (
-    <svg
-      className={`${className} transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={2}
+      strokeWidth={2.5}
       stroke="currentColor"
       aria-hidden="true"
     >
@@ -229,173 +210,154 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
         <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50">{c.title}</h3>
       </div>
 
-      {/* Column headers */}
-      <div className="grid grid-cols-[1fr_auto_auto] items-center gap-2 px-4 sm:px-5 py-3 bg-zinc-50/80 dark:bg-zinc-800/40 border-b border-zinc-100 dark:border-zinc-800">
-        <div className="text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-          {c.category}
-        </div>
-        <div className={`w-24 sm:w-28 text-center text-xs font-bold uppercase tracking-wider ${
-          buyWins ? "text-brand-600 dark:text-brand-400" : "text-brand-500 dark:text-brand-500"
-        }`}>
-          <div className="flex items-center justify-center gap-1">
-            {buyWins && <CheckIcon className="h-3.5 w-3.5" />}
-            {c.buy}
-          </div>
-        </div>
-        <div className={`w-24 sm:w-28 text-center text-xs font-bold uppercase tracking-wider ${
-          !buyWins ? "text-amber-600 dark:text-amber-400" : "text-amber-500 dark:text-amber-500"
-        }`}>
-          <div className="flex items-center justify-center gap-1">
-            {!buyWins && <CheckIcon className="h-3.5 w-3.5" />}
-            {c.lease}
-          </div>
-        </div>
-      </div>
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="bg-zinc-50/80 dark:bg-zinc-800/40">
+              <th className="text-start text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 py-3 ps-4 pe-3">
+                {c.category}
+              </th>
+              <th className="text-end text-xs font-bold uppercase tracking-wider py-3 px-3 w-[140px]">
+                <div className={`inline-flex items-center gap-1.5 ${buyWins ? "text-brand-600 dark:text-brand-400" : "text-zinc-400 dark:text-zinc-500"}`}>
+                  {buyWins && <CheckIcon className="h-4 w-4" />}
+                  {c.buy}
+                </div>
+              </th>
+              <th className="text-end text-xs font-bold uppercase tracking-wider py-3 ps-3 pe-4 w-[140px]">
+                <div className={`inline-flex items-center gap-1.5 ${!buyWins ? "text-amber-600 dark:text-amber-400" : "text-zinc-400 dark:text-zinc-500"}`}>
+                  {!buyWins && <CheckIcon className="h-4 w-4" />}
+                  {c.lease}
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {visibleRows.map((row, i) => {
+              const hasFormula = !!(row.buyFormula || row.leaseFormula);
+              const isExpanded = openRow === row.key;
+              const isCredit = row.isSubtraction;
 
-      {/* Rows */}
-      <div className="divide-y divide-zinc-100/80 dark:divide-zinc-800/50">
-        {visibleRows.map((row) => {
-          const hasFormula = !!(row.buyFormula || row.leaseFormula);
-          const isExpanded = openRow === row.key;
-          const isCredit = row.isSubtraction;
-
-          return (
-            <div key={row.key} className="group">
-              {/* Main row */}
-              <div
-                className={`grid grid-cols-[1fr_auto_auto] items-center gap-2 px-4 sm:px-5 py-3 ${
-                  hasFormula ? "cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800/30" : ""
-                }`}
-                onClick={() => hasFormula && toggleRow(row.key)}
-                role={hasFormula ? "button" : undefined}
-                tabIndex={hasFormula ? 0 : undefined}
-                onKeyDown={hasFormula ? (e) => e.key === "Enter" && toggleRow(row.key) : undefined}
-              >
-                {/* Category label with info icon */}
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300 truncate">
-                    {row.label}
-                  </span>
-                  {hasFormula && (
-                    <div className="flex items-center gap-1 shrink-0">
-                      <InfoIcon className={`h-4 w-4 transition-colors ${
-                        isExpanded 
-                          ? "text-brand-600 dark:text-brand-400" 
-                          : "text-zinc-400 dark:text-zinc-500 group-hover:text-brand-500"
-                      }`} />
-                      <ChevronIcon 
-                        className="h-3.5 w-3.5 text-zinc-400 dark:text-zinc-500" 
-                        expanded={isExpanded} 
-                      />
+              return (
+                <tr
+                  key={row.key}
+                  className={`border-b border-zinc-100/80 dark:border-zinc-800/50 ${
+                    i % 2 === 0
+                      ? "bg-white dark:bg-zinc-900"
+                      : "bg-zinc-50/40 dark:bg-zinc-800/20"
+                  }`}
+                >
+                  <td className="ps-4 pe-3 py-3.5 align-top">
+                    <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+                      <span className="text-sm sm:text-base font-medium text-zinc-700 dark:text-zinc-300">
+                        {row.label}
+                      </span>
+                      {hasFormula && (
+                        <button
+                          type="button"
+                          onClick={() => toggleRow(row.key)}
+                          aria-label={isExpanded ? "collapse" : "expand"}
+                          aria-expanded={isExpanded}
+                          className="shrink-0 rounded-full p-0.5 text-zinc-400 hover:text-brand-600 hover:bg-brand-50 dark:text-zinc-500 dark:hover:text-brand-400 dark:hover:bg-brand-900/30 transition-colors"
+                        >
+                          <ChevronToggleIcon expanded={isExpanded} className={`h-4 w-4 ${isExpanded ? "text-brand-600 dark:text-brand-400" : ""}`} />
+                        </button>
+                      )}
+                      {row.key === "residualValue" && (
+                        <a
+                          href="#depreciation-section"
+                          className="shrink-0 inline-flex items-center gap-1 rounded-full bg-brand-50 dark:bg-brand-950/40 px-2 py-0.5 text-[11px] font-medium text-brand-700 dark:text-brand-300 ring-1 ring-brand-200/60 dark:ring-brand-800/40 hover:bg-brand-100 dark:hover:bg-brand-900/60 transition-colors"
+                        >
+                          <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" />
+                          </svg>
+                          {c.editDepreciation}
+                        </a>
+                      )}
                     </div>
-                  )}
-                  {row.key === "residualValue" && (
-                    <a
-                      href="#depreciation-section"
-                      onClick={(e) => e.stopPropagation()}
-                      className="shrink-0 inline-flex items-center gap-1 rounded-full bg-brand-50 dark:bg-brand-950/40 px-2 py-0.5 text-[10px] font-medium text-brand-700 dark:text-brand-300 ring-1 ring-brand-200/60 dark:ring-brand-800/40 hover:bg-brand-100 dark:hover:bg-brand-900/60 transition-colors"
-                    >
-                      <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" />
-                      </svg>
-                      {c.editDepreciation}
-                    </a>
-                  )}
-                </div>
 
-                {/* Buy value */}
-                <div className={`w-24 sm:w-28 text-center text-sm tabular-nums font-semibold ${
-                  isCredit && row.buyValue < 0
-                    ? "text-emerald-600 dark:text-emerald-400"
-                    : "text-brand-600 dark:text-brand-400"
-                }`}>
-                  {fmtVal(row.buyValue, isCredit)}
-                </div>
-
-                {/* Lease value */}
-                <div className={`w-24 sm:w-28 text-center text-sm tabular-nums font-semibold ${
-                  isCredit && row.leaseValue < 0
-                    ? "text-emerald-600 dark:text-emerald-400"
-                    : "text-amber-600 dark:text-amber-400"
-                }`}>
-                  {fmtVal(row.leaseValue, isCredit)}
-                </div>
-              </div>
-
-              {/* Expandable formula section */}
-              {isExpanded && hasFormula && (
-                <div className="px-4 sm:px-5 pb-3 -mt-1">
-                  <div className="rounded-lg bg-zinc-100/80 dark:bg-zinc-800/60 px-3 py-2.5 text-xs leading-relaxed space-y-1.5">
-                    {row.buyFormula && (
-                      <div className="flex gap-2">
-                        <span className={`font-bold shrink-0 ${buyWins ? "text-brand-600 dark:text-brand-400" : "text-zinc-500 dark:text-zinc-400"}`}>
-                          {c.buy}:
-                        </span>
-                        <span className="text-zinc-600 dark:text-zinc-400">{row.buyFormula}</span>
+                    {isExpanded && hasFormula && (
+                      <div className="mt-2 rounded-lg bg-zinc-100/80 dark:bg-zinc-800/60 px-3 py-2 text-xs leading-relaxed space-y-1">
+                        {row.buyFormula && (
+                          <div className="flex gap-1.5">
+                            <span className="font-semibold text-brand-600 dark:text-brand-400 shrink-0">{c.buy}:</span>
+                            <span className="text-zinc-500 dark:text-zinc-400">{row.buyFormula}</span>
+                          </div>
+                        )}
+                        {row.leaseFormula && (
+                          <div className="flex gap-1.5">
+                            <span className="font-semibold text-amber-600 dark:text-amber-400 shrink-0">{c.lease}:</span>
+                            <span className="text-zinc-500 dark:text-zinc-400">{row.leaseFormula}</span>
+                          </div>
+                        )}
                       </div>
                     )}
-                    {row.leaseFormula && (
-                      <div className="flex gap-2">
-                        <span className={`font-bold shrink-0 ${!buyWins ? "text-amber-600 dark:text-amber-400" : "text-zinc-500 dark:text-zinc-400"}`}>
-                          {c.lease}:
-                        </span>
-                        <span className="text-zinc-600 dark:text-zinc-400">{row.leaseFormula}</span>
-                      </div>
-                    )}
+                  </td>
+
+                  <td className={`text-end px-3 py-3.5 align-top text-base tabular-nums font-bold ${
+                    isCredit && row.buyValue < 0
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-zinc-800 dark:text-zinc-200"
+                  }`}>
+                    {fmtVal(row.buyValue, isCredit)}
+                  </td>
+
+                  <td className={`text-end ps-3 pe-4 py-3.5 align-top text-base tabular-nums font-bold ${
+                    isCredit && row.leaseValue < 0
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-zinc-800 dark:text-zinc-200"
+                  }`}>
+                    {fmtVal(row.leaseValue, isCredit)}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+
+          <tfoot>
+            <tr className="bg-zinc-50 dark:bg-zinc-800/40 border-t-2 border-zinc-200 dark:border-zinc-700">
+              <td className="ps-4 pe-3 py-4">
+                <span className="text-base font-bold text-zinc-900 dark:text-zinc-50">{c.total}</span>
+              </td>
+              <td className={`text-end px-3 py-4 text-xl tabular-nums font-extrabold whitespace-nowrap ${
+                buyWins ? "text-brand-700 dark:text-brand-300" : "text-zinc-800 dark:text-zinc-200"
+              }`}>
+                {formatNumber(buy.totalCost, locale)} ₪
+              </td>
+              <td className={`text-end ps-3 pe-4 py-4 text-xl tabular-nums font-extrabold whitespace-nowrap ${
+                !buyWins ? "text-amber-700 dark:text-amber-300" : "text-zinc-800 dark:text-zinc-200"
+              }`}>
+                {formatNumber(lease.totalCost, locale)} ₪
+              </td>
+            </tr>
+            <tr className="bg-zinc-50 dark:bg-zinc-800/40">
+              <td className="ps-4 pe-3 pb-4">
+                <span className="text-sm text-zinc-400 dark:text-zinc-500">{c.monthlyCost}</span>
+              </td>
+              <td className="text-end px-3 pb-4 text-base tabular-nums font-semibold text-zinc-500 dark:text-zinc-400 whitespace-nowrap">
+                {formatNumber(buy.monthlyCost, locale)} ₪
+              </td>
+              <td className="text-end ps-3 pe-4 pb-4 text-base tabular-nums font-semibold text-zinc-500 dark:text-zinc-400 whitespace-nowrap">
+                {formatNumber(lease.monthlyCost, locale)} ₪
+              </td>
+            </tr>
+            {monthlyDelta > 0 && (
+              <tr className="bg-zinc-50 dark:bg-zinc-800/40">
+                <td colSpan={3} className="px-4 sm:px-5 pb-4">
+                  <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 dark:bg-emerald-950/40 ring-1 ring-emerald-200/60 dark:ring-emerald-800/40 px-3.5 py-1.5">
+                    <CheckIcon className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                    <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+                      {tpl(c.monthlySavings, {
+                        option: buyWins ? c.buy : c.lease,
+                        amount: formatNumber(monthlyDelta, locale),
+                      })}
+                    </span>
                   </div>
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Footer with totals */}
-      <div className="border-t-2 border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/40">
-        {/* Total row */}
-        <div className="grid grid-cols-[1fr_auto_auto] items-center gap-2 px-4 sm:px-5 py-4">
-          <div className="text-base font-bold text-zinc-900 dark:text-zinc-50">
-            {c.total}
-          </div>
-          <div className={`w-24 sm:w-28 text-center text-lg tabular-nums font-extrabold whitespace-nowrap ${
-            buyWins ? "text-brand-700 dark:text-brand-300" : "text-brand-600 dark:text-brand-400"
-          }`}>
-            {formatNumber(buy.totalCost, locale)} ₪
-          </div>
-          <div className={`w-24 sm:w-28 text-center text-lg tabular-nums font-extrabold whitespace-nowrap ${
-            !buyWins ? "text-amber-700 dark:text-amber-300" : "text-amber-600 dark:text-amber-400"
-          }`}>
-            {formatNumber(lease.totalCost, locale)} ₪
-          </div>
-        </div>
-
-        {/* Monthly cost row */}
-        <div className="grid grid-cols-[1fr_auto_auto] items-center gap-2 px-4 sm:px-5 pb-3">
-          <div className="text-sm text-zinc-400 dark:text-zinc-500">
-            {c.monthlyCost}
-          </div>
-          <div className="w-24 sm:w-28 text-center text-sm tabular-nums font-semibold text-zinc-500 dark:text-zinc-400 whitespace-nowrap">
-            {formatNumber(buy.monthlyCost, locale)} ₪
-          </div>
-          <div className="w-24 sm:w-28 text-center text-sm tabular-nums font-semibold text-zinc-500 dark:text-zinc-400 whitespace-nowrap">
-            {formatNumber(lease.monthlyCost, locale)} ₪
-          </div>
-        </div>
-
-        {/* Savings pill */}
-        {monthlyDelta > 0 && (
-          <div className="px-4 sm:px-5 pb-4">
-            <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 dark:bg-emerald-900/50 ring-1 ring-emerald-200/60 dark:ring-emerald-800/40 px-4 py-2">
-              <CheckIcon className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-              <span className="text-sm font-bold text-emerald-700 dark:text-emerald-300">
-                {tpl(c.monthlySavings, {
-                  option: buyWins ? c.buy : c.lease,
-                  amount: formatNumber(monthlyDelta, locale),
-                })}
-              </span>
-            </div>
-          </div>
-        )}
+                </td>
+              </tr>
+            )}
+          </tfoot>
+        </table>
       </div>
     </div>
   );

@@ -30,7 +30,7 @@ export default function FinancingStep({
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <FormField label={f.cashOnHand} hint={f.cashOnHandHint} error={errors["cashOnHand"]} required>
+        <FormField label={f.cashOnHand} hint={f.cashOnHandHint} error={errors["cashOnHand"]} required validationMessages={t.form.validation}>
           <NumberInput
             value={cashOnHand}
             onChange={(v) => onChange("cashOnHand", v)}
@@ -39,7 +39,7 @@ export default function FinancingStep({
           />
         </FormField>
 
-        <FormField label={f.oldCarValue} hint={f.oldCarValueHint} error={errors["oldCarValue"]} required>
+        <FormField label={f.oldCarValue} hint={f.oldCarValueHint} error={errors["oldCarValue"]} required validationMessages={t.form.validation}>
           <NumberInput
             value={oldCarValue}
             onChange={(v) => onChange("oldCarValue", v)}
