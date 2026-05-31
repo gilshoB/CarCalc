@@ -71,6 +71,53 @@ describe("calcDepreciation", () => {
     expect(result.residualValue).toBe(0);
     expect(result.totalDepreciation).toBe(0);
   });
+
+  // ---- New: used-car adjustments ----
+
+  it("applies hands penalty (3 previous hands ≈ −6%)", () => {
+    const baseline = calcDepreciation(150000, 3, "gasoline", true, 3);
+    const withHands = calcDepreciation(150000, 3, "gasoline", true, 3, undefined, {
+      previousHands: 3,
+    });
+    expect(withHands.residualValue).toBeLessThan(baseline.residualValue);
+    expect(withHands.adjustments?.handsAdj).toBeCloseTo(1 - 0.06, 5);
+    expect(withHands.adjustments?.leaseAdj).toBe(1);
+  });
+
+  it("applies wasLeased penalty (−7%)", () => {
+    const baseline = calcDepreciation(150000, 3, "gasoline", true, 2);
+    const withLease = calcDepreciation(150000, 3, "gasoline", true, 2, undefined, {
+      wasLeased: true,
+    });
+    expect(withLease.adjustments?.leaseAdj).toBe(0.93);
+    expect(withLease.residualValue).toBeLessThan(baseline.residualValue);
+  });
+
+  it("applies km penalty (above-average mileage)", () => {
+    const expected = 2 * 15000; // baseline km for a 2-year-old car
+    // 50% above average (clamped to 25%) → kmAdj = 1 - 0.25*0.15 = 0.9625
+    const result = calcDepreciation(150000, 3, "gasoline", true, 2, undefined, {
+      odometerKm: expected * 1.5,
+    });
+    expect(result.adjustments?.kmAdj).toBeCloseTo(0.9625, 4);
+  });
+
+  it("composite: 3 hands + leased + 80k extra km", () => {
+    const result = calcDepreciation(150000, 3, "gasoline", true, 2, undefined, {
+      previousHands: 3,
+      wasLeased: true,
+      odometerKm: 110000, // 2 yr × 15k = 30k baseline; 110k is ≫ avg → clamped to +25%
+    });
+    // hands 0.94 × lease 0.93 × km 0.9625 ≈ 0.8413
+    expect(result.adjustments?.composite).toBeCloseTo(0.94 * 0.93 * 0.9625, 3);
+  });
+
+  it("no adjustments: baseline behavior unchanged", () => {
+    const a = calcDepreciation(150000, 3, "gasoline", false);
+    const b = calcDepreciation(150000, 3, "gasoline", false, 0, undefined, undefined);
+    expect(a.residualValue).toBe(b.residualValue);
+    expect(b.adjustments?.composite).toBe(1);
+  });
 });
 
 // ---- calcFuelCost ----
@@ -136,6 +183,27 @@ describe("calcRegistrationFee", () => {
     const result = calcRegistrationFee(114001, 1, tiers, radioFee);
     expect(result).toBe(Math.round(1660 + 141));
   });
+
+  // ---- New: lookup by feeGroup (kvuzat_agra_cd) ----
+
+  it("uses feeGroup when provided (preferred over price-banding)", () => {
+    const feeByGroup = market.registrationFeeByGroup!;
+    // group 7 should map to fee from the table; ignore price tier
+    const result = calcRegistrationFee(500000, 1, tiers, radioFee, 7, feeByGroup);
+    expect(result).toBe(Math.round(feeByGroup[7] + radioFee));
+  });
+
+  it("falls back to price tiers when feeGroup is missing from the table", () => {
+    const feeByGroup = { 1: 1000 };
+    // group 99 doesn't exist → fall back to price tier (170k → 2326)
+    const result = calcRegistrationFee(170000, 1, tiers, radioFee, 99, feeByGroup);
+    expect(result).toBe(Math.round(2326 + radioFee));
+  });
+
+  it("falls back to price tiers when no feeByGroup table supplied", () => {
+    const result = calcRegistrationFee(170000, 1, tiers, radioFee, 7, undefined);
+    expect(result).toBe(Math.round(2326 + radioFee));
+  });
 });
 
 // ---- calcTestFee ----
@@ -195,6 +263,18 @@ describe("calcMaintenance", () => {
 
   it("zero km — zero cost", () => {
     expect(calcMaintenance(0, 3, "gasoline")).toBe(0);
+  });
+
+  it("override ratePerKm — uses user value", () => {
+    // 15000 × 0.20 × 1.0 × 3 = 9000
+    expect(calcMaintenance(15000, 3, "gasoline", { ratePerKm: 0.2 })).toBe(9000);
+  });
+
+  it("override multiplier — uses user value", () => {
+    // 15000 × 0.15 × 1.5 × 3 = 10125
+    expect(
+      calcMaintenance(15000, 3, "gasoline", { ratePerKm: 0.15, multipliers: { gasoline: 1.5 } }),
+    ).toBe(10125);
   });
 });
 

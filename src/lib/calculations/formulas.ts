@@ -16,6 +16,48 @@ const DEPRECIATION_CURVES: Record<FuelType, { yr1: number; yr2: number; yr3Plus:
   electric: { yr1: 0.25, yr2: 0.20, yr3Plus: 0.15 },
 };
 
+export interface DepreciationAdjustments {
+  odometerKm?: number;
+  previousHands?: number; // 1 = first hand (no penalty)
+  wasLeased?: boolean;
+}
+
+const ASSUMED_KM_PER_YEAR = 15_000; // baseline used to compute expected km from age
+
+function clamp(x: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, x));
+}
+
+/**
+ * Compute the depreciation adjustment multiplier from used-car attributes.
+ *
+ *  - hands:  −3% per previous owner beyond the first
+ *  - lease:  −7% if previously leased/rented
+ *  - km:     ±0–3.75% based on km vs expected (±25% km swing → ±15% × 25% = ±3.75%)
+ */
+export function calcDepreciationAdjustments(
+  startAge: number,
+  adj: DepreciationAdjustments | undefined,
+): { handsAdj: number; leaseAdj: number; kmAdj: number; composite: number } {
+  const hands = adj?.previousHands ?? 1;
+  const handsAdj = 1 - 0.03 * Math.max(0, hands - 1);
+  const leaseAdj = adj?.wasLeased ? 0.93 : 1;
+
+  let kmAdj = 1;
+  if (adj?.odometerKm !== undefined && startAge > 0) {
+    const expectedKm = ASSUMED_KM_PER_YEAR * startAge;
+    const delta = (adj.odometerKm - expectedKm) / expectedKm;
+    kmAdj = 1 - clamp(delta, -0.25, 0.25) * 0.15;
+  }
+
+  return {
+    handsAdj,
+    leaseAdj,
+    kmAdj,
+    composite: handsAdj * leaseAdj * kmAdj,
+  };
+}
+
 export function calcDepreciation(
   carPrice: number,
   years: number,
@@ -23,20 +65,13 @@ export function calcDepreciation(
   isUsed: boolean,
   usedCarAge: number = 0,
   overrideRates?: { yr1: number; yr2: number; yr3Plus: number },
+  adjustments?: DepreciationAdjustments,
 ): DepreciationResult {
   const curve = overrideRates
     ? { yr1: overrideRates.yr1 / 100, yr2: overrideRates.yr2 / 100, yr3Plus: overrideRates.yr3Plus / 100 }
     : DEPRECIATION_CURVES[fuelType];
   const startAge = isUsed ? usedCarAge : 0;
 
-  // Calculate value from new to determine starting value
-  let valueFromNew = carPrice;
-  if (!isUsed) {
-    // For new car, carPrice IS the starting value
-    valueFromNew = carPrice;
-  }
-
-  // For used car, carPrice is what the user pays — we use it as starting value directly
   let currentValue = carPrice;
   const yearlyValues: number[] = [];
 
@@ -51,10 +86,24 @@ export function calcDepreciation(
     yearlyValues.push(Math.round(currentValue));
   }
 
-  const residualValue = Math.round(currentValue);
+  // Apply used-car adjustments to the FINAL residual value
+  const adjustmentBreakdown = calcDepreciationAdjustments(startAge, adjustments);
+  const adjustedResidual = currentValue * adjustmentBreakdown.composite;
+
+  // Scale yearly values proportionally so chart looks consistent
+  const adjustedYearly = yearlyValues.map((v) =>
+    Math.round(v * adjustmentBreakdown.composite),
+  );
+
+  const residualValue = Math.round(adjustedResidual);
   const totalDepreciation = carPrice - residualValue;
 
-  return { totalDepreciation, residualValue, yearlyValues };
+  return {
+    totalDepreciation,
+    residualValue,
+    yearlyValues: adjustedYearly,
+    adjustments: adjustmentBreakdown,
+  };
 }
 
 // ---- Fuel Cost ----
@@ -84,15 +133,35 @@ export function calcFuelCost(
 
 // ---- Registration Fee ----
 
+/**
+ * Look up the annual registration fee.
+ *
+ * Preferred path: if `feeGroup` is provided AND `feeByGroup` table is
+ * available, look up the fee directly by group (kvuzat_agra_cd). This
+ * mirrors how the Israeli MoT actually bills.
+ *
+ * Fallback path: bucket by catalog price against the legacy 7-tier table.
+ * This is what the calculator did before the gov.il integration.
+ */
 export function calcRegistrationFee(
   catalogPrice: number,
   years: number,
   tiers: RegistrationTier[],
   radioFee: number,
+  feeGroup?: number,
+  feeByGroup?: Record<number, number>,
 ): number {
-  // Find the matching tier
-  const tier = tiers.find((t) => catalogPrice <= t.maxPrice);
-  const annualFee = tier ? tier.fee : tiers[tiers.length - 1].fee;
+  let annualFee: number;
+
+  if (feeGroup !== undefined && feeByGroup && feeByGroup[feeGroup] !== undefined) {
+    // Preferred: lookup by MoT fee group
+    annualFee = feeByGroup[feeGroup];
+  } else {
+    // Fallback: price-banded tiers
+    const tier = tiers.find((t) => catalogPrice <= t.maxPrice);
+    annualFee = tier ? tier.fee : tiers[tiers.length - 1].fee;
+  }
+
   return Math.round((annualFee + radioFee) * years);
 }
 
@@ -120,22 +189,25 @@ export function calcTestFee(
 
 // ---- Maintenance ----
 
-const MAINTENANCE_MULTIPLIERS: Record<FuelType, number> = {
+export const MAINTENANCE_MULTIPLIERS: Record<FuelType, number> = {
   gasoline: 1.0,
   diesel: 1.1,
   hybrid: 1.2,
   electric: 0.8,
 };
 
-const BASE_MAINTENANCE_RATE = 0.15; // ILS per km
+export const BASE_MAINTENANCE_RATE = 0.15; // ILS per km
 
 export function calcMaintenance(
   annualKm: number,
   years: number,
   fuelType: FuelType,
+  override?: { ratePerKm?: number; multipliers?: Partial<Record<FuelType, number>> },
 ): number {
-  const multiplier = MAINTENANCE_MULTIPLIERS[fuelType];
-  return Math.round(annualKm * BASE_MAINTENANCE_RATE * multiplier * years);
+  const rate = override?.ratePerKm ?? BASE_MAINTENANCE_RATE;
+  const multiplier =
+    override?.multipliers?.[fuelType] ?? MAINTENANCE_MULTIPLIERS[fuelType];
+  return Math.round(annualKm * rate * multiplier * years);
 }
 
 // ---- Loan / Financing ----

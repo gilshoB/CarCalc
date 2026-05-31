@@ -2,15 +2,56 @@
 
 export type FuelType = "gasoline" | "diesel" | "electric" | "hybrid";
 
+// ---- Vehicle Identity (auto-filled from gov.il picker) ----
+
+/**
+ * VehicleIdentity is populated by the cascading make/model/year/trim picker
+ * which queries Israeli gov.il open data. When present, fields like fuelType,
+ * consumptionKmPerUnit, and catalogPrice get auto-filled from this object.
+ *
+ * Data sources:
+ *  - Active vehicles registry (053cea08-09bc-40ec-8f7a-156f0677aff3): browsing
+ *  - WLTP model spec dataset (142afde2-6228-49f9-8a29-9b6c3a0cbe40):
+ *    fuelType, feeGroup (kvuzat_agra_cd), pollutionGroup (kvutzat_zihum),
+ *    CO2_WLTP for fuel-economy derivation
+ *  - Importer price list (39f455bf-6db0-4926-859d-017f34eacbcb): catalogPrice (mehir)
+ */
+export interface VehicleIdentity {
+  manufacturer: string; // tozeret_nm
+  manufacturerCode?: number; // tozeret_cd
+  model: string; // kinuy_mishari
+  modelCode?: string; // degem_nm
+  modelYear: number; // shnat_yitzur
+  trim?: string; // ramat_gimur — undefined or literal "__common__" sentinel
+  // Auto-resolved specs:
+  fuelType?: FuelType; // mapped from delek_nm (Hebrew "בנזין"/"דיזל"/"חשמל"/"היברידי")
+  fuelTypeRaw?: string; // raw delek_nm for diagnostics
+  pollutionGroup?: number; // kvutzat_zihum (1-15)
+  feeGroup?: number; // kvuzat_agra_cd — the registration fee group (preferred lookup)
+  co2WltpGramsPerKm?: number; // CO2_WLTP — used to derive km/L when not provided
+  kmPerLiter?: number; // derived from CO2 (combustion only) or null
+  catalogPrice?: number; // mehir — MSRP from importer price list
+  ambiguous?: boolean; // true if "Common" trim used or specs varied >30% across trims
+  source: "gov.il" | "manual";
+}
+
 // ---- User Inputs ----
 
 export interface BuyCarDetails {
   carPrice: number;
-  catalogPrice?: number; // מחיר מחירון — defaults to carPrice if omitted
+  catalogPrice?: number; // מחיר מחירון — defaults to carPrice if omitted. Auto-filled from picker when vehicle is set.
   isUsed: boolean;
   usedCarAge?: number; // age of used car at purchase (e.g. 2 = 2 years old)
   fuelType: FuelType;
   consumptionKmPerUnit: number; // km/L for combustion, km/kWh for electric
+  vehicle?: VehicleIdentity; // optional — populated by the picker
+  // Used-car adjustments (only meaningful when isUsed=true):
+  odometerKm?: number; // current mileage
+  previousHands?: number; // number of previous owners (1 = first hand)
+  wasLeased?: boolean; // car was previously leased/rented
+  // Per-scenario insurance (split from top-level for accuracy):
+  mandatoryInsuranceQuote?: number; // override of CalculatorInput.mandatoryInsuranceQuote
+  comprehensiveInsuranceQuote?: number; // override of CalculatorInput.comprehensiveInsuranceQuote
 }
 
 export interface LeaseCarDetails {
@@ -26,6 +67,10 @@ export interface LeaseCarDetails {
     comprehensiveInsurance: boolean;
     registration: boolean;
   };
+  vehicle?: VehicleIdentity; // optional — populated by the picker
+  // Per-scenario insurance overrides (only used if leaseIncludes.*=false):
+  mandatoryInsuranceQuote?: number;
+  comprehensiveInsuranceQuote?: number;
 }
 
 export interface CalculatorInput {
@@ -67,6 +112,12 @@ export interface CalculatorInput {
 
   // Depreciation override (from results page)
   depreciationOverride?: { yr1: number; yr2: number; yr3Plus: number };
+
+  // Maintenance override (from results page)
+  maintenanceOverride?: {
+    ratePerKm: number; // base ₪/km
+    multipliers?: Partial<Record<FuelType, number>>; // optional override of fuel multipliers
+  };
 }
 
 // ---- Market Data (live/dynamic) ----
@@ -84,9 +135,19 @@ export interface RegistrationTier {
   fee: number; // annual fee in ILS
 }
 
+/**
+ * Registration fee per Israeli MoT "fee group" (kvuzat_agra_cd).
+ * Each car model is assigned a fee group in the WLTP dataset.
+ * This is the preferred lookup over price-tier guessing.
+ */
+export interface RegistrationFeeByGroup {
+  [feeGroup: number]: number; // annual fee in ILS for that group
+}
+
 export interface MarketData {
   fuelPrices: FuelPrices;
-  registrationFeeTiers: RegistrationTier[];
+  registrationFeeTiers: RegistrationTier[]; // legacy fallback (price-banded)
+  registrationFeeByGroup?: RegistrationFeeByGroup; // preferred — indexed by kvuzat_agra_cd
   radioFee: number; // annual, ILS
   testFees: {
     combustion: number; // ILS/year
@@ -159,6 +220,12 @@ export interface DepreciationResult {
   totalDepreciation: number;
   residualValue: number;
   yearlyValues: number[]; // car value at end of each year
+  adjustments?: {
+    handsAdj: number; // multiplier from previousHands (1.0 = no adj)
+    leaseAdj: number; // multiplier from wasLeased (1.0 = no adj)
+    kmAdj: number; // multiplier from km vs expected (1.0 = on average)
+    composite: number; // product of the three
+  };
 }
 
 // ---- Loan Output ----

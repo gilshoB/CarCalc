@@ -29,29 +29,31 @@ export function calcLeaseScenario(
   // 2. Costs NOT included in lease — add separately
   let additionalMaintenance = 0;
   if (!lease.leaseIncludes.maintenance) {
-    additionalMaintenance = calcMaintenance(annualKm, years, lease.fuelType);
+    additionalMaintenance = calcMaintenance(annualKm, years, lease.fuelType, input.maintenanceOverride);
   }
 
   let additionalInsurance = { mandatory: 0, comprehensive: 0, total: 0 };
   if (!lease.leaseIncludes.mandatoryInsurance || !lease.leaseIncludes.comprehensiveInsurance) {
-    const mandatoryQuote = lease.leaseIncludes.mandatoryInsurance
-      ? 0
-      : input.mandatoryInsuranceQuote;
-    const comprehensiveQuote = lease.leaseIncludes.comprehensiveInsurance
-      ? 0
-      : input.comprehensiveInsuranceQuote;
+    // Prefer per-scenario override (lease.*) before top-level
+    const baseMandatory = lease.mandatoryInsuranceQuote ?? input.mandatoryInsuranceQuote;
+    const baseComprehensive = lease.comprehensiveInsuranceQuote ?? input.comprehensiveInsuranceQuote;
+    const mandatoryQuote = lease.leaseIncludes.mandatoryInsurance ? 0 : baseMandatory;
+    const comprehensiveQuote = lease.leaseIncludes.comprehensiveInsurance ? 0 : baseComprehensive;
     additionalInsurance = calcInsurance(mandatoryQuote, comprehensiveQuote, years);
   }
 
   let additionalRegistration = 0;
   if (!lease.leaseIncludes.registration) {
-    // Use buy car's catalog price as approximation for lease car value
-    // (leased cars don't expose their catalog price to user)
+    // Use lease vehicle's catalog price + fee group if available, else fall back to buy car
+    const leaseCatalogPrice =
+      lease.vehicle?.catalogPrice ?? input.buy.catalogPrice ?? input.buy.carPrice;
     additionalRegistration = calcRegistrationFee(
-      input.buy.catalogPrice ?? input.buy.carPrice,
+      leaseCatalogPrice,
       years,
       marketData.registrationFeeTiers,
       marketData.radioFee,
+      lease.vehicle?.feeGroup,
+      marketData.registrationFeeByGroup,
     );
   }
 
@@ -119,21 +121,27 @@ export function calcLeaseScenario(
   const annualLeasePayment = lease.monthlyPayment * 12;
   const annualFuel = calcFuelCost(annualKm, 1, lease.fuelType, lease.consumptionKmPerUnit, marketData.fuelPrices);
   const annualMaintenance = !lease.leaseIncludes.maintenance
-    ? calcMaintenance(annualKm, 1, lease.fuelType)
+    ? calcMaintenance(annualKm, 1, lease.fuelType, input.maintenanceOverride)
     : 0;
 
   const annualRegistration = !lease.leaseIncludes.registration
     ? calcRegistrationFee(
-        input.buy.catalogPrice ?? input.buy.carPrice,
+        lease.vehicle?.catalogPrice ?? input.buy.catalogPrice ?? input.buy.carPrice,
         1,
         marketData.registrationFeeTiers,
         marketData.radioFee,
+        lease.vehicle?.feeGroup,
+        marketData.registrationFeeByGroup,
       )
     : 0;
 
   const annualInsurance =
-    (!lease.leaseIncludes.mandatoryInsurance ? input.mandatoryInsuranceQuote : 0) +
-    (!lease.leaseIncludes.comprehensiveInsurance ? input.comprehensiveInsuranceQuote : 0);
+    (!lease.leaseIncludes.mandatoryInsurance
+      ? lease.mandatoryInsuranceQuote ?? input.mandatoryInsuranceQuote
+      : 0) +
+    (!lease.leaseIncludes.comprehensiveInsurance
+      ? lease.comprehensiveInsuranceQuote ?? input.comprehensiveInsuranceQuote
+      : 0);
 
   for (let i = 0; i < years; i++) {
     const ageAtEnd = leaseCarAge + i + 1;

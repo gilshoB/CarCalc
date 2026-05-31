@@ -30,6 +30,38 @@ const REGISTRATION_TIERS = [
   { maxPrice: Infinity, fee: 5_203 },
 ];
 
+/**
+ * Israeli MoT registration fee by "fee group" (kvuzat_agra_cd).
+ *
+ * Each vehicle model is assigned a fee group in the WLTP dataset. The
+ * mapping from group -> annual fee is published yearly by the Ministry of
+ * Transportation. This is the preferred lookup over our older price-tier
+ * approximation, because it uses the actual classification the MoT itself
+ * uses for billing.
+ *
+ * Numbers below are placeholders calibrated against the price-tier values
+ * for the same price range — they should be refreshed against the
+ * official MoT publication. Until that's done, calcRegistrationFee falls
+ * back to the price tiers when no feeGroup is provided.
+ */
+const REGISTRATION_FEE_BY_GROUP: Record<number, number> = {
+  1: 1_335,
+  2: 1_460,
+  3: 1_660,
+  4: 1_810,
+  5: 1_972,
+  6: 2_120,
+  7: 2_326,
+  8: 2_490,
+  9: 2_643,
+  10: 2_900,
+  11: 3_180,
+  12: 3_500,
+  13: 3_693,
+  14: 4_400,
+  15: 5_203,
+};
+
 // ---- Fuel Price Scraping ----
 
 async function fetchFuelPrices(): Promise<FuelPrices> {
@@ -134,6 +166,7 @@ export async function getMarketData(): Promise<MarketData> {
   const marketData: MarketData = {
     fuelPrices,
     registrationFeeTiers: REGISTRATION_TIERS,
+    registrationFeeByGroup: REGISTRATION_FEE_BY_GROUP,
     radioFee: 141,
     testFees: {
       combustion: 117.6,
@@ -157,6 +190,7 @@ export function getStaticMarketData(): MarketData {
   return {
     fuelPrices: FALLBACK_FUEL_PRICES,
     registrationFeeTiers: REGISTRATION_TIERS,
+    registrationFeeByGroup: REGISTRATION_FEE_BY_GROUP,
     radioFee: 141,
     testFees: {
       combustion: 117.6,

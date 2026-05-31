@@ -39,7 +39,7 @@ export function calcBuyScenario(
       )
     : { monthlyPayment: 0, totalInterest: 0, totalPaid: 0, totalWithFee: 0 };
 
-  // 3. Depreciation
+  // 3. Depreciation (with used-car adjustments if applicable)
   const depreciation = calcDepreciation(
     buy.carPrice,
     years,
@@ -47,6 +47,11 @@ export function calcBuyScenario(
     buy.isUsed,
     buy.usedCarAge,
     input.depreciationOverride,
+    {
+      odometerKm: buy.odometerKm,
+      previousHands: buy.previousHands,
+      wasLeased: buy.wasLeased,
+    },
   );
 
   // 4. Annual recurring costs
@@ -55,13 +60,14 @@ export function calcBuyScenario(
     years,
     marketData.registrationFeeTiers,
     marketData.radioFee,
+    buy.vehicle?.feeGroup,
+    marketData.registrationFeeByGroup,
   );
 
-  const insurance = calcInsurance(
-    input.mandatoryInsuranceQuote,
-    input.comprehensiveInsuranceQuote,
-    years,
-  );
+  // Insurance: prefer per-scenario override if set, else top-level
+  const mandatoryQuote = buy.mandatoryInsuranceQuote ?? input.mandatoryInsuranceQuote;
+  const comprehensiveQuote = buy.comprehensiveInsuranceQuote ?? input.comprehensiveInsuranceQuote;
+  const insurance = calcInsurance(mandatoryQuote, comprehensiveQuote, years);
 
   const testFees = calcTestFee(
     years,
@@ -79,7 +85,7 @@ export function calcBuyScenario(
     marketData.fuelPrices,
   );
 
-  const maintenance = calcMaintenance(annualKm, years, buy.fuelType);
+  const maintenance = calcMaintenance(annualKm, years, buy.fuelType, input.maintenanceOverride);
 
   // 5. Tax benefits (business)
   let taxBenefits = 0;
