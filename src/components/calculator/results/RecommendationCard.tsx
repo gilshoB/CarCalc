@@ -92,8 +92,8 @@ export default function RecommendationCard({ t, locale, results }: Recommendatio
         <div className="rounded-[13px] bg-white dark:bg-zinc-900 p-5 sm:p-6">
           {/* Winner hero */}
           <div className="flex flex-col sm:flex-row sm:items-end gap-4 sm:gap-6">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-3 mb-1">
+            <div className="flex-1 min-w-0 text-center">
+              <div className="flex items-center justify-center gap-3 mb-1">
                 <h3 className={`text-4xl sm:text-5xl font-extrabold tracking-tight leading-none ${
                   winnerColor === "brand"
                     ? "text-brand-700 dark:text-brand-300"
