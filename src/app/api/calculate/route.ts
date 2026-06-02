@@ -8,6 +8,24 @@ import type { CalculatorInput, CalculatorOutput } from "@/types/calculator";
 
 const FuelTypeSchema = z.enum(["gasoline", "diesel", "electric", "hybrid"]);
 
+const VehicleIdentitySchema = z.object({
+  manufacturer: z.string(),
+  manufacturerCode: z.number().optional(),
+  model: z.string(),
+  modelCode: z.string().optional(),
+  modelYear: z.number(),
+  trim: z.string().optional(),
+  fuelType: FuelTypeSchema.optional(),
+  fuelTypeRaw: z.string().optional(),
+  pollutionGroup: z.number().optional(),
+  feeGroup: z.number().optional(),
+  co2WltpGramsPerKm: z.number().optional(),
+  kmPerLiter: z.number().optional(),
+  catalogPrice: z.number().optional(),
+  ambiguous: z.boolean().optional(),
+  source: z.enum(["gov.il", "manual"]),
+});
+
 const CalculatorInputSchema = z.object({
   name: z.string().optional(),
   email: z.string().optional(),
@@ -19,6 +37,12 @@ const CalculatorInputSchema = z.object({
     usedCarAge: z.number().int().min(0).optional(),
     fuelType: FuelTypeSchema,
     consumptionKmPerUnit: z.number().positive(),
+    vehicle: VehicleIdentitySchema.optional(),
+    odometerKm: z.number().min(0).optional(),
+    previousHands: z.number().int().min(1).optional(),
+    wasLeased: z.boolean().optional(),
+    mandatoryInsuranceQuote: z.number().min(0).optional(),
+    comprehensiveInsuranceQuote: z.number().min(0).optional(),
   }),
 
   lease: z.object({
@@ -34,6 +58,9 @@ const CalculatorInputSchema = z.object({
       comprehensiveInsurance: z.boolean(),
       registration: z.boolean(),
     }),
+    vehicle: VehicleIdentitySchema.optional(),
+    mandatoryInsuranceQuote: z.number().min(0).optional(),
+    comprehensiveInsuranceQuote: z.number().min(0).optional(),
   }),
 
   cashOnHand: z.number().min(0),
@@ -61,6 +88,10 @@ const CalculatorInputSchema = z.object({
     yr1: z.number().min(0).max(100),
     yr2: z.number().min(0).max(100),
     yr3Plus: z.number().min(0).max(100),
+  }).optional(),
+  maintenanceOverride: z.object({
+    ratePerKm: z.number().min(0),
+    multipliers: z.record(FuelTypeSchema, z.number().min(0)).optional(),
   }).optional(),
 });
 

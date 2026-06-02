@@ -1,14 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import type { getTranslations } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
-import type { BuyCarDetails } from "@/types/calculator";
+import type { BuyCarDetails, VehicleIdentity } from "@/types/calculator";
 import type { FormErrors } from "@/types/form";
 import { formatNumber } from "@/lib/formatters";
 import FormField from "@/components/ui/FormField";
 import NumberInput from "@/components/ui/NumberInput";
 import Select from "@/components/ui/Select";
 import Toggle from "@/components/ui/Toggle";
+import VehiclePicker from "./VehiclePicker";
 
 const CONSUMPTION_DEFAULTS: Record<string, number> = {
   gasoline: 14,
@@ -63,6 +65,24 @@ export default function BuyingStep({
     onChange("buy.consumptionKmPerUnit", CONSUMPTION_DEFAULTS[fuelType] ?? 14);
   };
 
+  const [manualMode, setManualMode] = useState(false);
+
+  // Picker always wins: unconditionally overwrite the auto-fillable fields.
+  const handleResolve = (v: VehicleIdentity) => {
+    onChange("buy.vehicle", v);
+    if (v.fuelType) onChange("buy.fuelType", v.fuelType);
+    if (v.kmPerLiter) onChange("buy.consumptionKmPerUnit", v.kmPerLiter);
+    if (v.catalogPrice) onChange("buy.catalogPrice", v.catalogPrice);
+  };
+
+  const handleManualEntry = () => {
+    setManualMode(true);
+    onChange("buy.vehicle", undefined);
+    onChange("buy.catalogPrice", undefined);
+  };
+
+  const catalogAutoFilled = !manualMode && buy.vehicle?.catalogPrice != null;
+
   // Calculate if loan is needed
   const availableCapital = cashOnHand + oldCarValue;
   const loanNeeded = buy.carPrice > 0 && buy.carPrice > availableCapital;
@@ -71,6 +91,25 @@ export default function BuyingStep({
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">{f.title}</h2>
+
+      {!manualMode && (
+        <VehiclePicker
+          t={t}
+          vehicle={buy.vehicle}
+          onResolve={handleResolve}
+          onManualEntry={handleManualEntry}
+        />
+      )}
+
+      {manualMode && (
+        <button
+          type="button"
+          onClick={() => setManualMode(false)}
+          className="text-xs font-medium text-brand-600 hover:underline dark:text-brand-400"
+        >
+          {t.form.vehiclePicker.title}
+        </button>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <FormField label={f.carPrice} error={errors["buy.carPrice"]} required>
@@ -82,13 +121,26 @@ export default function BuyingStep({
           />
         </FormField>
 
-        <FormField label={f.catalogPrice} hint={f.catalogPriceHint}>
-          <NumberInput
-            value={buy.catalogPrice ?? 0}
-            onChange={(v) => onChange("buy.catalogPrice", v || undefined)}
-            prefix="₪"
-          />
-        </FormField>
+        {catalogAutoFilled ? (
+          <FormField label={f.catalogPrice}>
+            <div className="flex items-center justify-between rounded-lg border border-zinc-200 bg-zinc-100 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800">
+              <span className="text-zinc-700 dark:text-zinc-200">
+                ₪ {formatNumber(buy.vehicle!.catalogPrice!, locale)}
+              </span>
+              <span className="rounded bg-brand-100 px-1.5 py-0.5 text-[10px] font-medium text-brand-700 dark:bg-brand-900 dark:text-brand-300">
+                {t.form.vehiclePicker.autofilledBadge}
+              </span>
+            </div>
+          </FormField>
+        ) : (
+          <FormField label={f.catalogPrice} hint={f.catalogPriceHint}>
+            <NumberInput
+              value={buy.catalogPrice ?? 0}
+              onChange={(v) => onChange("buy.catalogPrice", v || undefined)}
+              prefix="₪"
+            />
+          </FormField>
+        )}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -119,15 +171,42 @@ export default function BuyingStep({
       </div>
 
       {buy.isUsed && (
-        <FormField label={f.usedCarAge} error={errors["buy.usedCarAge"]} required>
-          <NumberInput
-            value={buy.usedCarAge ?? 0}
-            onChange={(v) => onChange("buy.usedCarAge", v)}
-            min={1}
-            max={20}
-            error={!!errors["buy.usedCarAge"]}
+        <div className="space-y-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <FormField label={f.usedCarAge} error={errors["buy.usedCarAge"]} required>
+              <NumberInput
+                value={buy.usedCarAge ?? 0}
+                onChange={(v) => onChange("buy.usedCarAge", v)}
+                min={1}
+                max={20}
+                error={!!errors["buy.usedCarAge"]}
+              />
+            </FormField>
+
+            <FormField label={t.form.usedCar.odometer} hint={t.form.usedCar.odometerHint}>
+              <NumberInput
+                value={buy.odometerKm ?? 0}
+                onChange={(v) => onChange("buy.odometerKm", v || undefined)}
+                suffix="km"
+              />
+            </FormField>
+
+            <FormField label={t.form.usedCar.hands} hint={t.form.usedCar.handsHint}>
+              <NumberInput
+                value={buy.previousHands ?? 1}
+                onChange={(v) => onChange("buy.previousHands", v || undefined)}
+                min={1}
+                max={10}
+              />
+            </FormField>
+          </div>
+
+          <Toggle
+            checked={buy.wasLeased ?? false}
+            onChange={(v) => onChange("buy.wasLeased", v)}
+            label={t.form.usedCar.wasLeased}
           />
-        </FormField>
+        </div>
       )}
 
       {/* Insurance for purchased car */}

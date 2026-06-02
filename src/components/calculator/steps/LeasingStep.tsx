@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import type { getTranslations } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
-import type { LeaseCarDetails } from "@/types/calculator";
+import type { LeaseCarDetails, VehicleIdentity } from "@/types/calculator";
 import type { FormErrors } from "@/types/form";
 import { formatNumber } from "@/lib/formatters";
 import FormField from "@/components/ui/FormField";
@@ -10,6 +11,7 @@ import NumberInput from "@/components/ui/NumberInput";
 import Select from "@/components/ui/Select";
 import Checkbox from "@/components/ui/Checkbox";
 import Toggle from "@/components/ui/Toggle";
+import VehiclePicker from "./VehiclePicker";
 
 const CONSUMPTION_DEFAULTS: Record<string, number> = {
   gasoline: 14,
@@ -66,6 +68,20 @@ export default function LeasingStep({
     onChange("lease.consumptionKmPerUnit", CONSUMPTION_DEFAULTS[fuelType] ?? 14);
   };
 
+  const [manualMode, setManualMode] = useState(false);
+
+  // Picker always wins: unconditionally overwrite the auto-fillable fields.
+  const handleResolve = (v: VehicleIdentity) => {
+    onChange("lease.vehicle", v);
+    if (v.fuelType) onChange("lease.fuelType", v.fuelType);
+    if (v.kmPerLiter) onChange("lease.consumptionKmPerUnit", v.kmPerLiter);
+  };
+
+  const handleManualEntry = () => {
+    setManualMode(true);
+    onChange("lease.vehicle", undefined);
+  };
+
   // Calculate investable amount
   const investableAmount = Math.max(0, cashOnHand + oldCarValue - lease.leaseDownPayment);
 
@@ -76,6 +92,25 @@ export default function LeasingStep({
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">{f.title}</h2>
+
+      {!manualMode && (
+        <VehiclePicker
+          t={t}
+          vehicle={lease.vehicle}
+          onResolve={handleResolve}
+          onManualEntry={handleManualEntry}
+        />
+      )}
+
+      {manualMode && (
+        <button
+          type="button"
+          onClick={() => setManualMode(false)}
+          className="text-xs font-medium text-brand-600 hover:underline dark:text-brand-400"
+        >
+          {t.form.vehiclePicker.title}
+        </button>
+      )}
 
       {/* Annual KM */}
       <FormField label={f.annualKm} hint={f.annualKmHint} error={errors["annualKm"]} required>
