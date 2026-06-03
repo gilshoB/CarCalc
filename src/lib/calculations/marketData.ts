@@ -18,49 +18,21 @@ const FALLBACK_FUEL_PRICES: FuelPrices = {
 
 const FALLBACK_INVESTMENT_RETURN = 10.5; // 5-year S&P 500 avg ~10.5%
 
-// ---- Registration Fee Table (2025, effective April 1) ----
-
-const REGISTRATION_TIERS = [
-  { maxPrice: 114_000, fee: 1_335 },
-  { maxPrice: 138_000, fee: 1_660 },
-  { maxPrice: 162_000, fee: 1_972 },
-  { maxPrice: 183_000, fee: 2_326 },
-  { maxPrice: 238_000, fee: 2_643 },
-  { maxPrice: 338_000, fee: 3_693 },
-  { maxPrice: Infinity, fee: 5_203 },
+// ---- Official Registration Fee Table (אגרת רישוי, April 2026) ----
+//
+// The annual licensing fee is a fixed government table indexed by the car's
+// ORIGINAL new-car catalog price (price group 1–7) AND its manufacture-year
+// cohort. Source: Israeli Ministry of Transportation publication (2026).
+// `fees` is ordered: [2024–2026, 2021–2023, 2017–2020, ≤2016].
+const REGISTRATION_FEE_BANDS = [
+  { maxPrice: 117_000, fees: [1_266, 1_109, 972, 849] as [number, number, number, number] },
+  { maxPrice: 141_000, fees: [1_610, 1_404, 1_230, 1_076] as [number, number, number, number] },
+  { maxPrice: 167_000, fees: [1_941, 1_698, 1_487, 1_297] as [number, number, number, number] },
+  { maxPrice: 188_000, fees: [2_315, 1_968, 1_674, 1_422] as [number, number, number, number] },
+  { maxPrice: 244_000, fees: [2_651, 2_184, 1_802, 1_490] as [number, number, number, number] },
+  { maxPrice: 347_000, fees: [3_764, 2_823, 2_117, 1_585] as [number, number, number, number] },
+  { maxPrice: Infinity, fees: [5_364, 3_753, 2_627, 1_840] as [number, number, number, number] },
 ];
-
-/**
- * Israeli MoT registration fee by "fee group" (kvuzat_agra_cd).
- *
- * Each vehicle model is assigned a fee group in the WLTP dataset. The
- * mapping from group -> annual fee is published yearly by the Ministry of
- * Transportation. This is the preferred lookup over our older price-tier
- * approximation, because it uses the actual classification the MoT itself
- * uses for billing.
- *
- * Numbers below are placeholders calibrated against the price-tier values
- * for the same price range — they should be refreshed against the
- * official MoT publication. Until that's done, calcRegistrationFee falls
- * back to the price tiers when no feeGroup is provided.
- */
-const REGISTRATION_FEE_BY_GROUP: Record<number, number> = {
-  1: 1_335,
-  2: 1_460,
-  3: 1_660,
-  4: 1_810,
-  5: 1_972,
-  6: 2_120,
-  7: 2_326,
-  8: 2_490,
-  9: 2_643,
-  10: 2_900,
-  11: 3_180,
-  12: 3_500,
-  13: 3_693,
-  14: 4_400,
-  15: 5_203,
-};
 
 // ---- Fuel Price Scraping ----
 
@@ -165,9 +137,8 @@ export async function getMarketData(): Promise<MarketData> {
 
   const marketData: MarketData = {
     fuelPrices,
-    registrationFeeTiers: REGISTRATION_TIERS,
-    registrationFeeByGroup: REGISTRATION_FEE_BY_GROUP,
-    radioFee: 141,
+    registrationFeeBands: REGISTRATION_FEE_BANDS,
+    radioFee: 135,
     testFees: {
       combustion: 117.6,
       electric: 99.95,
@@ -175,7 +146,7 @@ export async function getMarketData(): Promise<MarketData> {
     },
     testStartAge: 3,
     defaultInvestmentReturn: investmentReturn,
-    year: 2025,
+    year: 2026,
     lastUpdated: new Date().toISOString(),
   };
 
@@ -189,9 +160,8 @@ export async function getMarketData(): Promise<MarketData> {
 export function getStaticMarketData(): MarketData {
   return {
     fuelPrices: FALLBACK_FUEL_PRICES,
-    registrationFeeTiers: REGISTRATION_TIERS,
-    registrationFeeByGroup: REGISTRATION_FEE_BY_GROUP,
-    radioFee: 141,
+    registrationFeeBands: REGISTRATION_FEE_BANDS,
+    radioFee: 135,
     testFees: {
       combustion: 117.6,
       electric: 99.95,
@@ -199,7 +169,7 @@ export function getStaticMarketData(): MarketData {
     },
     testStartAge: 3,
     defaultInvestmentReturn: FALLBACK_INVESTMENT_RETURN,
-    year: 2025,
+    year: 2026,
     lastUpdated: new Date().toISOString(),
   };
 }

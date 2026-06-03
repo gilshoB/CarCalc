@@ -23,6 +23,7 @@ export interface VehicleIdentity {
   modelCode?: string; // degem_nm
   modelYear: number; // shnat_yitzur
   trim?: string; // ramat_gimur — undefined or literal "__common__" sentinel
+  drivetrain?: string; // hanaa_nm — "4X2" / "4X4" (optional; narrows price/specs)
   // Auto-resolved specs:
   fuelType?: FuelType; // mapped from delek_nm (Hebrew "בנזין"/"דיזל"/"חשמל"/"היברידי")
   fuelTypeRaw?: string; // raw delek_nm for diagnostics
@@ -113,10 +114,10 @@ export interface CalculatorInput {
   // Depreciation override (from results page)
   depreciationOverride?: { yr1: number; yr2: number; yr3Plus: number };
 
-  // Maintenance override (from results page)
+  // Maintenance override (from results page) — service-interval model
   maintenanceOverride?: {
-    ratePerKm: number; // base ₪/km
-    multipliers?: Partial<Record<FuelType, number>>; // optional override of fuel multipliers
+    serviceIntervalKm: number; // routine service every N km
+    costPerService: number; // average all-in cost per service (incl. wear)
   };
 }
 
@@ -136,18 +137,19 @@ export interface RegistrationTier {
 }
 
 /**
- * Registration fee per Israeli MoT "fee group" (kvuzat_agra_cd).
- * Each car model is assigned a fee group in the WLTP dataset.
- * This is the preferred lookup over price-tier guessing.
+ * Official Israeli MoT annual licensing-fee table (אגרת רישוי).
+ * The fee is a fixed government table indexed by the car's ORIGINAL new-car
+ * catalog price (price group 1–7) AND its manufacture-year cohort.
+ * `fees` is ordered by year cohort: [2024–2026, 2021–2023, 2017–2020, ≤2016].
  */
-export interface RegistrationFeeByGroup {
-  [feeGroup: number]: number; // annual fee in ILS for that group
+export interface RegistrationFeeBand {
+  maxPrice: number; // upper bound of original new-car catalog price for this group
+  fees: [number, number, number, number]; // annual fee in ILS, by year cohort
 }
 
 export interface MarketData {
   fuelPrices: FuelPrices;
-  registrationFeeTiers: RegistrationTier[]; // legacy fallback (price-banded)
-  registrationFeeByGroup?: RegistrationFeeByGroup; // preferred — indexed by kvuzat_agra_cd
+  registrationFeeBands: RegistrationFeeBand[]; // official price-group × year table
   radioFee: number; // annual, ILS
   testFees: {
     combustion: number; // ILS/year

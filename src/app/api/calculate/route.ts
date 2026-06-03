@@ -90,8 +90,8 @@ const CalculatorInputSchema = z.object({
     yr3Plus: z.number().min(0).max(100),
   }).optional(),
   maintenanceOverride: z.object({
-    ratePerKm: z.number().min(0),
-    multipliers: z.record(FuelTypeSchema, z.number().min(0)).optional(),
+    serviceIntervalKm: z.number().min(1),
+    costPerService: z.number().min(0),
   }).optional(),
 });
 

@@ -48,6 +48,10 @@ export default function FinancingStep({
           />
         </FormField>
       </div>
+
+      <p className="rounded-lg bg-brand-50 px-3 py-2 text-xs text-brand-700 dark:bg-brand-950 dark:text-brand-300">
+        {f.capitalHint}
+      </p>
     </div>
   );
 }

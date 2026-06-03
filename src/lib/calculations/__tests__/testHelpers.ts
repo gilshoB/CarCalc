@@ -45,7 +45,10 @@ const BASE_INPUT: CalculatorInput = {
 };
 
 export function makeInput(overrides: Record<string, unknown> = {}): CalculatorInput {
-  return deepMerge(structuredClone(BASE_INPUT), overrides) as CalculatorInput;
+  return deepMerge(
+    structuredClone(BASE_INPUT) as unknown as Record<string, unknown>,
+    overrides,
+  ) as unknown as CalculatorInput;
 }
 
 function deepMerge(target: Record<string, unknown>, source: Record<string, unknown>): Record<string, unknown> {

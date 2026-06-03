@@ -8,6 +8,7 @@ const PRICE_RESOURCE = "39f455bf-6db0-4926-859d-017f34eacbcb"; // importer price
 const REVALIDATE_SECONDS = 24 * 60 * 60; // 24h cache for vehicle metadata
 const GOV_TIMEOUT_MS = 15_000;
 const COMMON_TRIM = "__common__";
+const DRIVE_ALL = "__all__";
 
 interface DatastoreRecord {
   [k: string]: unknown;
@@ -94,11 +95,11 @@ function deriveKmPerLiter(co2: number | undefined, fuelType: FuelType | undefine
 async function opManufacturers() {
   const records = await fetchGov(
     WLTP_RESOURCE,
-    { distinct: "true", fields: "tozeret_nm", limit: "1000" },
+    { distinct: "true", fields: "tozar", limit: "1000" },
     "vehicle-makes",
   );
   const list = records
-    .map((r) => String(r.tozeret_nm ?? "").trim())
+    .map((r) => String(r.tozar ?? "").trim())
     .filter(Boolean)
     .sort((a, b) => a.localeCompare(b, "he"));
   // Deduplicate (in case distinct didn't fully de-dupe across whitespace variants)
@@ -111,7 +112,7 @@ async function opModels(manufacturer: string) {
     {
       distinct: "true",
       fields: "kinuy_mishari",
-      filters: JSON.stringify({ tozeret_nm: manufacturer }),
+      filters: JSON.stringify({ tozar: manufacturer }),
       limit: "1000",
     },
     `vehicle-models:${manufacturer}`,
@@ -129,7 +130,7 @@ async function opYears(manufacturer: string, model: string) {
     {
       distinct: "true",
       fields: "shnat_yitzur",
-      filters: JSON.stringify({ tozeret_nm: manufacturer, kinuy_mishari: model }),
+      filters: JSON.stringify({ tozar: manufacturer, kinuy_mishari: model }),
       limit: "100",
     },
     `vehicle-years:${manufacturer}:${model}`,
@@ -148,7 +149,7 @@ async function opTrims(manufacturer: string, model: string, year: number) {
       distinct: "true",
       fields: "ramat_gimur",
       filters: JSON.stringify({
-        tozeret_nm: manufacturer,
+        tozar: manufacturer,
         kinuy_mishari: model,
         shnat_yitzur: year,
       }),
@@ -168,19 +169,26 @@ async function opResolve(
   model: string,
   year: number,
   trim: string | undefined,
-): Promise<VehicleIdentity> {
+  drive: string | undefined,
+): Promise<{ vehicle: VehicleIdentity; drivetrains: string[] }> {
   const isCommon = !trim || trim === COMMON_TRIM;
+  const hasDrive = !!drive && drive !== DRIVE_ALL;
   const baseFilters = {
-    tozeret_nm: manufacturer,
+    tozar: manufacturer,
     kinuy_mishari: model,
     shnat_yitzur: year,
   };
   const filters = isCommon ? baseFilters : { ...baseFilters, ramat_gimur: trim };
 
+  // The price dataset has no `tozar`/`ramat_gimur` columns — it joins on
+  // model name + year only. We narrow back to the chosen brand afterwards
+  // by substring-matching its `tozeret_nm` (e.g. brand "טויוטה" ⊂ "טויוטה טורקיה").
+  const priceFilters = { kinuy_mishari: model, shnat_yitzur: year };
+
   const tag = `vehicle:${manufacturer}:${model}:${year}:${trim ?? "all"}`;
 
   // Fetch both specs (WLTP) and price in parallel
-  const [wltpRecords, priceRecords] = await Promise.all([
+  const [allWltpRecords, priceRecordsRaw] = await Promise.all([
     fetchGov(
       WLTP_RESOURCE,
       { filters: JSON.stringify(filters), limit: "100" },
@@ -188,10 +196,37 @@ async function opResolve(
     ),
     fetchGov(
       PRICE_RESOURCE,
-      { filters: JSON.stringify(filters), limit: "100" },
+      { filters: JSON.stringify(priceFilters), limit: "100" },
       `${tag}:price`,
     ).catch(() => [] as DatastoreRecord[]), // soft-fail prices alone
   ]);
+
+  // Drivetrain (4X2 / 4X4) is the biggest within-trim price driver, so expose
+  // it as an optional narrowing axis. List what's available, then filter to the
+  // chosen one if the user picked it.
+  const drivetrains = Array.from(
+    new Set(allWltpRecords.map((r) => String(r.hanaa_nm ?? "").trim()).filter(Boolean)),
+  ).sort();
+  const wltpRecords = hasDrive
+    ? allWltpRecords.filter((r) => String(r.hanaa_nm ?? "").trim() === drive)
+    : allWltpRecords;
+
+  // Join price rows to the chosen spec rows precisely via `degem_cd` (model
+  // code) — shared by both datasets. This pins the price to the exact
+  // trim(s) the user picked instead of averaging across the whole model line
+  // (which badly skews the catalog price, and thus the registration band).
+  const degemCds = new Set(
+    wltpRecords.map((r) => String(r.degem_cd ?? "")).filter(Boolean),
+  );
+  let priceRecords = priceRecordsRaw.filter((r) =>
+    degemCds.has(String(r.degem_cd ?? "")),
+  );
+  // Fallback: if no degem_cd overlap, fall back to brand-name substring match.
+  if (priceRecords.length === 0) {
+    priceRecords = priceRecordsRaw.filter((r) =>
+      String(r.tozeret_nm ?? "").includes(manufacturer),
+    );
+  }
 
   // Aggregate WLTP fields
   const fuelTypesRaw = wltpRecords.map((r) => String(r.delek_nm ?? ""));
@@ -224,19 +259,23 @@ async function opResolve(
   const ambiguous = isCommon || (feeGroups.length > 1 && feeGroupShare < 0.7);
 
   return {
-    manufacturer,
-    model,
-    modelYear: year,
-    trim: isCommon ? COMMON_TRIM : trim,
-    fuelType,
-    fuelTypeRaw,
-    pollutionGroup,
-    feeGroup,
-    co2WltpGramsPerKm: co2 ? Math.round(co2) : undefined,
-    kmPerLiter,
-    catalogPrice,
-    ambiguous,
-    source: "gov.il",
+    vehicle: {
+      manufacturer,
+      model,
+      modelYear: year,
+      trim: isCommon ? COMMON_TRIM : trim,
+      drivetrain: hasDrive ? drive : undefined,
+      fuelType,
+      fuelTypeRaw,
+      pollutionGroup,
+      feeGroup,
+      co2WltpGramsPerKm: co2 ? Math.round(co2) : undefined,
+      kmPerLiter,
+      catalogPrice,
+      ambiguous,
+      source: "gov.il" as const,
+    },
+    drivetrains,
   };
 }
 
@@ -291,6 +330,7 @@ export async function GET(req: NextRequest) {
       const model = searchParams.get("model");
       const yearStr = searchParams.get("year");
       const trim = searchParams.get("trim") ?? undefined;
+      const drive = searchParams.get("drive") ?? undefined;
       const year = Number(yearStr);
       if (!manufacturer || !model || !Number.isFinite(year)) {
         return NextResponse.json(
@@ -298,8 +338,8 @@ export async function GET(req: NextRequest) {
           { status: 400 },
         );
       }
-      const vehicle = await opResolve(manufacturer, model, year, trim);
-      return NextResponse.json({ vehicle });
+      const { vehicle, drivetrains } = await opResolve(manufacturer, model, year, trim, drive);
+      return NextResponse.json({ vehicle, drivetrains });
     }
 
     return NextResponse.json({ error: "unknown op" }, { status: 400 });

@@ -25,9 +25,6 @@ interface BuyingStepProps {
   buy: BuyCarDetails;
   cashOnHand: number;
   oldCarValue: number;
-  mandatoryInsuranceQuote: number;
-  comprehensiveInsuranceQuote: number;
-  useLoan: boolean;
   interestRate: number;
   loanTermYears: number;
   errors: FormErrors;
@@ -40,9 +37,6 @@ export default function BuyingStep({
   buy,
   cashOnHand,
   oldCarValue,
-  mandatoryInsuranceQuote,
-  comprehensiveInsuranceQuote,
-  useLoan,
   interestRate,
   loanTermYears,
   errors,
@@ -73,6 +67,13 @@ export default function BuyingStep({
     if (v.fuelType) onChange("buy.fuelType", v.fuelType);
     if (v.kmPerLiter) onChange("buy.consumptionKmPerUnit", v.kmPerLiter);
     if (v.catalogPrice) onChange("buy.catalogPrice", v.catalogPrice);
+    // Auto-derive the car's age from the picked model year (#5). If it's at
+    // least a year old, mark it used so the depreciation inputs appear.
+    if (v.modelYear) {
+      const age = Math.max(0, new Date().getFullYear() - v.modelYear);
+      onChange("buy.usedCarAge", age);
+      if (age >= 1) onChange("buy.isUsed", true);
+    }
   };
 
   const handleManualEntry = () => {
@@ -82,8 +83,13 @@ export default function BuyingStep({
   };
 
   const catalogAutoFilled = !manualMode && buy.vehicle?.catalogPrice != null;
+  // When a car is picked, fuel type + consumption are filled by the picker —
+  // show them read-only instead of redundant editable inputs.
+  const vehicleAutoFilled = !manualMode && buy.vehicle != null;
 
-  // Calculate if loan is needed
+  // A loan is needed only when the available capital doesn't cover the price.
+  // Purely derived — the calculator computes the same thing from the numbers,
+  // so there's no "use loan" flag to store or sync.
   const availableCapital = cashOnHand + oldCarValue;
   const loanNeeded = buy.carPrice > 0 && buy.carPrice > availableCapital;
   const loanAmount = loanNeeded ? buy.carPrice - availableCapital : 0;
@@ -121,30 +127,22 @@ export default function BuyingStep({
           />
         </FormField>
 
-        {catalogAutoFilled ? (
-          <FormField label={f.catalogPrice}>
-            <div className="flex items-center justify-between rounded-lg border border-zinc-200 bg-zinc-100 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800">
-              <span className="text-zinc-700 dark:text-zinc-200">
-                ₪ {formatNumber(buy.vehicle!.catalogPrice!, locale)}
-              </span>
-              <span className="rounded bg-brand-100 px-1.5 py-0.5 text-[10px] font-medium text-brand-700 dark:bg-brand-900 dark:text-brand-300">
-                {t.form.vehiclePicker.autofilledBadge}
-              </span>
-            </div>
-          </FormField>
-        ) : (
-          <FormField label={f.catalogPrice} hint={f.catalogPriceHint}>
-            <NumberInput
-              value={buy.catalogPrice ?? 0}
-              onChange={(v) => onChange("buy.catalogPrice", v || undefined)}
-              prefix="₪"
-            />
-          </FormField>
-        )}
+        <FormField
+          label={f.catalogPrice}
+          hint={catalogAutoFilled ? `${t.form.vehiclePicker.autofilledBadge} · ${f.catalogPriceHint}` : f.catalogPriceHint}
+        >
+          <NumberInput
+            value={buy.catalogPrice ?? 0}
+            onChange={(v) => onChange("buy.catalogPrice", v || undefined)}
+            prefix="₪"
+          />
+        </FormField>
       </div>
 
+      {/* Fuel type + consumption — auto-filled by the picker but always editable
+          so the user can override (e.g. petrol vs. diesel within the same trim). */}
       <div className="grid gap-4 sm:grid-cols-2">
-        <FormField label={f.fuelType}>
+        <FormField label={f.fuelType} hint={vehicleAutoFilled ? t.form.vehiclePicker.autofilledBadge : undefined}>
           <Select
             value={buy.fuelType}
             onChange={handleFuelTypeChange}
@@ -152,7 +150,12 @@ export default function BuyingStep({
           />
         </FormField>
 
-        <FormField label={`${f.consumption} (${consumptionLabel})`} error={errors["buy.consumptionKmPerUnit"]} required>
+        <FormField
+          label={`${f.consumption} (${consumptionLabel})`}
+          hint={vehicleAutoFilled ? t.form.vehiclePicker.autofilledBadge : undefined}
+          error={errors["buy.consumptionKmPerUnit"]}
+          required
+        >
           <NumberInput
             value={buy.consumptionKmPerUnit}
             onChange={(v) => onChange("buy.consumptionKmPerUnit", v)}
@@ -171,9 +174,13 @@ export default function BuyingStep({
       </div>
 
       {buy.isUsed && (
-        <div className="space-y-4">
+        <div className="space-y-4 rounded-xl border border-zinc-200 bg-zinc-50/60 p-4 dark:border-zinc-700 dark:bg-zinc-800/40">
+          <div>
+            <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">{t.form.usedCar.sectionTitle}</h3>
+            <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">{t.form.usedCar.sectionHint}</p>
+          </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <FormField label={f.usedCarAge} error={errors["buy.usedCarAge"]} required>
+            <FormField label={f.usedCarAge} hint={f.usedCarAgeHint} error={errors["buy.usedCarAge"]} required>
               <NumberInput
                 value={buy.usedCarAge ?? 0}
                 onChange={(v) => onChange("buy.usedCarAge", v)}
@@ -201,11 +208,14 @@ export default function BuyingStep({
             </FormField>
           </div>
 
-          <Toggle
-            checked={buy.wasLeased ?? false}
-            onChange={(v) => onChange("buy.wasLeased", v)}
-            label={t.form.usedCar.wasLeased}
-          />
+          <div>
+            <Toggle
+              checked={buy.wasLeased ?? false}
+              onChange={(v) => onChange("buy.wasLeased", v)}
+              label={t.form.usedCar.wasLeased}
+            />
+            <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{t.form.usedCar.wasLeasedHint}</p>
+          </div>
         </div>
       )}
 
@@ -213,47 +223,38 @@ export default function BuyingStep({
       <div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
         <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-3">{f.insuranceSection}</h3>
         <div className="grid gap-4 sm:grid-cols-2">
-          <FormField label={f.mandatoryInsuranceQuote} error={errors["mandatoryInsuranceQuote"]} required>
+          <FormField label={f.mandatoryInsuranceQuote} error={errors["buy.mandatoryInsuranceQuote"]} required>
             <NumberInput
-              value={mandatoryInsuranceQuote}
-              onChange={(v) => onChange("mandatoryInsuranceQuote", v)}
+              value={buy.mandatoryInsuranceQuote ?? 0}
+              onChange={(v) => onChange("buy.mandatoryInsuranceQuote", v)}
               prefix="₪"
-              error={!!errors["mandatoryInsuranceQuote"]}
+              error={!!errors["buy.mandatoryInsuranceQuote"]}
             />
           </FormField>
-          <FormField label={f.comprehensiveInsuranceQuote} error={errors["comprehensiveInsuranceQuote"]} required>
+          <FormField label={f.comprehensiveInsuranceQuote} error={errors["buy.comprehensiveInsuranceQuote"]} required>
             <NumberInput
-              value={comprehensiveInsuranceQuote}
-              onChange={(v) => onChange("comprehensiveInsuranceQuote", v)}
+              value={buy.comprehensiveInsuranceQuote ?? 0}
+              onChange={(v) => onChange("buy.comprehensiveInsuranceQuote", v)}
               prefix="₪"
-              error={!!errors["comprehensiveInsuranceQuote"]}
+              error={!!errors["buy.comprehensiveInsuranceQuote"]}
             />
           </FormField>
         </div>
       </div>
 
-      {/* Loan section — user toggles on/off */}
+      {/* Loan section — appears automatically only when capital doesn't cover the price */}
       <div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-        <Toggle
-          checked={useLoan}
-          onChange={(v) => onChange("useLoan", v)}
-          label={f.useLoan}
-        />
+        <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-2">{f.loanSection}</h3>
 
-        {/* Hint when loan seems needed based on numbers */}
-        {!useLoan && loanNeeded && (
-          <p className="mt-2 text-xs text-amber-600 dark:text-amber-400">
-            {f.loanNeeded} — {f.loanAmount}: {formatNumber(loanAmount, locale)} ₪
+        {!loanNeeded ? (
+          <p className="text-xs text-emerald-600 dark:text-emerald-400">
+            {f.loanNotNeeded}
           </p>
-        )}
-
-        {useLoan && (
-          <div className="mt-4 space-y-3">
-            {loanNeeded && (
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                {f.loanExplain}
-              </p>
-            )}
+        ) : (
+          <div className="space-y-3">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              {f.loanExplain}
+            </p>
             <p className="text-sm font-medium text-brand-600 dark:text-brand-400">
               {f.loanAmount}: {formatNumber(loanAmount, locale)} ₪
             </p>

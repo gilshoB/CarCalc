@@ -6,7 +6,8 @@ const market = getTestMarketData();
 
 describe("calcBuyScenario", () => {
   it("basic scenario — no loan, no business, no investment", () => {
-    const input = makeInput();
+    // Capital fully covers the price → no loan is auto-triggered.
+    const input = makeInput({ cashOnHand: 170000, oldCarValue: 0 });
     const result = calcBuyScenario(input, market);
 
     expect(result.totalCost).toBeDefined();
@@ -29,15 +30,15 @@ describe("calcBuyScenario", () => {
 
     // Loan needed: 200000 - (50000 + 60000) = 90000
     expect(result.breakdown.loanInterest).toBeGreaterThan(0);
-    // Total cost includes loan interest but also subtracts old car value and residual
-    // So just verify loan interest adds cost vs no-loan scenario
+    // Total cost includes loan interest but also subtracts old car value and residual.
+    // Compare to a scenario with enough capital to avoid a loan entirely.
     const inputNoLoan = makeInput({
-      useLoan: false,
-      cashOnHand: 50000,
-      oldCarValue: 60000,
+      cashOnHand: 200000,
+      oldCarValue: 0,
       buy: { carPrice: 200000, catalogPrice: 200000, isUsed: false, fuelType: "gasoline", consumptionKmPerUnit: 14 },
     });
     const resultNoLoan = calcBuyScenario(inputNoLoan, market);
+    expect(resultNoLoan.breakdown.loanInterest).toBe(0);
     expect(result.totalCost).toBeGreaterThan(resultNoLoan.totalCost);
   });
 
@@ -69,7 +70,7 @@ describe("calcBuyScenario", () => {
     expect(result.totalCost).toBeLessThan(resultNoBusiness.totalCost);
   });
 
-  it("with investment — free capital invested", () => {
+  it("with investment — buying invests nothing of the car-relevant capital", () => {
     const input = makeInput({
       includeInvestment: true,
       investmentReturnRate: 10,
@@ -79,8 +80,10 @@ describe("calcBuyScenario", () => {
     });
     const result = calcBuyScenario(input, market);
 
-    // Free capital: (100000 + 100000) - 150000 = 50000
-    expect(result.breakdown.investmentResult).toBeGreaterThan(0);
+    // Capital up to the car price is sunk into the car; capital beyond it is
+    // invested identically whether you buy or lease, so it's excluded from both.
+    // => buying contributes no investment gain to the comparison.
+    expect(result.breakdown.investmentResult).toBe(0);
   });
 
   it("no free capital — no investment gain", () => {

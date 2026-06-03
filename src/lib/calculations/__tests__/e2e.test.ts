@@ -55,8 +55,8 @@ describe("e2e — exact numerical outputs", () => {
         fuelType: "gasoline", consumptionKmPerUnit: 14,
         leaseIncludes: { maintenance: true, mandatoryInsurance: true, comprehensiveInsurance: true, registration: true },
       },
-      cashOnHand: 50000,
-      oldCarValue: 60000,
+      cashOnHand: 170000,
+      oldCarValue: 0,
       comparisonPeriodYears: 3,
       isBusinessUse: false,
       useLoan: false,
@@ -65,6 +65,7 @@ describe("e2e — exact numerical outputs", () => {
 
     // Buy breakdown verification
     expect(buy.breakdown.carPayment).toBe(170000);
+    // Capital fully covers the price → no loan auto-triggered.
     expect(buy.breakdown.loanInterest).toBe(0);
     // Depreciation: 170000 → yr1 (0.85) → yr2 (0.88) → yr3 (0.90)
     // 170000 * 0.85 = 144500, * 0.88 = 127160, * 0.90 = 114444
@@ -282,17 +283,17 @@ describe("e2e — exact numerical outputs", () => {
       investmentReturnRate: 10,
     });
 
-    // Buy: free capital = (200000 + 50000) - 150000 = 100000
-    const buyFreeCapital = 100000;
-    const buyExpectedGain = Math.round(buyFreeCapital * (Math.pow(1.1, 3) - 1));
-    expect(buy.breakdown.investmentResult).toBe(buyExpectedGain);
+    // Only capital up to the car price (150k) is at stake in the decision.
+    // Buying sinks it into the car → invests 0.
+    expect(buy.breakdown.investmentResult).toBe(0);
 
-    // Lease: investable = (200000 + 50000) - 5000 = 245000
-    const leaseFreeCapital = 245000;
+    // Lease: relevant capital = min(250000, 150000) = 150000; investable = 150000 - 5000 = 145000.
+    // (Capital beyond the 150k car price is invested identically either way and excluded.)
+    const leaseFreeCapital = 145000;
     const leaseExpectedGain = Math.round(leaseFreeCapital * (Math.pow(1.1, 3) - 1));
     expect(lease.breakdown.investmentResult).toBe(leaseExpectedGain);
 
-    // Lease should have much higher investment gain
+    // Lease keeps the car-money liquid, so it still has the higher investment gain.
     expect(lease.breakdown.investmentResult).toBeGreaterThan(buy.breakdown.investmentResult);
 
     expect(comparison.savingsAmount).toBe(Math.abs(buy.totalCost - lease.totalCost));

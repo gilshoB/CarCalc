@@ -156,53 +156,42 @@ describe("calcFuelCost", () => {
 // ---- calcRegistrationFee ----
 
 describe("calcRegistrationFee", () => {
-  const tiers = market.registrationFeeTiers;
-  const radioFee = market.radioFee; // 141
+  const bands = market.registrationFeeBands;
+  const radioFee = market.radioFee; // 135
 
-  it("cheapest tier (< 114k)", () => {
-    const result = calcRegistrationFee(100000, 1, tiers, radioFee);
-    expect(result).toBe(Math.round(1335 + 141));
+  it("group 1 (≤117k), new car (2024-26)", () => {
+    const result = calcRegistrationFee(100000, 1, bands, radioFee, 2025);
+    expect(result).toBe(Math.round(1266 + 135));
   });
 
-  it("mid tier (162k-183k) — 3 years", () => {
-    const result = calcRegistrationFee(170000, 3, tiers, radioFee);
-    expect(result).toBe(Math.round((2326 + 141) * 3));
+  it("group 5 (188k-244k), new car — matches real Kodiaq case (2,651 + 135 = 2,786)", () => {
+    const result = calcRegistrationFee(204500, 1, bands, radioFee, 2024);
+    expect(result).toBe(2786);
   });
 
-  it("most expensive tier (> 338k)", () => {
-    const result = calcRegistrationFee(400000, 1, tiers, radioFee);
-    expect(result).toBe(Math.round(5203 + 141));
+  it("group 5, mid-age cohort (2021-2023)", () => {
+    const result = calcRegistrationFee(204500, 1, bands, radioFee, 2022);
+    expect(result).toBe(Math.round(2184 + 135));
   });
 
-  it("exact boundary — 114k falls in first tier", () => {
-    const result = calcRegistrationFee(114000, 1, tiers, radioFee);
-    expect(result).toBe(Math.round(1335 + 141));
+  it("most expensive group (>347k), 3 years", () => {
+    const result = calcRegistrationFee(400000, 3, bands, radioFee, 2025);
+    expect(result).toBe(Math.round((5364 + 135) * 3));
   });
 
-  it("just above boundary — 114001 falls in second tier", () => {
-    const result = calcRegistrationFee(114001, 1, tiers, radioFee);
-    expect(result).toBe(Math.round(1660 + 141));
+  it("exact boundary — 117k falls in group 1", () => {
+    const result = calcRegistrationFee(117000, 1, bands, radioFee, 2025);
+    expect(result).toBe(Math.round(1266 + 135));
   });
 
-  // ---- New: lookup by feeGroup (kvuzat_agra_cd) ----
-
-  it("uses feeGroup when provided (preferred over price-banding)", () => {
-    const feeByGroup = market.registrationFeeByGroup!;
-    // group 7 should map to fee from the table; ignore price tier
-    const result = calcRegistrationFee(500000, 1, tiers, radioFee, 7, feeByGroup);
-    expect(result).toBe(Math.round(feeByGroup[7] + radioFee));
+  it("just above boundary — 117001 falls in group 2", () => {
+    const result = calcRegistrationFee(117001, 1, bands, radioFee, 2025);
+    expect(result).toBe(Math.round(1610 + 135));
   });
 
-  it("falls back to price tiers when feeGroup is missing from the table", () => {
-    const feeByGroup = { 1: 1000 };
-    // group 99 doesn't exist → fall back to price tier (170k → 2326)
-    const result = calcRegistrationFee(170000, 1, tiers, radioFee, 99, feeByGroup);
-    expect(result).toBe(Math.round(2326 + radioFee));
-  });
-
-  it("falls back to price tiers when no feeByGroup table supplied", () => {
-    const result = calcRegistrationFee(170000, 1, tiers, radioFee, 7, undefined);
-    expect(result).toBe(Math.round(2326 + radioFee));
+  it("old car (≤2016) pays the lowest cohort fee", () => {
+    const result = calcRegistrationFee(204500, 1, bands, radioFee, 2010);
+    expect(result).toBe(Math.round(1490 + 135));
   });
 });
 
@@ -241,23 +230,23 @@ describe("calcTestFee", () => {
 // ---- calcMaintenance ----
 
 describe("calcMaintenance", () => {
-  it("gasoline — base rate", () => {
-    // 15000 * 0.15 * 1.0 * 3 = 6750
+  it("gasoline — default service (1,500 ₪ / 10,000 km)", () => {
+    // (15000 / 10000) * 1500 * 3 = 6750  (== old 0.15 ₪/km baseline)
     expect(calcMaintenance(15000, 3, "gasoline")).toBe(6750);
   });
 
-  it("electric — 0.8x multiplier", () => {
-    // 15000 * 0.15 * 0.8 * 3 = 5400
+  it("electric — cheaper service (1,200 ₪)", () => {
+    // (15000 / 10000) * 1200 * 3 = 5400
     expect(calcMaintenance(15000, 3, "electric")).toBe(5400);
   });
 
-  it("diesel — 1.1x multiplier", () => {
-    // 15000 * 0.15 * 1.1 * 3 = 7425
+  it("diesel — pricier service (1,650 ₪)", () => {
+    // (15000 / 10000) * 1650 * 3 = 7425
     expect(calcMaintenance(15000, 3, "diesel")).toBe(7425);
   });
 
-  it("hybrid — 1.2x multiplier", () => {
-    // 15000 * 0.15 * 1.2 * 3 = 8100
+  it("hybrid — pricier service (1,800 ₪)", () => {
+    // (15000 / 10000) * 1800 * 3 = 8100
     expect(calcMaintenance(15000, 3, "hybrid")).toBe(8100);
   });
 
@@ -265,16 +254,24 @@ describe("calcMaintenance", () => {
     expect(calcMaintenance(0, 3, "gasoline")).toBe(0);
   });
 
-  it("override ratePerKm — uses user value", () => {
-    // 15000 × 0.20 × 1.0 × 3 = 9000
-    expect(calcMaintenance(15000, 3, "gasoline", { ratePerKm: 0.2 })).toBe(9000);
+  it("override — custom service cost", () => {
+    // (15000 / 10000) * 2000 * 3 = 9000
+    expect(
+      calcMaintenance(15000, 3, "gasoline", { serviceIntervalKm: 10000, costPerService: 2000 }),
+    ).toBe(9000);
   });
 
-  it("override multiplier — uses user value", () => {
-    // 15000 × 0.15 × 1.5 × 3 = 10125
+  it("override — longer interval lowers annual cost", () => {
+    // (15000 / 20000) * 1500 * 3 = 3375
     expect(
-      calcMaintenance(15000, 3, "gasoline", { ratePerKm: 0.15, multipliers: { gasoline: 1.5 } }),
-    ).toBe(10125);
+      calcMaintenance(15000, 3, "gasoline", { serviceIntervalKm: 20000, costPerService: 1500 }),
+    ).toBe(3375);
+  });
+
+  it("override — zero interval guards against divide-by-zero", () => {
+    expect(
+      calcMaintenance(15000, 3, "gasoline", { serviceIntervalKm: 0, costPerService: 1500 }),
+    ).toBe(0);
   });
 });
 

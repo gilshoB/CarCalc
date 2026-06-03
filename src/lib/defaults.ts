@@ -10,6 +10,8 @@ export const DEFAULT_INPUT: CalculatorInput = {
     usedCarAge: 2,
     fuelType: "hybrid",
     consumptionKmPerUnit: 18,
+    mandatoryInsuranceQuote: 1500,
+    comprehensiveInsuranceQuote: 5000,
   },
   lease: {
     monthlyPayment: 3500,
@@ -17,6 +19,8 @@ export const DEFAULT_INPUT: CalculatorInput = {
     leaseDownPayment: 7900,
     fuelType: "hybrid",
     consumptionKmPerUnit: 18,
+    mandatoryInsuranceQuote: 1500,
+    comprehensiveInsuranceQuote: 5000,
     leaseIncludes: {
       maintenance: true,
       mandatoryInsurance: true,

@@ -10,6 +10,7 @@ interface PersonalDetailsStepProps {
   t: ReturnType<typeof getTranslations>;
   name: string;
   email: string;
+  annualKm: number;
   isBusinessUse: boolean;
   marginalTaxRate?: number;
   errors: FormErrors;
@@ -20,12 +21,14 @@ export default function PersonalDetailsStep({
   t,
   name,
   email,
+  annualKm,
   isBusinessUse,
   marginalTaxRate,
   errors,
   onChange,
 }: PersonalDetailsStepProps) {
   const f = t.form.personalDetails;
+  const l = t.form.leasing;
 
   return (
     <div className="space-y-6">
@@ -63,6 +66,16 @@ export default function PersonalDetailsStep({
           />
         </FormField>
       </div>
+
+      <FormField label={l.annualKm} hint={l.annualKmHint} error={errors["annualKm"]} required>
+        <NumberInput
+          value={annualKm}
+          onChange={(v) => onChange("annualKm", v)}
+          placeholder="15,000"
+          suffix="km"
+          error={!!errors["annualKm"]}
+        />
+      </FormField>
 
       <div className="pt-2">
         <Toggle

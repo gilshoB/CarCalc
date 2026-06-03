@@ -24,12 +24,17 @@ export function calcBuyScenario(
   const { buy, annualKm, comparisonPeriodYears: years } = input;
   const catalogPrice = buy.catalogPrice ?? buy.carPrice;
   const carAgeAtStart = buy.isUsed ? (buy.usedCarAge ?? 0) : 0;
+  // Manufacture year drives the registration-fee cohort. Prefer the picked
+  // vehicle's model year; otherwise derive from the used-car age.
+  const manufactureYear = buy.vehicle?.modelYear ?? (new Date().getFullYear() - carAgeAtStart);
 
   // 1. Available capital
   const availableCapital = input.cashOnHand + input.oldCarValue;
 
-  // 2. Loan calculation (only if user toggled on)
-  const loanNeeded = input.useLoan ? Math.max(0, buy.carPrice - availableCapital) : 0;
+  // 2. Loan calculation — a loan is needed (and only needed) when the available
+  // capital doesn't cover the price. Derived purely from the numbers; there's no
+  // separate "use loan" flag to keep in sync.
+  const loanNeeded = Math.max(0, buy.carPrice - availableCapital);
   const loan = loanNeeded > 0
     ? calcLoanCost(
         loanNeeded,
@@ -58,10 +63,9 @@ export function calcBuyScenario(
   const registration = calcRegistrationFee(
     catalogPrice,
     years,
-    marketData.registrationFeeTiers,
+    marketData.registrationFeeBands,
     marketData.radioFee,
-    buy.vehicle?.feeGroup,
-    marketData.registrationFeeByGroup,
+    manufactureYear,
   );
 
   // Insurance: prefer per-scenario override if set, else top-level
@@ -100,16 +104,13 @@ export function calcBuyScenario(
     taxBenefits = calcBusinessTaxBenefits(deductibleExpenses, input.marginalTaxRate);
   }
 
-  // 6. Investment gain on free capital
-  // Only count what's actually free to invest (capital not spent on the car)
-  let investmentResult = 0;
-  if (input.includeInvestment) {
-    const returnRate = input.investmentReturnRate ?? marketData.defaultInvestmentReturn;
-    const freeCapital = Math.max(0, availableCapital - buy.carPrice);
-    if (freeCapital > 0) {
-      investmentResult = calcInvestmentReturn(freeCapital, years, returnRate).gain;
-    }
-  }
+  // 6. Investment / opportunity cost.
+  // Only the capital "at stake" in the buy-vs-lease decision counts — that's the
+  // amount up to the car's price. When buying, that capital is sunk into the car,
+  // so none of it stays invested → 0. (Any capital the user holds *beyond* the car
+  // price would be invested identically whether they buy or lease, so it cancels
+  // out and is deliberately excluded from both sides rather than inflating them.)
+  const investmentResult = 0;
 
   // 7. Total cost
   // Net cost of ownership = what you pay - what you get back
@@ -135,10 +136,13 @@ export function calcBuyScenario(
   const annualRegistration = calcRegistrationFee(
     catalogPrice,
     1,
-    marketData.registrationFeeTiers,
+    marketData.registrationFeeBands,
     marketData.radioFee,
+    manufactureYear,
   );
-  const annualInsurance = input.mandatoryInsuranceQuote + input.comprehensiveInsuranceQuote;
+  const annualInsurance =
+    (buy.mandatoryInsuranceQuote ?? input.mandatoryInsuranceQuote) +
+    (buy.comprehensiveInsuranceQuote ?? input.comprehensiveInsuranceQuote);
   const annualFuel = calcFuelCost(annualKm, 1, buy.fuelType, buy.consumptionKmPerUnit, marketData.fuelPrices);
   const annualMaintenance = calcMaintenance(annualKm, 1, buy.fuelType);
   const annualLoanPayment = loan.monthlyPayment * 12;

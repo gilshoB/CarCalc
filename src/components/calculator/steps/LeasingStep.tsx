@@ -24,9 +24,6 @@ interface LeasingStepProps {
   t: ReturnType<typeof getTranslations>;
   locale: Locale;
   lease: LeaseCarDetails;
-  annualKm: number;
-  mandatoryInsuranceQuote: number;
-  comprehensiveInsuranceQuote: number;
   includeInvestment: boolean;
   investmentReturnRate?: number;
   defaultInvestmentReturn: number;
@@ -40,9 +37,6 @@ export default function LeasingStep({
   t,
   locale,
   lease,
-  annualKm,
-  mandatoryInsuranceQuote,
-  comprehensiveInsuranceQuote,
   includeInvestment,
   investmentReturnRate,
   defaultInvestmentReturn,
@@ -82,6 +76,10 @@ export default function LeasingStep({
     onChange("lease.vehicle", undefined);
   };
 
+  // When a car is picked, fuel type + consumption are filled by the picker —
+  // show them read-only instead of redundant editable inputs.
+  const vehicleAutoFilled = !manualMode && lease.vehicle != null;
+
   // Calculate investable amount
   const investableAmount = Math.max(0, cashOnHand + oldCarValue - lease.leaseDownPayment);
 
@@ -112,17 +110,6 @@ export default function LeasingStep({
         </button>
       )}
 
-      {/* Annual KM */}
-      <FormField label={f.annualKm} hint={f.annualKmHint} error={errors["annualKm"]} required>
-        <NumberInput
-          value={annualKm}
-          onChange={(v) => onChange("annualKm", v)}
-          placeholder="15,000"
-          suffix="km"
-          error={!!errors["annualKm"]}
-        />
-      </FormField>
-
       <div className="grid gap-4 sm:grid-cols-2">
         <FormField label={f.monthlyPayment} error={errors["lease.monthlyPayment"]} required>
           <NumberInput
@@ -150,8 +137,9 @@ export default function LeasingStep({
         </FormField>
       </div>
 
+      {/* Fuel type + consumption — auto-filled by the picker but always editable. */}
       <div className="grid gap-4 sm:grid-cols-2">
-        <FormField label={f.fuelType}>
+        <FormField label={f.fuelType} hint={vehicleAutoFilled ? t.form.vehiclePicker.autofilledBadge : undefined}>
           <Select
             value={lease.fuelType}
             onChange={handleFuelTypeChange}
@@ -159,7 +147,12 @@ export default function LeasingStep({
           />
         </FormField>
 
-        <FormField label={`${f.consumption} (${consumptionLabel})`} error={errors["lease.consumptionKmPerUnit"]} required>
+        <FormField
+          label={`${f.consumption} (${consumptionLabel})`}
+          hint={vehicleAutoFilled ? t.form.vehiclePicker.autofilledBadge : undefined}
+          error={errors["lease.consumptionKmPerUnit"]}
+          required
+        >
           <NumberInput
             value={lease.consumptionKmPerUnit}
             onChange={(v) => onChange("lease.consumptionKmPerUnit", v)}
@@ -204,8 +197,8 @@ export default function LeasingStep({
             {needsMandatoryInsurance && (
               <FormField label={f.mandatoryInsuranceQuote}>
                 <NumberInput
-                  value={mandatoryInsuranceQuote}
-                  onChange={(v) => onChange("mandatoryInsuranceQuote", v)}
+                  value={lease.mandatoryInsuranceQuote ?? 0}
+                  onChange={(v) => onChange("lease.mandatoryInsuranceQuote", v)}
                   prefix="₪"
                 />
               </FormField>
@@ -213,8 +206,8 @@ export default function LeasingStep({
             {needsComprehensiveInsurance && (
               <FormField label={f.comprehensiveInsuranceQuote}>
                 <NumberInput
-                  value={comprehensiveInsuranceQuote}
-                  onChange={(v) => onChange("comprehensiveInsuranceQuote", v)}
+                  value={lease.comprehensiveInsuranceQuote ?? 0}
+                  onChange={(v) => onChange("lease.comprehensiveInsuranceQuote", v)}
                   prefix="₪"
                 />
               </FormField>

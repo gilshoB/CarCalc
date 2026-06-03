@@ -3,8 +3,20 @@
 import { useState } from "react";
 import type { getTranslations } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
-import type { CalculatorOutput, CalculatorInput } from "@/types/calculator";
+import type { CalculatorOutput, CalculatorInput, VehicleIdentity } from "@/types/calculator";
 import { formatNumber } from "@/lib/formatters";
+
+function vehicleLabel(
+  vehicle: VehicleIdentity | undefined,
+  t: ReturnType<typeof getTranslations>,
+): string {
+  if (!vehicle) return t.results.comparison.manuallyEntered;
+  const base = `${vehicle.manufacturer} ${vehicle.model} ${vehicle.modelYear}`.trim();
+  const isCommon = !vehicle.trim || vehicle.trim === "__common__";
+  const trimPart = isCommon ? "" : ` ${vehicle.trim}`;
+  const fuel = vehicle.fuelType ? ` — ${t.form.fuelTypes[vehicle.fuelType]}` : "";
+  return `${base}${trimPart}${fuel}`;
+}
 
 interface ComparisonTableProps {
   t: ReturnType<typeof getTranslations>;
@@ -100,10 +112,19 @@ function buildFormulas(
     lease: tpl(f.fuelFormula, { km: fmt(input.annualKm), consumption: input.lease.consumptionKmPerUnit, years }),
   };
 
+  // Maintenance is a service-interval model: every N km at an avg cost.
+  // The override (if set) wins; otherwise per-fuel-type service cost is used.
+  const SERVICE_COST: Record<string, number> = {
+    gasoline: 1500, diesel: 1650, hybrid: 1800, electric: 1200,
+  };
+  const mo = input.maintenanceOverride;
+  const maintInterval = mo?.serviceIntervalKm ?? 10000;
+  const buyCost = mo?.costPerService ?? SERVICE_COST[input.buy.fuelType] ?? 1500;
+  const leaseCost = mo?.costPerService ?? SERVICE_COST[input.lease.fuelType] ?? 1500;
   formulas.maintenance = {
-    buy: tpl(f.maintenanceFormula, { km: fmt(input.annualKm), years }),
+    buy: tpl(f.maintenanceFormula, { interval: fmt(maintInterval), cost: fmt(buyCost), km: fmt(input.annualKm), years }),
     lease: leaseBreak.maintenance > 0
-      ? tpl(f.maintenanceFormula, { km: fmt(input.annualKm), years })
+      ? tpl(f.maintenanceFormula, { interval: fmt(maintInterval), cost: fmt(leaseCost), km: fmt(input.annualKm), years })
       : f.includedInLease,
   };
 
@@ -233,6 +254,20 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
             </tr>
           </thead>
           <tbody>
+            {/* Vehicle identity row — echoes the cars chosen at the top */}
+            <tr className="border-b border-zinc-100/80 dark:border-zinc-800/50 bg-zinc-50/60 dark:bg-zinc-800/30">
+              <td className="ps-4 pe-3 py-3">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+                  {c.vehicleRowLabel}
+                </span>
+              </td>
+              <td className="text-end px-3 py-3 align-top text-xs font-medium text-zinc-600 dark:text-zinc-300">
+                {vehicleLabel(input.buy.vehicle, t)}
+              </td>
+              <td className="text-end ps-3 pe-4 py-3 align-top text-xs font-medium text-zinc-600 dark:text-zinc-300">
+                {vehicleLabel(input.lease.vehicle, t)}
+              </td>
+            </tr>
             {visibleRows.map((row, i) => {
               const hasFormula = !!(row.buyFormula || row.leaseFormula);
               const isExpanded = openRow === row.key;
@@ -272,6 +307,17 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
                             <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" />
                           </svg>
                           {c.editDepreciation}
+                        </a>
+                      )}
+                      {row.key === "maintenance" && (
+                        <a
+                          href="#maintenance-section"
+                          className="shrink-0 inline-flex items-center gap-1 rounded-full bg-brand-50 dark:bg-brand-950/40 px-2 py-0.5 text-[11px] font-medium text-brand-700 dark:text-brand-300 ring-1 ring-brand-200/60 dark:ring-brand-800/40 hover:bg-brand-100 dark:hover:bg-brand-900/60 transition-colors"
+                        >
+                          <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" />
+                          </svg>
+                          {c.maintenance}
                         </a>
                       )}
                     </div>
@@ -359,6 +405,12 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
           </tfoot>
         </table>
       </div>
+
+      {(buy.breakdown.taxBenefits > 0 || lease.breakdown.taxBenefits > 0) && (
+        <p className="px-4 sm:px-5 py-3 text-[11px] leading-relaxed text-zinc-400 dark:text-zinc-500 border-t border-zinc-100 dark:border-zinc-800">
+          {c.taxNote}
+        </p>
+      )}
     </div>
   );
 }

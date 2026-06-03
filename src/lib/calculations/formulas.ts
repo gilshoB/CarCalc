@@ -1,7 +1,7 @@
 import type {
   FuelType,
   FuelPrices,
-  RegistrationTier,
+  RegistrationFeeBand,
   DepreciationResult,
   LoanResult,
   InvestmentResult,
@@ -143,25 +143,32 @@ export function calcFuelCost(
  * Fallback path: bucket by catalog price against the legacy 7-tier table.
  * This is what the calculator did before the gov.il integration.
  */
+/**
+ * Maps a manufacture year to the official fee-table year cohort index:
+ *   0 → 2024–2026, 1 → 2021–2023, 2 → 2017–2020, 3 → ≤2016
+ */
+export function registrationYearCohort(manufactureYear: number): 0 | 1 | 2 | 3 {
+  if (manufactureYear >= 2024) return 0;
+  if (manufactureYear >= 2021) return 1;
+  if (manufactureYear >= 2017) return 2;
+  return 3;
+}
+
+/**
+ * Annual licensing fee (אגרת רישוי) — fixed government table indexed by the
+ * car's ORIGINAL new-car catalog price (price group) and its manufacture-year
+ * cohort. Adds the radio fee. Returns the total over `years`.
+ */
 export function calcRegistrationFee(
   catalogPrice: number,
   years: number,
-  tiers: RegistrationTier[],
+  bands: RegistrationFeeBand[],
   radioFee: number,
-  feeGroup?: number,
-  feeByGroup?: Record<number, number>,
+  manufactureYear: number,
 ): number {
-  let annualFee: number;
-
-  if (feeGroup !== undefined && feeByGroup && feeByGroup[feeGroup] !== undefined) {
-    // Preferred: lookup by MoT fee group
-    annualFee = feeByGroup[feeGroup];
-  } else {
-    // Fallback: price-banded tiers
-    const tier = tiers.find((t) => catalogPrice <= t.maxPrice);
-    annualFee = tier ? tier.fee : tiers[tiers.length - 1].fee;
-  }
-
+  const cohort = registrationYearCohort(manufactureYear);
+  const band = bands.find((b) => catalogPrice <= b.maxPrice) ?? bands[bands.length - 1];
+  const annualFee = band.fees[cohort];
   return Math.round((annualFee + radioFee) * years);
 }
 
@@ -189,25 +196,30 @@ export function calcTestFee(
 
 // ---- Maintenance ----
 
-export const MAINTENANCE_MULTIPLIERS: Record<FuelType, number> = {
-  gasoline: 1.0,
-  diesel: 1.1,
-  hybrid: 1.2,
-  electric: 0.8,
-};
+// Maintenance is modeled the way drivers actually think about it: a routine
+// service every N kilometers, at an average cost per service. The cost is
+// "all-in" — it folds in ongoing wear (tires, brakes) amortized across the km,
+// matching the old 0.15 ₪/km baseline (1,500 ₪ / 10,000 km = 0.15 ₪/km).
+export const DEFAULT_SERVICE_INTERVAL_KM = 10000;
 
-export const BASE_MAINTENANCE_RATE = 0.15; // ILS per km
+export const DEFAULT_SERVICE_COST: Record<FuelType, number> = {
+  gasoline: 1500,
+  diesel: 1650,
+  hybrid: 1800,
+  electric: 1200,
+};
 
 export function calcMaintenance(
   annualKm: number,
   years: number,
   fuelType: FuelType,
-  override?: { ratePerKm?: number; multipliers?: Partial<Record<FuelType, number>> },
+  override?: { serviceIntervalKm?: number; costPerService?: number },
 ): number {
-  const rate = override?.ratePerKm ?? BASE_MAINTENANCE_RATE;
-  const multiplier =
-    override?.multipliers?.[fuelType] ?? MAINTENANCE_MULTIPLIERS[fuelType];
-  return Math.round(annualKm * rate * multiplier * years);
+  const intervalKm = override?.serviceIntervalKm ?? DEFAULT_SERVICE_INTERVAL_KM;
+  const costPerService = override?.costPerService ?? DEFAULT_SERVICE_COST[fuelType];
+  if (intervalKm <= 0) return 0;
+  const servicesPerYear = annualKm / intervalKm;
+  return Math.round(servicesPerYear * costPerService * years);
 }
 
 // ---- Loan / Financing ----

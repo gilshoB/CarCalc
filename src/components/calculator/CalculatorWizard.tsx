@@ -24,6 +24,15 @@ const DEPRECIATION_DEFAULTS: Record<FuelType, { yr1: number; yr2: number; yr3Plu
   electric: { yr1: 25, yr2: 20, yr3Plus: 15 },
 };
 
+// Mirrors DEFAULT_SERVICE_COST in formulas.ts (1,500 ₪ / 10,000 km == 0.15 ₪/km baseline)
+const MAINTENANCE_SERVICE_COST: Record<FuelType, number> = {
+  gasoline: 1500,
+  diesel: 1650,
+  hybrid: 1800,
+  electric: 1200,
+};
+const MAINTENANCE_INTERVAL_KM = 10000;
+
 const DEFAULT_INVESTMENT_RETURN = 10.5;
 
 export default function CalculatorWizard({ locale, translations: t }: CalculatorWizardProps) {
@@ -31,6 +40,10 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
   const { currentStep, input, errors, updateField } = calc;
 
   const depDefaults = DEPRECIATION_DEFAULTS[input.buy.fuelType];
+  const maintDefaults = {
+    serviceIntervalKm: MAINTENANCE_INTERVAL_KM,
+    costPerService: MAINTENANCE_SERVICE_COST[input.buy.fuelType],
+  };
 
   // Fetch default investment return from market data
   const [defaultReturn, setDefaultReturn] = useState(DEFAULT_INVESTMENT_RETURN);
@@ -71,6 +84,7 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
                 t={t}
                 name={input.name}
                 email={input.email}
+                annualKm={input.annualKm}
                 isBusinessUse={input.isBusinessUse}
                 marginalTaxRate={input.marginalTaxRate}
                 errors={errors}
@@ -93,9 +107,6 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
                 t={t}
                 locale={locale}
                 lease={input.lease}
-                annualKm={input.annualKm}
-                mandatoryInsuranceQuote={input.mandatoryInsuranceQuote}
-                comprehensiveInsuranceQuote={input.comprehensiveInsuranceQuote}
                 includeInvestment={input.includeInvestment}
                 investmentReturnRate={input.investmentReturnRate}
                 defaultInvestmentReturn={defaultReturn}
@@ -113,9 +124,6 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
                 buy={input.buy}
                 cashOnHand={input.cashOnHand}
                 oldCarValue={input.oldCarValue}
-                mandatoryInsuranceQuote={input.mandatoryInsuranceQuote}
-                comprehensiveInsuranceQuote={input.comprehensiveInsuranceQuote}
-                useLoan={input.useLoan}
                 interestRate={input.financing.interestRate}
                 loanTermYears={input.financing.loanTermYears}
                 errors={errors}
@@ -190,6 +198,9 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
             onDepreciationChange={calc.setDepreciationOverride}
             onRecalculate={calc.recalculate}
             depreciationDefaults={depDefaults}
+            maintenanceOverride={calc.maintenanceOverride}
+            onMaintenanceChange={calc.setMaintenanceOverride}
+            maintenanceDefaults={maintDefaults}
           />
 
           <div className="mt-10 flex justify-center">

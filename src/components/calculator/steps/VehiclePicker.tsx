@@ -7,6 +7,7 @@ import FormField from "@/components/ui/FormField";
 import Select from "@/components/ui/Select";
 
 const COMMON_TRIM = "__common__";
+const DRIVE_ALL = "__all__";
 
 interface VehiclePickerProps {
   t: ReturnType<typeof getTranslations>;
@@ -38,11 +39,13 @@ export default function VehiclePicker({ t, vehicle, onResolve, onManualEntry }: 
   const [model, setModel] = useState(vehicle?.model ?? "");
   const [year, setYear] = useState(vehicle?.modelYear ? String(vehicle.modelYear) : "");
   const [trim, setTrim] = useState(vehicle?.trim ?? "");
+  const [drive, setDrive] = useState(vehicle?.drivetrain ?? DRIVE_ALL);
 
   const [manufacturers, setManufacturers] = useState<string[]>([]);
   const [models, setModels] = useState<string[]>([]);
   const [years, setYears] = useState<number[]>([]);
   const [trims, setTrims] = useState<string[]>([]);
+  const [drivetrains, setDrivetrains] = useState<string[]>([]);
 
   const [loading, setLoading] = useState<"manufacturers" | "models" | "years" | "trims" | "resolve" | null>(null);
   const [resolveError, setResolveError] = useState(false);
@@ -74,18 +77,20 @@ export default function VehiclePicker({ t, vehicle, onResolve, onManualEntry }: 
   ];
 
   const resolve = useCallback(
-    async (mfr: string, mdl: string, yr: string, trm: string) => {
+    async (mfr: string, mdl: string, yr: string, trm: string, drv: string) => {
       setLoading("resolve");
       setResolveError(false);
-      const data = await fetchOp<{ vehicle: VehicleIdentity }>({
+      const data = await fetchOp<{ vehicle: VehicleIdentity; drivetrains?: string[] }>({
         op: "resolve",
         manufacturer: mfr,
         model: mdl,
         year: yr,
         trim: trm || COMMON_TRIM,
+        drive: drv || DRIVE_ALL,
       });
       setLoading(null);
       if (data?.vehicle) {
+        setDrivetrains(data.drivetrains ?? []);
         onResolve(data.vehicle);
       } else {
         setResolveError(true);
@@ -99,9 +104,11 @@ export default function VehiclePicker({ t, vehicle, onResolve, onManualEntry }: 
     setModel("");
     setYear("");
     setTrim("");
+    setDrive(DRIVE_ALL);
     setModels([]);
     setYears([]);
     setTrims([]);
+    setDrivetrains([]);
     if (!value) return;
     setLoading("models");
     const data = await fetchOp<{ models: string[] }>({ op: "models", manufacturer: value });
@@ -114,8 +121,10 @@ export default function VehiclePicker({ t, vehicle, onResolve, onManualEntry }: 
       setModel(value);
       setYear("");
       setTrim("");
+      setDrive(DRIVE_ALL);
       setYears([]);
       setTrims([]);
+      setDrivetrains([]);
       if (!value) return;
       setLoading("years");
       const data = await fetchOp<{ years: number[] }>({ op: "years", manufacturer, model: value });
@@ -130,6 +139,8 @@ export default function VehiclePicker({ t, vehicle, onResolve, onManualEntry }: 
       setYear(value);
       setTrim("");
       setTrims([]);
+      setDrive(DRIVE_ALL);
+      setDrivetrains([]);
       if (!value) return;
       setLoading("trims");
       const data = await fetchOp<{ trims: string[] }>({
@@ -142,7 +153,7 @@ export default function VehiclePicker({ t, vehicle, onResolve, onManualEntry }: 
       setTrims(list);
       setLoading(null);
       // Auto-resolve with the Common aggregate as soon as the year is picked.
-      await resolve(manufacturer, model, value, COMMON_TRIM);
+      await resolve(manufacturer, model, value, COMMON_TRIM, DRIVE_ALL);
       setTrim(COMMON_TRIM);
     },
     [manufacturer, model, resolve],
@@ -151,10 +162,19 @@ export default function VehiclePicker({ t, vehicle, onResolve, onManualEntry }: 
   const handleTrim = useCallback(
     async (value: string) => {
       setTrim(value);
+      setDrive(DRIVE_ALL); // drivetrain options depend on the trim — reset
       if (!value) return;
-      await resolve(manufacturer, model, year, value);
+      await resolve(manufacturer, model, year, value, DRIVE_ALL);
     },
     [manufacturer, model, year, resolve],
+  );
+
+  const handleDrive = useCallback(
+    async (value: string) => {
+      setDrive(value);
+      await resolve(manufacturer, model, year, trim || COMMON_TRIM, value);
+    },
+    [manufacturer, model, year, trim, resolve],
   );
 
   const showAmbiguous = vehicle?.ambiguous;
@@ -174,7 +194,7 @@ export default function VehiclePicker({ t, vehicle, onResolve, onManualEntry }: 
       </div>
       <p className="mb-4 text-xs text-zinc-500 dark:text-zinc-400">{f.hint}</p>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
         <FormField label={f.manufacturer}>
           <Select
             value={manufacturer}
@@ -206,6 +226,19 @@ export default function VehiclePicker({ t, vehicle, onResolve, onManualEntry }: 
             options={trimOptions}
           />
         </FormField>
+
+        {drivetrains.length > 1 && (
+          <FormField label={f.drivetrain}>
+            <Select
+              value={drive}
+              onChange={handleDrive}
+              options={[
+                { value: DRIVE_ALL, label: f.drivetrainAll },
+                ...drivetrains.map((d) => ({ value: d, label: d })),
+              ]}
+            />
+          </FormField>
+        )}
       </div>
 
       {loading && (

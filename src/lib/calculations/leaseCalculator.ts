@@ -21,6 +21,9 @@ export function calcLeaseScenario(
 ): OptionResult {
   const { lease, annualKm, comparisonPeriodYears: years } = input;
   const leaseCarAge = lease.leaseCarAge ?? 0;
+  // Manufacture year for the registration-fee cohort: prefer the picked
+  // vehicle's model year; otherwise derive from the lease car's age.
+  const manufactureYear = lease.vehicle?.modelYear ?? (new Date().getFullYear() - leaseCarAge);
 
   // 1. Total lease payments (lease spans the full comparison period)
   const totalLeasePayments =
@@ -50,10 +53,9 @@ export function calcLeaseScenario(
     additionalRegistration = calcRegistrationFee(
       leaseCatalogPrice,
       years,
-      marketData.registrationFeeTiers,
+      marketData.registrationFeeBands,
       marketData.radioFee,
-      lease.vehicle?.feeGroup,
-      marketData.registrationFeeByGroup,
+      manufactureYear,
     );
   }
 
@@ -87,14 +89,19 @@ export function calcLeaseScenario(
     taxBenefits = calcBusinessTaxBenefits(deductibleExpenses, input.marginalTaxRate);
   }
 
-  // 6. Investment — capital stays liquid when leasing
+  // 6. Investment — car-relevant capital stays liquid when leasing.
+  // The capital "at stake" in the decision is only the amount up to the price of
+  // buying the car. When leasing you don't sink that into a vehicle, so it stays
+  // invested (minus the lease down payment). Capital beyond the car price would be
+  // invested whether you buy or lease, so it's excluded from both sides.
   let investmentResult = 0;
   if (input.includeInvestment) {
     const returnRate = input.investmentReturnRate ?? marketData.defaultInvestmentReturn;
     const availableCapital = input.cashOnHand + input.oldCarValue;
+    const carValue = input.buy.carPrice; // cost of owning — the alternative to leasing
+    const relevantCapital = Math.min(availableCapital, carValue);
 
-    // With leasing, the full capital stays invested (minus lease down payment)
-    const investableCapital = Math.max(0, availableCapital - lease.leaseDownPayment);
+    const investableCapital = Math.max(0, relevantCapital - lease.leaseDownPayment);
     if (investableCapital > 0) {
       const result = calcInvestmentReturn(investableCapital, years, returnRate);
       investmentResult = result.gain; // positive = gain for lessee
@@ -128,10 +135,9 @@ export function calcLeaseScenario(
     ? calcRegistrationFee(
         lease.vehicle?.catalogPrice ?? input.buy.catalogPrice ?? input.buy.carPrice,
         1,
-        marketData.registrationFeeTiers,
+        marketData.registrationFeeBands,
         marketData.radioFee,
-        lease.vehicle?.feeGroup,
-        marketData.registrationFeeByGroup,
+        manufactureYear,
       )
     : 0;
 

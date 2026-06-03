@@ -3,12 +3,13 @@
 import type { getTranslations } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import type { CalculatorOutput, CalculatorInput } from "@/types/calculator";
-import type { DepreciationOverrideValues } from "@/types/form";
+import type { DepreciationOverrideValues, MaintenanceOverrideValues } from "@/types/form";
 import RecommendationCard from "./RecommendationCard";
 import ComparisonTable from "./ComparisonTable";
 import CostBreakdownChart from "./CostBreakdownChart";
 import CumulativeCostChart from "./CumulativeCostChart";
 import DepreciationOverride from "./DepreciationOverride";
+import MaintenanceOverride from "./MaintenanceOverride";
 import PeriodSelector from "./PeriodSelector";
 import AdUnit from "@/components/AdUnit";
 
@@ -24,6 +25,9 @@ interface ResultsDashboardProps {
   onDepreciationChange: (values: DepreciationOverrideValues | null) => void;
   onRecalculate: () => void;
   depreciationDefaults: DepreciationOverrideValues;
+  maintenanceOverride: MaintenanceOverrideValues | null;
+  onMaintenanceChange: (values: MaintenanceOverrideValues | null) => void;
+  maintenanceDefaults: MaintenanceOverrideValues;
 }
 
 export default function ResultsDashboard({
@@ -38,6 +42,9 @@ export default function ResultsDashboard({
   onDepreciationChange,
   onRecalculate,
   depreciationDefaults,
+  maintenanceOverride,
+  onMaintenanceChange,
+  maintenanceDefaults,
 }: ResultsDashboardProps) {
   return (
     <section id="results" className="space-y-6">
@@ -92,7 +99,16 @@ export default function ResultsDashboard({
         defaults={depreciationDefaults}
       />
 
-      {depreciationOverride && (
+      <MaintenanceOverride
+        t={t}
+        locale={locale}
+        annualKm={input.annualKm}
+        override={maintenanceOverride}
+        onChange={onMaintenanceChange}
+        defaults={maintenanceDefaults}
+      />
+
+      {(depreciationOverride || maintenanceOverride) && (
         <div className="flex justify-center">
           <button
             type="button"

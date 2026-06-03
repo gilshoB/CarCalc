@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef } from "react";
 import type { CalculatorInput, CalculatorOutput } from "@/types/calculator";
-import type { FormErrors, DepreciationOverrideValues } from "@/types/form";
+import type { FormErrors, DepreciationOverrideValues, MaintenanceOverrideValues } from "@/types/form";
 import { DEFAULT_INPUT } from "@/lib/defaults";
 
 export interface UseCalculatorReturn {
@@ -25,6 +25,8 @@ export interface UseCalculatorReturn {
 
   depreciationOverride: DepreciationOverrideValues | null;
   setDepreciationOverride: (v: DepreciationOverrideValues | null) => void;
+  maintenanceOverride: MaintenanceOverrideValues | null;
+  setMaintenanceOverride: (v: MaintenanceOverrideValues | null) => void;
   recalculate: () => Promise<void>;
 
   backToForm: () => void;
@@ -50,6 +52,9 @@ function validateStep(step: number, input: CalculatorInput): FormErrors {
       if (input.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email)) {
         errors["email"] = "Invalid email address";
       }
+      if (!input.annualKm || input.annualKm <= 0) {
+        errors["annualKm"] = "required";
+      }
       if (input.isBusinessUse && (!input.marginalTaxRate || input.marginalTaxRate <= 0)) {
         errors["marginalTaxRate"] = "required";
       }
@@ -60,9 +65,6 @@ function validateStep(step: number, input: CalculatorInput): FormErrors {
       break;
 
     case 4: // Leasing
-      if (!input.annualKm || input.annualKm <= 0) {
-        errors["annualKm"] = "required";
-      }
       if (!input.lease.monthlyPayment || input.lease.monthlyPayment <= 0) {
         errors["lease.monthlyPayment"] = "required";
       }
@@ -81,11 +83,11 @@ function validateStep(step: number, input: CalculatorInput): FormErrors {
       if (input.buy.isUsed && (!input.buy.usedCarAge || input.buy.usedCarAge <= 0)) {
         errors["buy.usedCarAge"] = "required";
       }
-      if (!input.mandatoryInsuranceQuote || input.mandatoryInsuranceQuote <= 0) {
-        errors["mandatoryInsuranceQuote"] = "required";
+      if (!input.buy.mandatoryInsuranceQuote || input.buy.mandatoryInsuranceQuote <= 0) {
+        errors["buy.mandatoryInsuranceQuote"] = "required";
       }
-      if (!input.comprehensiveInsuranceQuote || input.comprehensiveInsuranceQuote <= 0) {
-        errors["comprehensiveInsuranceQuote"] = "required";
+      if (!input.buy.comprehensiveInsuranceQuote || input.buy.comprehensiveInsuranceQuote <= 0) {
+        errors["buy.comprehensiveInsuranceQuote"] = "required";
       }
       break;
   }
@@ -102,6 +104,7 @@ export function useCalculator(): UseCalculatorReturn {
   const [isCalculating, setIsCalculating] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
   const [depreciationOverride, setDepreciationOverride] = useState<DepreciationOverrideValues | null>(null);
+  const [maintenanceOverride, setMaintenanceOverride] = useState<MaintenanceOverrideValues | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   const updateField = useCallback((path: string, value: unknown) => {
@@ -133,7 +136,11 @@ export function useCalculator(): UseCalculatorReturn {
     setCurrentStep((s) => Math.max(s - 1, 1));
   }, []);
 
-  const doCalculate = useCallback(async (inputData: CalculatorInput, depOverride?: DepreciationOverrideValues | null) => {
+  const doCalculate = useCallback(async (
+    inputData: CalculatorInput,
+    depOverride?: DepreciationOverrideValues | null,
+    maintOverride?: MaintenanceOverrideValues | null,
+  ) => {
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
@@ -142,9 +149,12 @@ export function useCalculator(): UseCalculatorReturn {
     setApiError(null);
 
     try {
-      const payload = depOverride
-        ? { ...inputData, depreciationOverride: depOverride }
-        : inputData;
+      const payload: CalculatorInput & {
+        depreciationOverride?: DepreciationOverrideValues;
+        maintenanceOverride?: MaintenanceOverrideValues;
+      } = { ...inputData };
+      if (depOverride) payload.depreciationOverride = depOverride;
+      if (maintOverride) payload.maintenanceOverride = maintOverride;
       const response = await fetch("/api/calculate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -188,18 +198,18 @@ export function useCalculator(): UseCalculatorReturn {
       return;
     }
     setErrors({});
-    await doCalculate(input, depreciationOverride);
-  }, [input, depreciationOverride, doCalculate]);
+    await doCalculate(input, depreciationOverride, maintenanceOverride);
+  }, [input, depreciationOverride, maintenanceOverride, doCalculate]);
 
   const changePeriod = useCallback(async (years: number) => {
     const updatedInput = { ...input, comparisonPeriodYears: years };
     setInput(updatedInput);
-    await doCalculate(updatedInput, depreciationOverride);
-  }, [input, depreciationOverride, doCalculate]);
+    await doCalculate(updatedInput, depreciationOverride, maintenanceOverride);
+  }, [input, depreciationOverride, maintenanceOverride, doCalculate]);
 
   const recalculate = useCallback(async () => {
-    await doCalculate(input, depreciationOverride);
-  }, [input, depreciationOverride, doCalculate]);
+    await doCalculate(input, depreciationOverride, maintenanceOverride);
+  }, [input, depreciationOverride, maintenanceOverride, doCalculate]);
 
   const backToForm = useCallback(() => {
     setShowResults(false);
@@ -213,6 +223,7 @@ export function useCalculator(): UseCalculatorReturn {
     setShowResults(false);
     setApiError(null);
     setDepreciationOverride(null);
+    setMaintenanceOverride(null);
   }, []);
 
   return {
@@ -230,6 +241,8 @@ export function useCalculator(): UseCalculatorReturn {
     changePeriod,
     depreciationOverride,
     setDepreciationOverride,
+    maintenanceOverride,
+    setMaintenanceOverride,
     recalculate,
     backToForm,
     resetAll,

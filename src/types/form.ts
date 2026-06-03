@@ -6,6 +6,11 @@ export interface DepreciationOverrideValues {
   yr3Plus: number;
 }
 
+export interface MaintenanceOverrideValues {
+  serviceIntervalKm: number;
+  costPerService: number;
+}
+
 export type WizardStep = 1 | 2 | 3 | 4 | 5;
 
 export const TOTAL_STEPS = 5;
