@@ -272,6 +272,11 @@ export function calcBusinessTaxBenefits(
 
 // ---- Investment Opportunity Cost ----
 
+// Israeli capital-gains tax on securities (real gain). Applied to the
+// investment *gain* — not the principal — when comparing the liquid-capital
+// opportunity of leasing vs. sinking the money into a car.
+export const CAPITAL_GAINS_TAX_RATE = 0.25;
+
 export function calcInvestmentReturn(
   principal: number,
   years: number,

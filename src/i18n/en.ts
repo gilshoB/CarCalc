@@ -265,7 +265,7 @@ const en = {
       testFormula: "{fee} ₪/year (car age > 3)",
       taxFormula: "45% recognized × {rate}% tax rate = {amount} ₪ back",
       opportunityCost: "Opportunity cost: capital in car × {rate}% return",
-      investmentGain: "Available capital invested at {rate}% = +{amount} ₪",
+      investmentGain: "Available capital invested at {rate}% = +{amount} ₪ (net, after 25% capital-gains tax)",
       noFreeCapital: "No free capital to invest — used for car purchase",
     },
     marketData: {

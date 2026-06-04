@@ -13,6 +13,7 @@ import {
   calcBusinessTaxBenefits,
   calcInvestmentReturn,
   calcInsurance,
+  CAPITAL_GAINS_TAX_RATE,
 } from "./formulas";
 
 export function calcLeaseScenario(
@@ -104,7 +105,8 @@ export function calcLeaseScenario(
     const investableCapital = Math.max(0, relevantCapital - lease.leaseDownPayment);
     if (investableCapital > 0) {
       const result = calcInvestmentReturn(investableCapital, years, returnRate);
-      investmentResult = result.gain; // positive = gain for lessee
+      // Net of 25% Israeli capital-gains tax on the gain (not the principal).
+      investmentResult = Math.round(result.gain * (1 - CAPITAL_GAINS_TAX_RATE));
     }
   }
 

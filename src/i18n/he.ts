@@ -265,7 +265,7 @@ const he = {
       testFormula: "{fee} ₪/שנה (רכב מעל גיל 3)",
       taxFormula: "45% הכרה × {rate}% מס = {amount} ₪ החזר",
       opportunityCost: "עלות הזדמנות: הון תפוס ברכב × {rate}% תשואה",
-      investmentGain: "הון פנוי מושקע ב-{rate}% תשואה = +{amount} ₪",
+      investmentGain: "הון פנוי מושקע ב-{rate}% תשואה = +{amount} ₪ (נטו, אחרי 25% מס רווחי הון)",
       noFreeCapital: "אין הון פנוי להשקעה — ההון שימש לרכישת הרכב",
     },
     marketData: {

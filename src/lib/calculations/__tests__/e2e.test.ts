@@ -289,8 +289,10 @@ describe("e2e — exact numerical outputs", () => {
 
     // Lease: relevant capital = min(250000, 150000) = 150000; investable = 150000 - 5000 = 145000.
     // (Capital beyond the 150k car price is invested identically either way and excluded.)
+    // Gain is net of 25% Israeli capital-gains tax.
     const leaseFreeCapital = 145000;
-    const leaseExpectedGain = Math.round(leaseFreeCapital * (Math.pow(1.1, 3) - 1));
+    const leaseGrossGain = Math.round(leaseFreeCapital * (Math.pow(1.1, 3) - 1));
+    const leaseExpectedGain = Math.round(leaseGrossGain * 0.75);
     expect(lease.breakdown.investmentResult).toBe(leaseExpectedGain);
 
     // Lease keeps the car-money liquid, so it still has the higher investment gain.
