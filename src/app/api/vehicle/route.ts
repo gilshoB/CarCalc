@@ -103,8 +103,10 @@ const MODEL_TRIM_TOKENS = new Set([
   "WAGON", "SEDAN", "COUPE", "CABRIO", "AVANT", "VARIANT",
 ]);
 
-function isRomanNumeral(t: string): boolean {
-  return /^(?:I{1,3}|IV|VI{0,3}|IX|X)$/.test(t);
+// Multi-letter roman numerals only. Single letters (I, V, X) are intentionally
+// EXCLUDED — they are legitimate model identifiers (e.g. Tesla "MODEL X").
+function isGenerationRoman(t: string): boolean {
+  return t.length >= 2 && /^(?:II|III|IV|VI|VII|VIII|IX)$/.test(t);
 }
 
 export function canonicalModel(name: string): string {
@@ -117,10 +119,13 @@ export function canonicalModel(name: string): string {
   const tokens = s.split(" ").filter((t) => !MODEL_NOISE.has(t));
   const base: string[] = [];
   for (const t of tokens) {
-    if (isRomanNumeral(t)) break; // generation marker
-    if (/^\d{4}$/.test(t)) break; // model year
-    if (MODEL_TRIM_TOKENS.has(t) && base.length > 0) break; // trim baked into name
-    if (t.length === 1 && base.length > 0) break; // trailing trim letter (e.g. "OCTAVIA S")
+    if (base.length > 0) {
+      // Only strip suffixes that are unambiguously NOT a model identifier:
+      // multi-letter generation markers and known trim WORDS. Crucially we never
+      // strip single letters or digits ("MODEL 3", "MODEL S", "GLC 300", "2008").
+      if (isGenerationRoman(t)) break;
+      if (MODEL_TRIM_TOKENS.has(t)) break;
+    }
     base.push(t);
   }
   return base.join(" ") || s;
