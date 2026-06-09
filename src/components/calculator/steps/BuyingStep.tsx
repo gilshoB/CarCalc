@@ -5,7 +5,6 @@ import type { getTranslations } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import type { BuyCarDetails, VehicleIdentity } from "@/types/calculator";
 import type { FormErrors } from "@/types/form";
-import { formatNumber } from "@/lib/formatters";
 import FormField from "@/components/ui/FormField";
 import NumberInput from "@/components/ui/NumberInput";
 import Select from "@/components/ui/Select";
@@ -23,10 +22,6 @@ interface BuyingStepProps {
   t: ReturnType<typeof getTranslations>;
   locale: Locale;
   buy: BuyCarDetails;
-  cashOnHand: number;
-  oldCarValue: number;
-  interestRate: number;
-  loanTermYears: number;
   errors: FormErrors;
   onChange: (path: string, value: unknown) => void;
 }
@@ -35,10 +30,6 @@ export default function BuyingStep({
   t,
   locale,
   buy,
-  cashOnHand,
-  oldCarValue,
-  interestRate,
-  loanTermYears,
   errors,
   onChange,
 }: BuyingStepProps) {
@@ -86,13 +77,6 @@ export default function BuyingStep({
   // When a car is picked, fuel type + consumption are filled by the picker —
   // show them read-only instead of redundant editable inputs.
   const vehicleAutoFilled = !manualMode && buy.vehicle != null;
-
-  // A loan is needed only when the available capital doesn't cover the price.
-  // Purely derived — the calculator computes the same thing from the numbers,
-  // so there's no "use loan" flag to store or sync.
-  const availableCapital = cashOnHand + oldCarValue;
-  const loanNeeded = buy.carPrice > 0 && buy.carPrice > availableCapital;
-  const loanAmount = loanNeeded ? buy.carPrice - availableCapital : 0;
 
   return (
     <div className="space-y-6">
@@ -240,46 +224,6 @@ export default function BuyingStep({
             />
           </FormField>
         </div>
-      </div>
-
-      {/* Loan section — appears automatically only when capital doesn't cover the price */}
-      <div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-        <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-2">{f.loanSection}</h3>
-
-        {!loanNeeded ? (
-          <p className="text-xs text-emerald-600 dark:text-emerald-400">
-            {f.loanNotNeeded}
-          </p>
-        ) : (
-          <div className="space-y-3">
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
-              {f.loanExplain}
-            </p>
-            <p className="text-sm font-medium text-brand-600 dark:text-brand-400">
-              {f.loanAmount}: {formatNumber(loanAmount, locale)} ₪
-            </p>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <FormField label={f.interestRate} error={errors["financing.interestRate"]}>
-                <NumberInput
-                  value={interestRate}
-                  onChange={(v) => onChange("financing.interestRate", v)}
-                  suffix="%"
-                  step={0.1}
-                  error={!!errors["financing.interestRate"]}
-                />
-              </FormField>
-              <FormField label={f.loanTerm} error={errors["financing.loanTermYears"]}>
-                <NumberInput
-                  value={loanTermYears}
-                  onChange={(v) => onChange("financing.loanTermYears", v)}
-                  min={1}
-                  max={10}
-                  error={!!errors["financing.loanTermYears"]}
-                />
-              </FormField>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

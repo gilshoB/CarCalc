@@ -5,12 +5,10 @@ import type { getTranslations } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import type { LeaseCarDetails, VehicleIdentity } from "@/types/calculator";
 import type { FormErrors } from "@/types/form";
-import { formatNumber } from "@/lib/formatters";
 import FormField from "@/components/ui/FormField";
 import NumberInput from "@/components/ui/NumberInput";
 import Select from "@/components/ui/Select";
 import Checkbox from "@/components/ui/Checkbox";
-import Toggle from "@/components/ui/Toggle";
 import VehiclePicker from "./VehiclePicker";
 
 const CONSUMPTION_DEFAULTS: Record<string, number> = {
@@ -24,11 +22,6 @@ interface LeasingStepProps {
   t: ReturnType<typeof getTranslations>;
   locale: Locale;
   lease: LeaseCarDetails;
-  includeInvestment: boolean;
-  investmentReturnRate?: number;
-  defaultInvestmentReturn: number;
-  cashOnHand: number;
-  oldCarValue: number;
   errors: FormErrors;
   onChange: (path: string, value: unknown) => void;
 }
@@ -37,11 +30,6 @@ export default function LeasingStep({
   t,
   locale,
   lease,
-  includeInvestment,
-  investmentReturnRate,
-  defaultInvestmentReturn,
-  cashOnHand,
-  oldCarValue,
   errors,
   onChange,
 }: LeasingStepProps) {
@@ -79,9 +67,6 @@ export default function LeasingStep({
   // When a car is picked, fuel type + consumption are filled by the picker —
   // show them read-only instead of redundant editable inputs.
   const vehicleAutoFilled = !manualMode && lease.vehicle != null;
-
-  // Calculate investable amount
-  const investableAmount = Math.max(0, cashOnHand + oldCarValue - lease.leaseDownPayment);
 
   // Determine which insurances need separate quotes (not included in lease)
   const needsMandatoryInsurance = !lease.leaseIncludes.mandatoryInsurance;
@@ -215,33 +200,6 @@ export default function LeasingStep({
           </div>
         </div>
       )}
-
-      {/* Investment section */}
-      <div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-        <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-1">{f.investmentSection}</h3>
-        <Toggle
-          checked={includeInvestment}
-          onChange={(v) => onChange("includeInvestment", v)}
-          label={f.investmentQuestion}
-        />
-        {includeInvestment && (
-          <div className="mt-3 space-y-3">
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">{f.investmentExplain}</p>
-            <p className="text-sm font-medium text-brand-600 dark:text-brand-400">
-              {f.investmentAmount}: {formatNumber(investableAmount, locale)} ₪
-            </p>
-            <FormField label={f.investmentReturn} hint={f.investmentHint}>
-              <NumberInput
-                value={investmentReturnRate ?? defaultInvestmentReturn}
-                onChange={(v) => onChange("investmentReturnRate", v)}
-                suffix="%"
-                step={0.1}
-                placeholder={String(defaultInvestmentReturn)}
-              />
-            </FormField>
-          </div>
-        )}
-      </div>
     </div>
   );
 }

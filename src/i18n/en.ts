@@ -66,6 +66,17 @@ const en = {
       marginalTaxRate: "Marginal Tax Rate (%)",
       marginalTaxRateHint: "The highest tax bracket applied to your income — check your pay slip",
     },
+    annualKmStep: {
+      title: "How much do you drive?",
+      subtitle: "Drag the slider to set how many kilometers you drive per year",
+      valueLabel: "{km} km / year",
+    },
+    finance: {
+      title: "Your financial situation",
+      subtitle: "Now that we know the car price — how much capital you have, and whether to invest or take a loan",
+      businessSection: "Business use",
+      capitalSection: "Available capital",
+    },
     financing: {
       title: "Financial Situation",
       subtitle: "Needed to calculate required loan and opportunity cost of capital",

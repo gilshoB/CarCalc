@@ -48,32 +48,19 @@ function validateStep(step: number, input: CalculatorInput): FormErrors {
   const errors: FormErrors = {};
 
   switch (step) {
-    case 2: // Personal Details
+    case 2: // Personal Details (name + email only)
       if (input.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email)) {
         errors["email"] = "Invalid email address";
       }
+      break;
+
+    case 3: // Annual km
       if (!input.annualKm || input.annualKm <= 0) {
         errors["annualKm"] = "required";
       }
-      if (input.isBusinessUse && (!input.marginalTaxRate || input.marginalTaxRate <= 0)) {
-        errors["marginalTaxRate"] = "required";
-      }
       break;
 
-    case 3: // Financial Situation
-      if (input.cashOnHand < 0) errors["cashOnHand"] = "positiveNumber";
-      break;
-
-    case 4: // Leasing
-      if (!input.lease.monthlyPayment || input.lease.monthlyPayment <= 0) {
-        errors["lease.monthlyPayment"] = "required";
-      }
-      if (!input.lease.consumptionKmPerUnit || input.lease.consumptionKmPerUnit <= 0) {
-        errors["lease.consumptionKmPerUnit"] = "required";
-      }
-      break;
-
-    case 5: // Buying
+    case 4: // Buying
       if (!input.buy.carPrice || input.buy.carPrice <= 0) {
         errors["buy.carPrice"] = "required";
       }
@@ -88,6 +75,22 @@ function validateStep(step: number, input: CalculatorInput): FormErrors {
       }
       if (!input.buy.comprehensiveInsuranceQuote || input.buy.comprehensiveInsuranceQuote <= 0) {
         errors["buy.comprehensiveInsuranceQuote"] = "required";
+      }
+      break;
+
+    case 5: // Leasing
+      if (!input.lease.monthlyPayment || input.lease.monthlyPayment <= 0) {
+        errors["lease.monthlyPayment"] = "required";
+      }
+      if (!input.lease.consumptionKmPerUnit || input.lease.consumptionKmPerUnit <= 0) {
+        errors["lease.consumptionKmPerUnit"] = "required";
+      }
+      break;
+
+    case 6: // Finances (capital + business/tax)
+      if (input.cashOnHand < 0) errors["cashOnHand"] = "positiveNumber";
+      if (input.isBusinessUse && (!input.marginalTaxRate || input.marginalTaxRate <= 0)) {
+        errors["marginalTaxRate"] = "required";
       }
       break;
   }
@@ -127,7 +130,7 @@ export function useCalculator(): UseCalculatorReturn {
       return false;
     }
     setErrors({});
-    setCurrentStep((s) => Math.min(s + 1, 5));
+    setCurrentStep((s) => Math.min(s + 1, 6));
     return true;
   }, [currentStep, input]);
 
