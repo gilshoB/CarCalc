@@ -111,14 +111,13 @@ export default function BuyingStep({
           />
         </FormField>
 
-        <FormField
-          label={f.catalogPrice}
-          hint={catalogAutoFilled ? `${t.form.vehiclePicker.autofilledBadge} · ${f.catalogPriceHint}` : f.catalogPriceHint}
-        >
+        <FormField label={f.catalogPrice} hint={f.catalogPriceHint}>
           <NumberInput
             value={buy.catalogPrice ?? 0}
             onChange={(v) => onChange("buy.catalogPrice", v || undefined)}
             prefix="₪"
+            autoFilled={catalogAutoFilled}
+            badge={catalogAutoFilled ? t.form.vehiclePicker.autofilledBadge : undefined}
           />
         </FormField>
       </div>
@@ -126,17 +125,18 @@ export default function BuyingStep({
       {/* Fuel type + consumption — auto-filled by the picker but always editable
           so the user can override (e.g. petrol vs. diesel within the same trim). */}
       <div className="grid gap-4 sm:grid-cols-2">
-        <FormField label={f.fuelType} hint={vehicleAutoFilled ? t.form.vehiclePicker.autofilledBadge : undefined}>
+        <FormField label={f.fuelType}>
           <Select
             value={buy.fuelType}
             onChange={handleFuelTypeChange}
             options={fuelOptions}
+            autoFilled={vehicleAutoFilled}
+            badge={vehicleAutoFilled ? t.form.vehiclePicker.autofilledBadge : undefined}
           />
         </FormField>
 
         <FormField
           label={`${f.consumption} (${consumptionLabel})`}
-          hint={vehicleAutoFilled ? t.form.vehiclePicker.autofilledBadge : undefined}
           error={errors["buy.consumptionKmPerUnit"]}
           required
         >
@@ -145,6 +145,8 @@ export default function BuyingStep({
             onChange={(v) => onChange("buy.consumptionKmPerUnit", v)}
             step={0.1}
             error={!!errors["buy.consumptionKmPerUnit"]}
+            autoFilled={vehicleAutoFilled}
+            badge={vehicleAutoFilled ? t.form.vehiclePicker.autofilledBadge : undefined}
           />
         </FormField>
       </div>
@@ -171,6 +173,8 @@ export default function BuyingStep({
                 min={1}
                 max={20}
                 error={!!errors["buy.usedCarAge"]}
+                autoFilled={vehicleAutoFilled}
+                badge={vehicleAutoFilled ? t.form.vehiclePicker.autofilledBadge : undefined}
               />
             </FormField>
 

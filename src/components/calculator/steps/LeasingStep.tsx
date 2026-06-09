@@ -57,6 +57,10 @@ export default function LeasingStep({
     onChange("lease.vehicle", v);
     if (v.fuelType) onChange("lease.fuelType", v.fuelType);
     if (v.kmPerLiter) onChange("lease.consumptionKmPerUnit", v.kmPerLiter);
+    // Auto-derive the lease car's age from the picked model year.
+    if (v.modelYear) {
+      onChange("lease.leaseCarAge", Math.max(0, new Date().getFullYear() - v.modelYear));
+    }
   };
 
   const handleManualEntry = () => {
@@ -118,23 +122,26 @@ export default function LeasingStep({
             value={lease.leaseCarAge ?? 0}
             onChange={(v) => onChange("lease.leaseCarAge", v)}
             min={0}
+            autoFilled={vehicleAutoFilled}
+            badge={vehicleAutoFilled ? t.form.vehiclePicker.autofilledBadge : undefined}
           />
         </FormField>
       </div>
 
       {/* Fuel type + consumption — auto-filled by the picker but always editable. */}
       <div className="grid gap-4 sm:grid-cols-2">
-        <FormField label={f.fuelType} hint={vehicleAutoFilled ? t.form.vehiclePicker.autofilledBadge : undefined}>
+        <FormField label={f.fuelType}>
           <Select
             value={lease.fuelType}
             onChange={handleFuelTypeChange}
             options={fuelOptions}
+            autoFilled={vehicleAutoFilled}
+            badge={vehicleAutoFilled ? t.form.vehiclePicker.autofilledBadge : undefined}
           />
         </FormField>
 
         <FormField
           label={`${f.consumption} (${consumptionLabel})`}
-          hint={vehicleAutoFilled ? t.form.vehiclePicker.autofilledBadge : undefined}
           error={errors["lease.consumptionKmPerUnit"]}
           required
         >
@@ -143,6 +150,8 @@ export default function LeasingStep({
             onChange={(v) => onChange("lease.consumptionKmPerUnit", v)}
             step={0.1}
             error={!!errors["lease.consumptionKmPerUnit"]}
+            autoFilled={vehicleAutoFilled}
+            badge={vehicleAutoFilled ? t.form.vehiclePicker.autofilledBadge : undefined}
           />
         </FormField>
       </div>
