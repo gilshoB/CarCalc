@@ -187,7 +187,7 @@ export default function VehiclePicker({ t, vehicle, onResolve, onManualEntry }: 
         <button
           type="button"
           onClick={onManualEntry}
-          className="text-xs font-medium text-brand-600 hover:underline dark:text-brand-400"
+          className="inline-flex items-center gap-1 rounded-lg border border-brand-300 bg-white px-3 py-1.5 text-xs font-semibold text-brand-700 shadow-sm hover:bg-brand-50 transition-colors dark:border-brand-700 dark:bg-zinc-900 dark:text-brand-300 dark:hover:bg-zinc-800"
         >
           {f.manualEntry}
         </button>

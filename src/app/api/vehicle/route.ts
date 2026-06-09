@@ -90,6 +90,42 @@ function deriveKmPerLiter(co2: number | undefined, fuelType: FuelType | undefine
   return undefined;
 }
 
+// ---- Model-name canonicalization ----
+// gov.il's `kinuy_mishari` is noisy: facelifts ("FL"), generations ("IV"),
+// "NEW", typos, and trims baked into the name ("OCTAVIA RS", "OCTAVIA SPACE").
+// We collapse all of these to a single base model so the dropdown shows one
+// entry per model. Downstream ops re-derive the canonical and filter in-code.
+const MODEL_NOISE = new Set(["FL", "NEW", "FACELIFT", "פייסליפט", "MY"]);
+const MODEL_TRIM_TOKENS = new Set([
+  "RS", "SPACE", "SPORT", "STYLE", "AMBITION", "SELECTION", "ADVANCE", "GT",
+  "GTI", "GTE", "GTD", "ELEGANCE", "COMFORTLINE", "HIGHLINE", "TRENDLINE",
+  "ACTIVE", "EXCLUSIVE", "PREMIUM", "LUXURY", "BUSINESS", "LIMITED", "TOURING",
+  "WAGON", "SEDAN", "COUPE", "CABRIO", "AVANT", "VARIANT",
+]);
+
+function isRomanNumeral(t: string): boolean {
+  return /^(?:I{1,3}|IV|VI{0,3}|IX|X)$/.test(t);
+}
+
+export function canonicalModel(name: string): string {
+  const s = String(name ?? "")
+    .toUpperCase()
+    .replace(/[()]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!s) return "";
+  const tokens = s.split(" ").filter((t) => !MODEL_NOISE.has(t));
+  const base: string[] = [];
+  for (const t of tokens) {
+    if (isRomanNumeral(t)) break; // generation marker
+    if (/^\d{4}$/.test(t)) break; // model year
+    if (MODEL_TRIM_TOKENS.has(t) && base.length > 0) break; // trim baked into name
+    if (t.length === 1 && base.length > 0) break; // trailing trim letter (e.g. "OCTAVIA S")
+    base.push(t);
+  }
+  return base.join(" ") || s;
+}
+
 // ---- Operations ----
 
 async function opManufacturers() {
@@ -117,25 +153,28 @@ async function opModels(manufacturer: string) {
     },
     `vehicle-models:${manufacturer}`,
   );
-  const list = records
-    .map((r) => String(r.kinuy_mishari ?? "").trim())
-    .filter(Boolean)
-    .sort();
-  return Array.from(new Set(list));
+  // Collapse the noisy raw names into one canonical entry per model.
+  const canon = records
+    .map((r) => canonicalModel(String(r.kinuy_mishari ?? "")))
+    .filter(Boolean);
+  return Array.from(new Set(canon)).sort((a, b) => a.localeCompare(b, "he"));
 }
 
 async function opYears(manufacturer: string, model: string) {
+  // Fetch all of the brand's (name, year) pairs and keep those whose model
+  // canonicalizes to the picked one.
   const records = await fetchGov(
     WLTP_RESOURCE,
     {
       distinct: "true",
-      fields: "shnat_yitzur",
-      filters: JSON.stringify({ tozar: manufacturer, kinuy_mishari: model }),
-      limit: "100",
+      fields: "kinuy_mishari,shnat_yitzur",
+      filters: JSON.stringify({ tozar: manufacturer }),
+      limit: "2000",
     },
     `vehicle-years:${manufacturer}:${model}`,
   );
   const years = records
+    .filter((r) => canonicalModel(String(r.kinuy_mishari ?? "")) === model)
     .map((r) => Number(r.shnat_yitzur))
     .filter((y) => Number.isFinite(y) && y > 1980)
     .sort((a, b) => b - a); // newest first
@@ -147,17 +186,14 @@ async function opTrims(manufacturer: string, model: string, year: number) {
     WLTP_RESOURCE,
     {
       distinct: "true",
-      fields: "ramat_gimur",
-      filters: JSON.stringify({
-        tozar: manufacturer,
-        kinuy_mishari: model,
-        shnat_yitzur: year,
-      }),
-      limit: "100",
+      fields: "kinuy_mishari,ramat_gimur",
+      filters: JSON.stringify({ tozar: manufacturer, shnat_yitzur: year }),
+      limit: "1000",
     },
     `vehicle-trims:${manufacturer}:${model}:${year}`,
   );
   const trims = records
+    .filter((r) => canonicalModel(String(r.kinuy_mishari ?? "")) === model)
     .map((r) => String(r.ramat_gimur ?? "").trim())
     .filter(Boolean);
   // "__common__" always first option
@@ -173,48 +209,49 @@ async function opResolve(
 ): Promise<{ vehicle: VehicleIdentity; drivetrains: string[] }> {
   const isCommon = !trim || trim === COMMON_TRIM;
   const hasDrive = !!drive && drive !== DRIVE_ALL;
-  const baseFilters = {
-    tozar: manufacturer,
-    kinuy_mishari: model,
-    shnat_yitzur: year,
-  };
-  const filters = isCommon ? baseFilters : { ...baseFilters, ramat_gimur: trim };
-
-  // The price dataset has no `tozar`/`ramat_gimur` columns — it joins on
-  // model name + year only. We narrow back to the chosen brand afterwards
-  // by substring-matching its `tozeret_nm` (e.g. brand "טויוטה" ⊂ "טויוטה טורקיה").
-  const priceFilters = { kinuy_mishari: model, shnat_yitzur: year };
 
   const tag = `vehicle:${manufacturer}:${model}:${year}:${trim ?? "all"}`;
 
-  // Fetch both specs (WLTP) and price in parallel
-  const [allWltpRecords, priceRecordsRaw] = await Promise.all([
-    fetchGov(
-      WLTP_RESOURCE,
-      { filters: JSON.stringify(filters), limit: "100" },
-      `${tag}:wltp`,
-    ),
-    fetchGov(
-      PRICE_RESOURCE,
-      { filters: JSON.stringify(priceFilters), limit: "100" },
-      `${tag}:price`,
-    ).catch(() => [] as DatastoreRecord[]), // soft-fail prices alone
-  ]);
+  // `model` is now a CANONICAL base model (e.g. "OCTAVIA"), which doesn't exist
+  // verbatim in the data. Fetch the whole brand-year and keep rows whose raw
+  // model name canonicalizes to it.
+  const brandYearRows = await fetchGov(
+    WLTP_RESOURCE,
+    { filters: JSON.stringify({ tozar: manufacturer, shnat_yitzur: year }), limit: "500" },
+    `${tag}:wltp`,
+  );
+  const modelRows = brandYearRows.filter(
+    (r) => canonicalModel(String(r.kinuy_mishari ?? "")) === model,
+  );
 
-  // Drivetrain (4X2 / 4X4) is the biggest within-trim price driver, so expose
-  // it as an optional narrowing axis. List what's available, then filter to the
-  // chosen one if the user picked it.
+  // Drivetrain (4X2 / 4X4) is the biggest within-model price driver, so expose
+  // it as an optional narrowing axis. List what's available across the model,
+  // then narrow the working set by trim and drivetrain.
   const drivetrains = Array.from(
-    new Set(allWltpRecords.map((r) => String(r.hanaa_nm ?? "").trim()).filter(Boolean)),
+    new Set(modelRows.map((r) => String(r.hanaa_nm ?? "").trim()).filter(Boolean)),
   ).sort();
-  const wltpRecords = hasDrive
-    ? allWltpRecords.filter((r) => String(r.hanaa_nm ?? "").trim() === drive)
-    : allWltpRecords;
+  const wltpRecords = modelRows.filter((r) => {
+    if (!isCommon && String(r.ramat_gimur ?? "").trim() !== trim) return false;
+    if (hasDrive && String(r.hanaa_nm ?? "").trim() !== drive) return false;
+    return true;
+  });
 
-  // Join price rows to the chosen spec rows precisely via `degem_cd` (model
-  // code) — shared by both datasets. This pins the price to the exact
-  // trim(s) the user picked instead of averaging across the whole model line
-  // (which badly skews the catalog price, and thus the registration band).
+  // Price: the price dataset keys on the RAW model name + year (no tozar/canonical),
+  // so fetch each raw name present in the selected rows, then pin precisely via
+  // `degem_cd` (shared by both datasets) to avoid averaging across the line.
+  const rawNames = Array.from(
+    new Set(wltpRecords.map((r) => String(r.kinuy_mishari ?? "").trim()).filter(Boolean)),
+  );
+  const priceBatches = await Promise.all(
+    rawNames.map((rn) =>
+      fetchGov(
+        PRICE_RESOURCE,
+        { filters: JSON.stringify({ kinuy_mishari: rn, shnat_yitzur: year }), limit: "100" },
+        `${tag}:price:${rn}`,
+      ).catch(() => [] as DatastoreRecord[]),
+    ),
+  );
+  const priceRecordsRaw = priceBatches.flat();
   const degemCds = new Set(
     wltpRecords.map((r) => String(r.degem_cd ?? "")).filter(Boolean),
   );
