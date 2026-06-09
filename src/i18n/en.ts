@@ -159,7 +159,7 @@ const en = {
       selectPlaceholder: "Select...",
       loading: "Loading...",
       manualEntry: "Enter manually",
-      manualEntryHint: "Models are merged by base name. Can't find the exact model or a specific sub-variant? Switch to manual entry.",
+      manualEntryHint: "Can't find the exact model in the list? Switch to manual entry.",
       ambiguousNote: "Multiple sub-variants possible — values based on the most common",
       ambiguousCommonNote: "Based on the average across all trims",
       autofilledBadge: "auto-filled",

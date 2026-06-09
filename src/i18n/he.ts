@@ -159,7 +159,7 @@ const he = {
       selectPlaceholder: "בחרו...",
       loading: "טוען...",
       manualEntry: "הזנה ידנית",
-      manualEntryHint: "הדגמים מאוחדים לפי שם בסיס. לא מצאתם את הדגם המדויק או תת-דגם ספציפי? עברו להזנה ידנית.",
+      manualEntryHint: "לא מצאתם את הדגם המדויק ברשימה? עברו להזנה ידנית.",
       ambiguousNote: "ייתכנו מספר תת-דגמים — הנתונים מבוססים על הנפוץ ביותר",
       ambiguousCommonNote: "מבוסס על ממוצע בין כל רמות הגימור",
       autofilledBadge: "מולא אוטומטית",
