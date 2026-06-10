@@ -141,7 +141,9 @@ async function opModels(manufacturer: string) {
     },
     `vehicle-models:${manufacturer}`,
   );
-  // Present names exactly as they appear — recent years + clean English only.
+  // Names presented exactly as they appear — kept filters: private cars only,
+  // recent years, and English names (drops Hebrew/single-char junk). No name
+  // editing — the user picks the model (and skips obvious typo entries).
   const list = records
     .filter((r) => Number(r.shnat_yitzur) >= MODEL_MIN_YEAR)
     .map((r) => String(r.kinuy_mishari ?? "").trim())

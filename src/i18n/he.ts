@@ -157,6 +157,7 @@ const he = {
       drivetrain: "הנעה",
       drivetrainAll: "הכל",
       selectPlaceholder: "בחרו...",
+      searchPlaceholder: "הקלידו לחיפוש...",
       loading: "טוען...",
       manualEntry: "הזנה ידנית",
       manualEntryHint: "לא מצאתם את הדגם המדויק ברשימה? עברו להזנה ידנית.",

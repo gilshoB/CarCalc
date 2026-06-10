@@ -5,6 +5,7 @@ import type { getTranslations } from "@/i18n/config";
 import type { VehicleIdentity } from "@/types/calculator";
 import FormField from "@/components/ui/FormField";
 import Select from "@/components/ui/Select";
+import SearchableSelect from "@/components/ui/SearchableSelect";
 
 const COMMON_TRIM = "__common__";
 const DRIVE_ALL = "__all__";
@@ -196,18 +197,21 @@ export default function VehiclePicker({ t, vehicle, onResolve, onManualEntry }: 
 
       <div className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
         <FormField label={f.manufacturer}>
-          <Select
+          <SearchableSelect
             value={manufacturer}
             onChange={handleManufacturer}
-            options={toOptions(manufacturers)}
+            options={manufacturers.map((x) => ({ value: x, label: x }))}
+            placeholder={f.searchPlaceholder}
           />
         </FormField>
 
         <FormField label={f.model}>
-          <Select
+          <SearchableSelect
             value={model}
             onChange={handleModel}
-            options={toOptions(models)}
+            options={models.map((x) => ({ value: x, label: x }))}
+            placeholder={f.searchPlaceholder}
+            disabled={!manufacturer}
           />
         </FormField>
 

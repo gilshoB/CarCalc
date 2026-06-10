@@ -157,6 +157,7 @@ const en = {
       drivetrain: "Drivetrain",
       drivetrainAll: "All",
       selectPlaceholder: "Select...",
+      searchPlaceholder: "Type to search...",
       loading: "Loading...",
       manualEntry: "Enter manually",
       manualEntryHint: "Can't find the exact model in the list? Switch to manual entry.",
