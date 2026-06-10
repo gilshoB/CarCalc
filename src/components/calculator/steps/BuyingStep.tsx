@@ -77,6 +77,8 @@ export default function BuyingStep({
   // When a car is picked, fuel type + consumption are filled by the picker —
   // show them read-only instead of redundant editable inputs.
   const vehicleAutoFilled = !manualMode && buy.vehicle != null;
+  // Show the detail fields only once a car is picked or the user chose manual entry.
+  const showFields = manualMode || buy.vehicle != null;
 
   return (
     <div className="space-y-6">
@@ -101,6 +103,14 @@ export default function BuyingStep({
         </button>
       )}
 
+      {!showFields && (
+        <p className="rounded-lg bg-zinc-50 px-3 py-2 text-xs text-zinc-500 dark:bg-zinc-800/40 dark:text-zinc-400">
+          {t.form.vehiclePicker.pickPrompt}
+        </p>
+      )}
+
+      {showFields && (
+      <>
       <div className="grid gap-4 sm:grid-cols-2">
         <FormField label={f.carPrice} error={errors["buy.carPrice"]} required>
           <NumberInput
@@ -229,6 +239,8 @@ export default function BuyingStep({
           </FormField>
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 }

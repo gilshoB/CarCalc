@@ -164,6 +164,7 @@ const en = {
       drivetrainAll: "All",
       selectPlaceholder: "Select...",
       searchPlaceholder: "Type to search...",
+      pickPrompt: "Pick a car from the list above to continue, or switch to manual entry.",
       loading: "Loading...",
       manualEntry: "Enter manually",
       manualEntryHint: "Can't find the exact model in the list? Switch to manual entry.",

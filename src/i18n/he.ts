@@ -164,6 +164,7 @@ const he = {
       drivetrainAll: "הכל",
       selectPlaceholder: "בחרו...",
       searchPlaceholder: "הקלידו לחיפוש...",
+      pickPrompt: "בחרו רכב מהרשימה למעלה כדי להמשיך, או עברו להזנה ידנית.",
       loading: "טוען...",
       manualEntry: "הזנה ידנית",
       manualEntryHint: "לא מצאתם את הדגם המדויק ברשימה? עברו להזנה ידנית.",
