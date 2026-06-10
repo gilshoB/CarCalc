@@ -16,6 +16,8 @@ interface NumberInputProps {
   autoFilled?: boolean;
   /** Small label shown inside the field on the trailing edge (e.g. "auto-filled"). */
   badge?: string;
+  /** When true, displays a 0 value as "0" instead of blank (for meaningful zeros like a new car's age). */
+  showZero?: boolean;
 }
 
 export default function NumberInput({
@@ -30,14 +32,15 @@ export default function NumberInput({
   error,
   autoFilled,
   badge,
+  showZero,
 }: NumberInputProps) {
   const [focused, setFocused] = useState(false);
   const [displayValue, setDisplayValue] = useState("");
 
   const handleFocus = useCallback(() => {
     setFocused(true);
-    setDisplayValue(value === 0 ? "" : String(value));
-  }, [value]);
+    setDisplayValue(value === 0 && !showZero ? "" : String(value));
+  }, [value, showZero]);
 
   const handleBlur = useCallback(() => {
     setFocused(false);
@@ -53,7 +56,7 @@ export default function NumberInput({
     setDisplayValue(e.target.value);
   }, []);
 
-  const formattedValue = value === 0 ? "" : value.toLocaleString();
+  const formattedValue = value === 0 && !showZero ? "" : value.toLocaleString();
 
   return (
     <div className="relative">

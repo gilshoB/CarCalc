@@ -122,6 +122,7 @@ export default function LeasingStep({
             value={lease.leaseCarAge ?? 0}
             onChange={(v) => onChange("lease.leaseCarAge", v)}
             min={0}
+            showZero={vehicleAutoFilled}
             autoFilled={vehicleAutoFilled}
             badge={vehicleAutoFilled ? t.form.vehiclePicker.autofilledBadge : undefined}
           />
