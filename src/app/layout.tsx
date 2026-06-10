@@ -14,11 +14,11 @@ const heebo = Heebo({
 });
 
 export const metadata: Metadata = {
-  title: "CarCalc - השוואת עלויות רכב בישראל",
+  title: "CarCalc — קנייה או ליסינג: מה משתלם יותר?",
   description:
     "השוו בין קניית רכב חדש, רכב יד שנייה או ליסינג תפעולי וגלו מה הכי משתלם",
   openGraph: {
-    title: "CarCalc - השוואת עלויות רכב בישראל",
+    title: "CarCalc — קנייה או ליסינג: מה משתלם יותר?",
     description: "השוו בין קניית רכב חדש, רכב יד שנייה או ליסינג תפעולי וגלו מה הכי משתלם",
     type: "website",
     locale: "he_IL",

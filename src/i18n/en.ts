@@ -1,8 +1,8 @@
 const en = {
   app: {
     title: "CarCalc",
-    subtitle: "Israel Car Cost Comparison",
-    description: "Compare buying new, buying used, or operational leasing — find out which option saves you the most",
+    subtitle: "Which is better — buying a car or leasing?",
+    description: "This calculator compares buying a car (new or used) against leasing for a monthly payment. For an accurate comparison, enter real quotes you've received — ideally for the same car.",
   },
   nav: {
     calculator: "Calculator",

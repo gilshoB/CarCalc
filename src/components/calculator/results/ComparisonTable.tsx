@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import type { getTranslations } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import type { CalculatorOutput, CalculatorInput, VehicleIdentity } from "@/types/calculator";
@@ -225,19 +225,19 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
   };
 
   return (
-    <div className="rounded-2xl bg-white shadow-md ring-1 ring-zinc-200/60 dark:bg-zinc-900 dark:ring-zinc-700/50 overflow-hidden max-w-2xl mx-auto">
+    <div className="rounded-2xl bg-white shadow-md ring-1 ring-zinc-200/60 dark:bg-zinc-900 dark:ring-zinc-700/50 max-w-2xl mx-auto">
       {/* Header */}
       <div className="px-4 sm:px-5 py-4 border-b border-zinc-100 dark:border-zinc-800">
         <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50">{c.title}</h3>
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
+      <div>
         <table className="w-full border-collapse">
           <thead>
-            <tr className="bg-zinc-50/80 dark:bg-zinc-800/40">
-              <th className="text-start text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 py-3 ps-4 pe-3">
-                {c.category}
+            <tr className="sticky top-0 z-20 bg-zinc-100 dark:bg-zinc-800 shadow-sm">
+              <th className="text-start text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 py-3 ps-4 pe-3 whitespace-nowrap">
+                {input.comparisonPeriodYears} {t.results.years}
               </th>
               <th className="text-end text-xs font-bold uppercase tracking-wider py-3 px-3 w-[140px]">
                 <div className={`inline-flex items-center gap-1.5 ${buyWins ? "text-brand-600 dark:text-brand-400" : "text-zinc-400 dark:text-zinc-500"}`}>
@@ -274,8 +274,8 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
               const isCredit = row.isSubtraction;
 
               return (
+                <Fragment key={row.key}>
                 <tr
-                  key={row.key}
                   className={`border-b border-zinc-100/80 dark:border-zinc-800/50 ${
                     i % 2 === 0
                       ? "bg-white dark:bg-zinc-900"
@@ -321,23 +321,6 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
                         </a>
                       )}
                     </div>
-
-                    {isExpanded && hasFormula && (
-                      <div className="mt-2 rounded-lg bg-zinc-100/80 dark:bg-zinc-800/60 px-3 py-2 text-xs leading-relaxed space-y-1">
-                        {row.buyFormula && (
-                          <div className="flex gap-1.5">
-                            <span className="font-semibold text-brand-600 dark:text-brand-400 shrink-0">{c.buy}:</span>
-                            <span className="text-zinc-500 dark:text-zinc-400">{row.buyFormula}</span>
-                          </div>
-                        )}
-                        {row.leaseFormula && (
-                          <div className="flex gap-1.5">
-                            <span className="font-semibold text-amber-600 dark:text-amber-400 shrink-0">{c.lease}:</span>
-                            <span className="text-zinc-500 dark:text-zinc-400">{row.leaseFormula}</span>
-                          </div>
-                        )}
-                      </div>
-                    )}
                   </td>
 
                   <td className={`text-end px-3 py-3.5 align-top text-base tabular-nums font-bold ${
@@ -356,6 +339,28 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
                     {fmtVal(row.leaseValue, isCredit)}
                   </td>
                 </tr>
+
+                {isExpanded && hasFormula && (
+                  <tr className="border-b border-zinc-100/80 dark:border-zinc-800/50 bg-zinc-50/60 dark:bg-zinc-800/30">
+                    <td colSpan={3} className="px-4 pb-3 pt-0">
+                      <div className="rounded-lg bg-zinc-100/80 dark:bg-zinc-800/60 px-3 py-2.5 text-xs leading-relaxed space-y-1.5">
+                        {row.buyFormula && (
+                          <div className="flex gap-1.5">
+                            <span className="font-semibold text-brand-600 dark:text-brand-400 shrink-0">{c.buy}:</span>
+                            <span className="text-zinc-600 dark:text-zinc-300">{row.buyFormula}</span>
+                          </div>
+                        )}
+                        {row.leaseFormula && (
+                          <div className="flex gap-1.5">
+                            <span className="font-semibold text-amber-600 dark:text-amber-400 shrink-0">{c.lease}:</span>
+                            <span className="text-zinc-600 dark:text-zinc-300">{row.leaseFormula}</span>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+                </Fragment>
               );
             })}
           </tbody>
