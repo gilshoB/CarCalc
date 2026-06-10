@@ -8,7 +8,8 @@ import StepIndicator from "@/components/ui/StepIndicator";
 import InstructionsStep from "./steps/InstructionsStep";
 import PersonalDetailsStep from "./steps/PersonalDetailsStep";
 import AnnualKmStep from "./steps/AnnualKmStep";
-import FinancingStep from "./steps/FinancingStep";
+import PurchaseFinanceStep from "./steps/PurchaseFinanceStep";
+import InvestStep from "./steps/InvestStep";
 import LeasingStep from "./steps/LeasingStep";
 import BuyingStep from "./steps/BuyingStep";
 import ResultsDashboard from "./results/ResultsDashboard";
@@ -110,6 +111,20 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
             )}
 
             {currentStep === 5 && (
+              <PurchaseFinanceStep
+                t={t}
+                locale={locale}
+                cashOnHand={input.cashOnHand}
+                oldCarValue={input.oldCarValue}
+                carPrice={input.buy.carPrice}
+                interestRate={input.financing.interestRate}
+                loanTermYears={input.financing.loanTermYears}
+                errors={errors}
+                onChange={updateField}
+              />
+            )}
+
+            {currentStep === 6 && (
               <LeasingStep
                 t={t}
                 locale={locale}
@@ -119,21 +134,19 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
               />
             )}
 
-            {currentStep === 6 && (
-              <FinancingStep
+            {currentStep === 7 && (
+              <InvestStep
                 t={t}
                 locale={locale}
                 cashOnHand={input.cashOnHand}
                 oldCarValue={input.oldCarValue}
-                isBusinessUse={input.isBusinessUse}
-                marginalTaxRate={input.marginalTaxRate}
                 carPrice={input.buy.carPrice}
-                interestRate={input.financing.interestRate}
-                loanTermYears={input.financing.loanTermYears}
+                leaseDownPayment={input.lease.leaseDownPayment}
                 includeInvestment={input.includeInvestment}
                 investmentReturnRate={input.investmentReturnRate}
                 defaultInvestmentReturn={defaultReturn}
-                leaseDownPayment={input.lease.leaseDownPayment}
+                isBusinessUse={input.isBusinessUse}
+                marginalTaxRate={input.marginalTaxRate}
                 errors={errors}
                 onChange={updateField}
               />
@@ -157,7 +170,7 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
                   {t.wizard.back}
                 </button>
 
-                {currentStep < 6 ? (
+                {currentStep < 7 ? (
                   <button
                     type="button"
                     onClick={calc.nextStep}

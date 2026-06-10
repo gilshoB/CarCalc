@@ -78,7 +78,11 @@ function validateStep(step: number, input: CalculatorInput): FormErrors {
       }
       break;
 
-    case 5: // Leasing
+    case 5: // Purchase financing (capital + loan)
+      if (input.cashOnHand < 0) errors["cashOnHand"] = "positiveNumber";
+      break;
+
+    case 6: // Leasing
       if (!input.lease.monthlyPayment || input.lease.monthlyPayment <= 0) {
         errors["lease.monthlyPayment"] = "required";
       }
@@ -87,8 +91,7 @@ function validateStep(step: number, input: CalculatorInput): FormErrors {
       }
       break;
 
-    case 6: // Finances (capital + business/tax)
-      if (input.cashOnHand < 0) errors["cashOnHand"] = "positiveNumber";
+    case 7: // Investment + business/tax
       if (input.isBusinessUse && (!input.marginalTaxRate || input.marginalTaxRate <= 0)) {
         errors["marginalTaxRate"] = "required";
       }
@@ -130,7 +133,7 @@ export function useCalculator(): UseCalculatorReturn {
       return false;
     }
     setErrors({});
-    setCurrentStep((s) => Math.min(s + 1, 6));
+    setCurrentStep((s) => Math.min(s + 1, 7));
     return true;
   }, [currentStep, input]);
 

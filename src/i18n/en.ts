@@ -76,6 +76,10 @@ const en = {
       subtitle: "Now that we know the car price — how much capital you have, and whether to invest or take a loan",
       businessSection: "Business use",
       capitalSection: "Available capital",
+      purchaseTitle: "Financing the purchase",
+      purchaseSubtitle: "How much capital do you have? If it doesn't cover the car price, you'll need a loan for the gap.",
+      investTitle: "Investing your capital",
+      investSubtitle: "In the lease scenario you don't buy the car — your capital stays liquid and can be invested.",
     },
     financing: {
       title: "Financial Situation",
