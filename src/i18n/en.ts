@@ -80,6 +80,8 @@ const en = {
       purchaseSubtitle: "How much capital do you have? If it doesn't cover the car price, you'll need a loan for the gap.",
       investTitle: "Investing your capital",
       investSubtitle: "In the lease scenario you don't buy the car — your capital stays liquid and can be invested.",
+      businessTitle: "Business use",
+      businessSubtitle: "If you're a licensed business, part of the car expenses is tax-deductible and affects both options.",
     },
     financing: {
       title: "Financial Situation",

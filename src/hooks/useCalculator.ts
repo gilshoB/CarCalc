@@ -91,7 +91,10 @@ function validateStep(step: number, input: CalculatorInput): FormErrors {
       }
       break;
 
-    case 7: // Investment + business/tax
+    case 7: // Investment (optional — no required fields)
+      break;
+
+    case 8: // Business use + marginal tax
       if (input.isBusinessUse && (!input.marginalTaxRate || input.marginalTaxRate <= 0)) {
         errors["marginalTaxRate"] = "required";
       }
@@ -133,7 +136,7 @@ export function useCalculator(): UseCalculatorReturn {
       return false;
     }
     setErrors({});
-    setCurrentStep((s) => Math.min(s + 1, 7));
+    setCurrentStep((s) => Math.min(s + 1, 8));
     return true;
   }, [currentStep, input]);
 

@@ -10,6 +10,7 @@ import PersonalDetailsStep from "./steps/PersonalDetailsStep";
 import AnnualKmStep from "./steps/AnnualKmStep";
 import PurchaseFinanceStep from "./steps/PurchaseFinanceStep";
 import InvestStep from "./steps/InvestStep";
+import BusinessStep from "./steps/BusinessStep";
 import LeasingStep from "./steps/LeasingStep";
 import BuyingStep from "./steps/BuyingStep";
 import ResultsDashboard from "./results/ResultsDashboard";
@@ -145,6 +146,13 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
                 includeInvestment={input.includeInvestment}
                 investmentReturnRate={input.investmentReturnRate}
                 defaultInvestmentReturn={defaultReturn}
+                onChange={updateField}
+              />
+            )}
+
+            {currentStep === 8 && (
+              <BusinessStep
+                t={t}
                 isBusinessUse={input.isBusinessUse}
                 marginalTaxRate={input.marginalTaxRate}
                 errors={errors}
@@ -170,7 +178,7 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
                   {t.wizard.back}
                 </button>
 
-                {currentStep < 7 ? (
+                {currentStep < 8 ? (
                   <button
                     type="button"
                     onClick={calc.nextStep}

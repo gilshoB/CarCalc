@@ -13,4 +13,4 @@ export interface MaintenanceOverrideValues {
 
 export type WizardStep = 1 | 2 | 3 | 4 | 5;
 
-export const TOTAL_STEPS = 7;
+export const TOTAL_STEPS = 8;
