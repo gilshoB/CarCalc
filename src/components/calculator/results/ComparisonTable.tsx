@@ -233,19 +233,19 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
 
       {/* Table */}
       <div>
-        <table className="w-full border-collapse">
+        <table className="w-full border-separate border-spacing-0">
           <thead>
-            <tr className="sticky top-0 z-20 bg-zinc-100 dark:bg-zinc-800 shadow-sm">
-              <th className="text-start text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 py-3 ps-4 pe-3 whitespace-nowrap">
+            <tr>
+              <th className="sticky top-0 z-20 bg-zinc-100 dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700 text-start text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 py-3 ps-4 pe-3 whitespace-nowrap">
                 {input.comparisonPeriodYears} {t.results.years}
               </th>
-              <th className="text-end text-xs font-bold uppercase tracking-wider py-3 px-3 w-[140px]">
+              <th className="sticky top-0 z-20 bg-zinc-100 dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700 text-end text-xs font-bold uppercase tracking-wider py-3 px-3 w-[140px]">
                 <div className={`inline-flex items-center gap-1.5 ${buyWins ? "text-brand-600 dark:text-brand-400" : "text-zinc-400 dark:text-zinc-500"}`}>
                   {buyWins && <CheckIcon className="h-4 w-4" />}
                   {c.buy}
                 </div>
               </th>
-              <th className="text-end text-xs font-bold uppercase tracking-wider py-3 ps-3 pe-4 w-[140px]">
+              <th className="sticky top-0 z-20 bg-zinc-100 dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700 text-end text-xs font-bold uppercase tracking-wider py-3 ps-3 pe-4 w-[140px]">
                 <div className={`inline-flex items-center gap-1.5 ${!buyWins ? "text-amber-600 dark:text-amber-400" : "text-zinc-400 dark:text-zinc-500"}`}>
                   {!buyWins && <CheckIcon className="h-4 w-4" />}
                   {c.lease}
@@ -366,7 +366,7 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
           </tbody>
 
           <tfoot>
-            <tr className="bg-zinc-50 dark:bg-zinc-800/40 border-t-2 border-zinc-200 dark:border-zinc-700">
+            <tr className="bg-zinc-50 dark:bg-zinc-800/40 [&>td]:border-t-2 [&>td]:border-zinc-200 dark:[&>td]:border-zinc-700">
               <td className="ps-4 pe-3 py-4">
                 <span className="text-base font-bold text-zinc-900 dark:text-zinc-50">{c.total}</span>
               </td>
