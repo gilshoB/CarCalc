@@ -46,16 +46,24 @@ export default function ResultsDashboard({
   onMaintenanceChange,
   maintenanceDefaults,
 }: ResultsDashboardProps) {
+  const buyWins = results.buy.totalCost <= results.lease.totalCost;
+  const winnerText = buyWins
+    ? t.results.recommendation.buyWins
+    : t.results.recommendation.leaseWins;
+
   return (
     <section id="results" className="space-y-6">
-      {/* Period selector - centered and prominent */}
-      <div className="flex justify-center">
+      {/* Sticky compact bar: period selector + winner — stays visible while scrolling */}
+      <div className="sticky top-0 z-30 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-xl bg-white/90 px-3 py-2 ring-1 ring-zinc-200/60 backdrop-blur dark:bg-zinc-900/90 dark:ring-zinc-700/50">
         <PeriodSelector
           t={t}
           selected={periodYears}
           onChange={onPeriodChange}
           disabled={isRecalculating}
         />
+        <span className={`text-sm font-bold ${buyWins ? "text-brand-700 dark:text-brand-300" : "text-amber-700 dark:text-amber-300"}`}>
+          {winnerText}
+        </span>
       </div>
 
       {isRecalculating && (
