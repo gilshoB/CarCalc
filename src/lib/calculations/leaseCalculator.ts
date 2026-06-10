@@ -11,6 +11,7 @@ import {
   calcTestFee,
   calcMaintenance,
   calcBusinessTaxBenefits,
+  calcCarVatReclaim,
   calcInvestmentReturn,
   calcInsurance,
   CAPITAL_GAINS_TAX_RATE,
@@ -78,16 +79,20 @@ export function calcLeaseScenario(
     marketData.testStartAge,
   );
 
-  // 5. Tax benefits (business)
+  // 5. Tax benefits (business). VAT: reclaimable only on fuel + maintenance —
+  // NOT on lease payments (private car <3.5t) or insurance. Income-tax base is
+  // netted of the reclaimed VAT so it isn't double-counted.
   let taxBenefits = 0;
   if (input.isBusinessUse && input.marginalTaxRate) {
+    const vatReclaim = calcCarVatReclaim(fuel + additionalMaintenance);
     const deductibleExpenses =
-      totalLeasePayments + // lease payments are deductible
+      totalLeasePayments + // lease payments are deductible (income tax only)
       additionalInsurance.total +
       additionalRegistration +
       additionalMaintenance +
-      fuel;
-    taxBenefits = calcBusinessTaxBenefits(deductibleExpenses, input.marginalTaxRate);
+      fuel -
+      vatReclaim;
+    taxBenefits = vatReclaim + calcBusinessTaxBenefits(deductibleExpenses, input.marginalTaxRate);
   }
 
   // 6. Investment — car-relevant capital stays liquid when leasing.

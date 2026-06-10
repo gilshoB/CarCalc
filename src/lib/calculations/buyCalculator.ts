@@ -13,6 +13,7 @@ import {
   calcMaintenance,
   calcLoanCost,
   calcBusinessTaxBenefits,
+  calcCarVatReclaim,
   calcInvestmentReturn,
   calcInsurance,
 } from "./formulas";
@@ -91,17 +92,21 @@ export function calcBuyScenario(
 
   const maintenance = calcMaintenance(annualKm, years, buy.fuelType, input.maintenanceOverride);
 
-  // 5. Tax benefits (business)
+  // 5. Tax benefits (business): VAT reclaim (2/3 on fuel + maintenance) plus
+  // income-tax recognition. The reclaimed VAT is netted out of the income-tax
+  // base so it isn't counted twice.
   let taxBenefits = 0;
   if (input.isBusinessUse && input.marginalTaxRate) {
+    const vatReclaim = calcCarVatReclaim(fuel + maintenance);
     const deductibleExpenses =
       insurance.total +
       registration +
       maintenance +
       fuel +
       depreciation.totalDepreciation +
-      loan.totalInterest;
-    taxBenefits = calcBusinessTaxBenefits(deductibleExpenses, input.marginalTaxRate);
+      loan.totalInterest -
+      vatReclaim;
+    taxBenefits = vatReclaim + calcBusinessTaxBenefits(deductibleExpenses, input.marginalTaxRate);
   }
 
   // 6. Investment / opportunity cost.

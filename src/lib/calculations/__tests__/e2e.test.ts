@@ -182,8 +182,12 @@ describe("e2e — exact numerical outputs", () => {
     expect(buy.breakdown.taxBenefits).toBeGreaterThan(0);
     expect(lease.breakdown.taxBenefits).toBeGreaterThan(0);
 
-    // Tax benefits = 45% * marginalRate * deductibleExpenses
+    // Tax benefit = 2/3 VAT reclaim on (fuel + maintenance) + 45% income-tax
+    // recognition on the deductible base (net of the reclaimed VAT).
+    const vat = (x: number) => Math.round(x * (0.18 / 1.18) * (2 / 3));
+
     // Verify buy tax benefits formula
+    const buyVat = vat(buy.breakdown.fuel + buy.breakdown.maintenance);
     const buyDeductible =
       buy.breakdown.mandatoryInsurance +
       buy.breakdown.comprehensiveInsurance +
@@ -191,18 +195,21 @@ describe("e2e — exact numerical outputs", () => {
       buy.breakdown.maintenance +
       buy.breakdown.fuel +
       buy.breakdown.depreciation +
-      buy.breakdown.loanInterest;
-    expect(buy.breakdown.taxBenefits).toBe(Math.round(buyDeductible * 0.45 * 0.47));
+      buy.breakdown.loanInterest -
+      buyVat;
+    expect(buy.breakdown.taxBenefits).toBe(buyVat + Math.round(buyDeductible * 0.45 * 0.47));
 
-    // Verify lease tax benefits formula
+    // Verify lease tax benefits formula (VAT on fuel + maintenance only, NOT lease payments)
+    const leaseVat = vat(lease.breakdown.fuel + lease.breakdown.maintenance);
     const leaseDeductible =
-      lease.breakdown.carPayment + // lease payments are deductible
+      lease.breakdown.carPayment + // lease payments are deductible (income tax only)
       lease.breakdown.mandatoryInsurance +
       lease.breakdown.comprehensiveInsurance +
       lease.breakdown.registrationFees +
       lease.breakdown.maintenance +
-      lease.breakdown.fuel;
-    expect(lease.breakdown.taxBenefits).toBe(Math.round(leaseDeductible * 0.45 * 0.47));
+      lease.breakdown.fuel -
+      leaseVat;
+    expect(lease.breakdown.taxBenefits).toBe(leaseVat + Math.round(leaseDeductible * 0.45 * 0.47));
 
     // Lease has everything NOT included, so it should have insurance, registration, maintenance
     expect(lease.breakdown.mandatoryInsurance).toBe(4500);

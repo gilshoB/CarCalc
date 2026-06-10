@@ -270,6 +270,21 @@ export function calcBusinessTaxBenefits(
   return Math.round(recognized * (marginalTaxRate / 100));
 }
 
+// ---- VAT reclaim (business, private car) ----
+// A licensed business (Osek Murshe) using the car mainly for work reclaims 2/3
+// of the input VAT on RUNNING expenses (fuel + maintenance/repairs). VAT is NOT
+// reclaimable on: the car purchase, lease payments (private car <3.5t), or
+// insurance (VAT-exempt). Prices we use are VAT-inclusive, so the embedded VAT
+// is amount × rate/(1+rate).
+export const VAT_RATE = 0.18; // Israel, since 2025
+export const CAR_INPUT_VAT_SHARE = 2 / 3; // deductible share for a business car
+
+/** Reclaimable input VAT (2/3) embedded in VAT-inclusive running expenses. */
+export function calcCarVatReclaim(vatableExpenses: number): number {
+  const embeddedVat = vatableExpenses * (VAT_RATE / (1 + VAT_RATE));
+  return Math.round(embeddedVat * CAR_INPUT_VAT_SHARE);
+}
+
 // ---- Investment Opportunity Cost ----
 
 // Israeli capital-gains tax on securities (real gain). Applied to the

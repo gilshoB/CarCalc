@@ -7,6 +7,7 @@ import {
   calcMaintenance,
   calcLoanCost,
   calcBusinessTaxBenefits,
+  calcCarVatReclaim,
   calcInvestmentReturn,
   calcInsurance,
 } from "../formulas";
@@ -323,6 +324,19 @@ describe("calcBusinessTaxBenefits", () => {
 
   it("zero tax rate — zero benefit", () => {
     expect(calcBusinessTaxBenefits(100000, 0)).toBe(0);
+  });
+});
+
+// ---- calcCarVatReclaim ----
+
+describe("calcCarVatReclaim", () => {
+  it("reclaims 2/3 of the 18% VAT embedded in running expenses", () => {
+    // 10,000 ₪ incl. VAT → embedded VAT 10000×18/118 ≈ 1525.4 → ×2/3 ≈ 1017
+    expect(calcCarVatReclaim(10000)).toBe(Math.round(10000 * (0.18 / 1.18) * (2 / 3)));
+  });
+
+  it("zero expenses — zero reclaim", () => {
+    expect(calcCarVatReclaim(0)).toBe(0);
   });
 });
 

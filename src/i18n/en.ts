@@ -235,7 +235,7 @@ const en = {
       monthlyDelta: "Difference: {amount} ₪/month",
       vehicleRowLabel: "Vehicle",
       manuallyEntered: "Manually entered",
-      taxNote: "The tax benefit is a rough estimate — it excludes VAT, use-value and the depreciation ceiling.",
+      taxNote: "The tax benefit is an estimate — it includes 45% income-tax recognition and a 2/3 VAT reclaim on fuel & maintenance, but excludes use-value and the depreciation ceiling.",
     },
     charts: {
       breakdownTitle: "Cost Breakdown",
@@ -281,7 +281,7 @@ const en = {
       newCarNoTest: "New car — no test in first 3 years",
       noTestNeeded: "No test needed",
       testFormula: "{fee} ₪/year (car age > 3)",
-      taxFormula: "45% recognized × {rate}% tax rate = {amount} ₪ back",
+      taxFormula: "Combined benefit — income tax (45% recognized × {rate}%) + 2/3 VAT reclaim = {amount} ₪",
       opportunityCost: "Opportunity cost: capital in car × {rate}% return",
       investmentGain: "Available capital invested at {rate}% = +{amount} ₪ (net, after 25% capital-gains tax)",
       noFreeCapital: "No free capital to invest — used for car purchase",

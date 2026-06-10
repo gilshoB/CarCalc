@@ -235,7 +235,7 @@ const he = {
       monthlyDelta: "הפרש: {amount} ₪/חודש",
       vehicleRowLabel: "רכב",
       manuallyEntered: "הוזן ידנית",
-      taxNote: "הטבת המס היא הערכה גסה — אינה כוללת מע\"מ, שווי שימוש ותקרת פחת.",
+      taxNote: "הטבת המס היא הערכה — כוללת 45% הכרה במס הכנסה וקיזוז 2/3 ממע\"מ על דלק ותחזוקה, אך אינה כוללת שווי שימוש ותקרת פחת.",
     },
     charts: {
       breakdownTitle: "פירוט עלויות",
@@ -281,7 +281,7 @@ const he = {
       newCarNoTest: "רכב חדש — ללא טסט ב-3 שנים ראשונות",
       noTestNeeded: "ללא טסט",
       testFormula: "{fee} ₪/שנה (רכב מעל גיל 3)",
-      taxFormula: "45% הכרה × {rate}% מס = {amount} ₪ החזר",
+      taxFormula: "החזר משולב — מס הכנסה (45% הכרה × {rate}%) + קיזוז 2/3 מע\"מ = {amount} ₪",
       opportunityCost: "עלות הזדמנות: הון תפוס ברכב × {rate}% תשואה",
       investmentGain: "הון פנוי מושקע ב-{rate}% תשואה = +{amount} ₪ (נטו, אחרי 25% מס רווחי הון)",
       noFreeCapital: "אין הון פנוי להשקעה — ההון שימש לרכישת הרכב",
