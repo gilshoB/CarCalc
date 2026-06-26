@@ -54,7 +54,7 @@ export default function ResultsDashboard({
   return (
     <section id="results" className="space-y-6">
       {/* Sticky compact bar: period selector + winner — stays visible while scrolling */}
-      <div className="sticky top-0 z-30 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-xl bg-white/90 px-3 py-2 ring-1 ring-zinc-200/60 backdrop-blur dark:bg-zinc-900/90 dark:ring-zinc-700/50">
+      <div className="sticky top-0 z-30 mx-auto flex w-full max-w-2xl flex-wrap items-center justify-center gap-x-6 gap-y-2 rounded-xl bg-white/90 px-4 py-2.5 ring-1 ring-zinc-200/60 backdrop-blur dark:bg-zinc-900/90 dark:ring-zinc-700/50">
         <PeriodSelector
           t={t}
           selected={periodYears}
