@@ -13,7 +13,15 @@ const heebo = Heebo({
   variable: "--font-heebo",
 });
 
+const OG_IMAGE = {
+  url: "/images/logo_new.png",
+  width: 1992,
+  height: 941,
+  alt: "CarCalc",
+};
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://carcalc-sigma.vercel.app"),
   title: "CarCalc — קנייה או ליסינג: מה משתלם יותר?",
   description:
     "השוו בין קניית רכב חדש, רכב יד שנייה או ליסינג תפעולי וגלו מה הכי משתלם",
@@ -22,6 +30,14 @@ export const metadata: Metadata = {
     description: "השוו בין קניית רכב חדש, רכב יד שנייה או ליסינג תפעולי וגלו מה הכי משתלם",
     type: "website",
     locale: "he_IL",
+    siteName: "CarCalc",
+    images: [OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CarCalc — קנייה או ליסינג: מה משתלם יותר?",
+    description: "השוו בין קניית רכב חדש, רכב יד שנייה או ליסינג תפעולי וגלו מה הכי משתלם",
+    images: [OG_IMAGE.url],
   },
   other: {
     "theme-color": "#5c8d89",
