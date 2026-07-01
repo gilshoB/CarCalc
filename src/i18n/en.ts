@@ -192,6 +192,7 @@ const en = {
     title: "Results",
     periodLabel: "Comparison Period",
     years: "years",
+    pageIntro: "Choose the comparison period in years — each change recalculates the total and monthly cost for that period. The table below breaks down every cost, buy vs. lease; open any row to see how it was computed, and you can even adjust depreciation and maintenance assumptions further down. Remember — this is an estimate to help you decide, not financial advice.",
     recommendation: {
       bestDeal: "Best deal",
       buyName: "Buy",

@@ -46,24 +46,21 @@ export default function ResultsDashboard({
   onMaintenanceChange,
   maintenanceDefaults,
 }: ResultsDashboardProps) {
-  const buyWins = results.buy.totalCost <= results.lease.totalCost;
-  const winnerText = buyWins
-    ? t.results.recommendation.buyWins
-    : t.results.recommendation.leaseWins;
-
   return (
     <section id="results" className="space-y-6">
-      {/* Sticky compact bar: period selector + winner — stays visible while scrolling */}
-      <div className="sticky top-0 z-30 mx-auto flex w-full max-w-2xl flex-wrap items-center justify-center gap-x-6 gap-y-2 rounded-xl bg-white/90 px-4 py-2.5 ring-1 ring-zinc-200/60 backdrop-blur dark:bg-zinc-900/90 dark:ring-zinc-700/50">
+      {/* Results intro — explains the period selector, the table, and the caveat */}
+      <p className="mx-auto max-w-2xl text-center text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+        {t.results.pageIntro}
+      </p>
+
+      {/* Sticky period selector — table width, stays visible while scrolling */}
+      <div className="sticky top-0 z-30 mx-auto w-full max-w-2xl rounded-xl bg-white/90 px-4 py-3 ring-1 ring-zinc-200/60 backdrop-blur dark:bg-zinc-900/90 dark:ring-zinc-700/50">
         <PeriodSelector
           t={t}
           selected={periodYears}
           onChange={onPeriodChange}
           disabled={isRecalculating}
         />
-        <span className={`text-sm font-bold ${buyWins ? "text-brand-700 dark:text-brand-300" : "text-amber-700 dark:text-amber-300"}`}>
-          {winnerText}
-        </span>
       </div>
 
       {isRecalculating && (

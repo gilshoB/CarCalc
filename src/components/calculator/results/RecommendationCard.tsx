@@ -21,7 +21,7 @@ export default function RecommendationCard({ t, locale, results }: Recommendatio
   return (
     <>
       {/* Main recommendation card */}
-      <div className={`relative rounded-2xl p-[1.5px] shadow-lg ${
+      <div className={`relative mx-auto max-w-2xl rounded-2xl p-[1.5px] shadow-lg ${
         isBuy
           ? "bg-gradient-to-br from-brand-500 via-brand-400 to-sky-500"
           : "bg-gradient-to-br from-amber-500 via-amber-400 to-orange-500"
