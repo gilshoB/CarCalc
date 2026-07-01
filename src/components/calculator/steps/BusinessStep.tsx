@@ -44,7 +44,6 @@ export default function BusinessStep({
             <NumberInput
               value={marginalTaxRate ?? 0}
               onChange={(v) => onChange("marginalTaxRate", v)}
-              placeholder="47"
               suffix="%"
               min={0}
               max={100}

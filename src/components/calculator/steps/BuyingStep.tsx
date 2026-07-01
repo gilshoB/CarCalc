@@ -63,7 +63,8 @@ export default function BuyingStep({
     if (v.modelYear) {
       const age = Math.max(0, new Date().getFullYear() - v.modelYear);
       onChange("buy.usedCarAge", age);
-      if (age >= 1) onChange("buy.isUsed", true);
+      // A current-year car is new; anything older is treated as used.
+      onChange("buy.isUsed", age >= 1);
     }
   };
 
@@ -82,7 +83,10 @@ export default function BuyingStep({
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">{f.title}</h2>
+      <div>
+        <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">{f.title}</h2>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{f.subtitle}</p>
+      </div>
 
       {!manualMode && (
         <VehiclePicker
@@ -180,9 +184,10 @@ export default function BuyingStep({
               <NumberInput
                 value={buy.usedCarAge ?? 0}
                 onChange={(v) => onChange("buy.usedCarAge", v)}
-                min={1}
+                min={0}
                 max={20}
                 error={!!errors["buy.usedCarAge"]}
+                showZero={vehicleAutoFilled}
                 autoFilled={vehicleAutoFilled}
                 badge={vehicleAutoFilled ? t.form.vehiclePicker.autofilledBadge : undefined}
               />

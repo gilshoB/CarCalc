@@ -90,7 +90,7 @@ const en = {
       cashOnHandHint: "How much cash do you have for purchase or investment?",
       oldCarValue: "Current Car Value",
       oldCarValueHint: "Trade-in or sale value of your current car",
-      capitalHint: "This capital affects both options — it reduces your loan when buying, and stays invested when leasing.",
+      capitalHint: "This capital affects both options — it goes toward the purchase / reduces your loan when buying, or stays invested in the market when leasing.",
     },
     leasing: {
       title: "Leasing Option",
@@ -118,10 +118,11 @@ const en = {
       investmentExplain: "Investment amount: old car value + available cash minus lease down payment",
       investmentAmount: "Amount available to invest",
       investmentReturn: "Expected Annual Return (%)",
-      investmentHint: "Default: 5-year S&P 500 average return",
+      investmentHint: "Default: 5-year S&P 500 average return. Capital-gains tax (25%) is deducted automatically in the final table.",
     },
     buying: {
-      title: "Buying Option",
+      title: "Car to buy",
+      subtitle: "Enter the details of the car you're considering buying (new or used)",
       carPrice: "Car Price",
       catalogPrice: "Catalog price (when new)",
       catalogPriceHint: "The car's original list price when new — used to calculate the registration fee",

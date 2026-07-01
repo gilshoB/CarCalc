@@ -67,7 +67,7 @@ function validateStep(step: number, input: CalculatorInput): FormErrors {
       if (!input.buy.consumptionKmPerUnit || input.buy.consumptionKmPerUnit <= 0) {
         errors["buy.consumptionKmPerUnit"] = "required";
       }
-      if (input.buy.isUsed && (!input.buy.usedCarAge || input.buy.usedCarAge <= 0)) {
+      if (input.buy.isUsed && (input.buy.usedCarAge == null || input.buy.usedCarAge < 0)) {
         errors["buy.usedCarAge"] = "required";
       }
       if (!input.buy.mandatoryInsuranceQuote || input.buy.mandatoryInsuranceQuote <= 0) {
