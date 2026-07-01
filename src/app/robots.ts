@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://carcalc.vercel.app/sitemap.xml",
+    sitemap: "https://carcalc-sigma.vercel.app/sitemap.xml",
   };
 }
