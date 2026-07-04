@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { defaultLocale, getTranslations } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import CalculatorWizard from "@/components/calculator/CalculatorWizard";
+import HomeContent from "@/components/HomeContent";
 
 export default async function Home() {
   const cookieStore = await cookies();
@@ -22,6 +23,9 @@ export default async function Home() {
 
       {/* Calculator Wizard */}
       <CalculatorWizard locale={locale} translations={t} />
+
+      {/* Editorial content + FAQ (SEO / crawlable content) */}
+      <HomeContent t={t} />
 
       {/* Footer */}
       <footer className="mt-16 border-t border-zinc-200 pt-8 text-center text-sm text-zinc-500 dark:border-zinc-800">

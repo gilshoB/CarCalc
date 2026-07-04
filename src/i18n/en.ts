@@ -4,6 +4,41 @@ const en = {
     subtitle: "Which is better — buying a car or leasing?",
     description: "This calculator compares buying a car (new or used) against leasing for a monthly payment. For an accurate comparison, enter real quotes you've received — ideally for the same car.",
   },
+  home: {
+    aboutTitle: "Buying vs. leasing — how to decide?",
+    aboutParagraphs: [
+      "Choosing between buying a car and operational leasing is about much more than the monthly payment. A buyer pays upfront (or takes a loan) and absorbs depreciation — the drop in the car's value over time — but keeps an asset they can sell at the end. A lessee pays a fixed monthly amount that usually includes insurance, servicing and fees, but returns the car at the end and is left with nothing.",
+      "A fair comparison weighs every cost component: the car price or lease payments, the annual registration fee (set by the new-car catalog price and manufacture year), mandatory and comprehensive insurance, fuel based on real consumption, maintenance, loan interest if any, and the opportunity cost of your money — what you could have earned had the capital stayed invested instead of being tied up in a car.",
+      "This calculator rolls all of that into clear numbers: the total and monthly cost of each option over the period you choose. The technical data (fuel type, consumption, catalog price, fee group) is pulled automatically from the Israeli Ministry of Transport open datasets, so you only fill in what only you know — the quotes you received and your financial situation.",
+    ],
+    faqTitle: "Frequently asked questions",
+    faq: [
+      {
+        q: "Which is better — buying or leasing?",
+        a: "There's no one answer. Buying usually wins for people who keep a car for many years and drive a lot, since depreciation is spread over more time and you're left with an asset. Leasing can win for those who want predictable monthly costs, swap cars often, or prefer to keep their capital invested. The calculator shows which is cheaper for your specific numbers.",
+      },
+      {
+        q: "What is operational leasing?",
+        a: "In operational leasing the leasing company owns the car and you pay a fixed monthly amount for an agreed term (typically 3 years), usually including insurance, servicing and the registration fee. At the end you return the car — no asset and no depreciation risk, but also no residual value.",
+      },
+      {
+        q: "How is car depreciation calculated?",
+        a: "Depreciation is the drop in the car's value over time. The calculator estimates it by fuel type (EVs lose value faster than petrol cars) and adjusts for mileage, number of previous owners, and whether the car was ex-lease/rental — all factors that affect the future resale price.",
+      },
+      {
+        q: "How much is the annual registration fee?",
+        a: "The registration fee is set by an official Ministry of Transport table based on the car's new-car catalog price and its manufacture year — not the fuel type. The calculator resolves the price group automatically and computes the exact fee for each year of the period.",
+      },
+      {
+        q: "Can a licensed business deduct car expenses?",
+        a: "Yes. A licensed business (Osek Murshe) can recognize 45% of car expenses for income tax, and additionally reclaim 2/3 of the input VAT on fuel and maintenance. The calculator computes this automatically when 'business use' is selected. It's an estimate — verify with an accountant.",
+      },
+      {
+        q: "Should I take a loan to buy a car?",
+        a: "If your capital doesn't cover the car price, a loan lets you buy anyway — but adds interest to the total cost. The calculator adds a loan automatically only when needed, and lets you enter the rate and term your bank offered.",
+      },
+    ],
+  },
   nav: {
     calculator: "Calculator",
     about: "About",
