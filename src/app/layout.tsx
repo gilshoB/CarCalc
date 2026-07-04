@@ -22,6 +22,9 @@ const OG_IMAGE = {
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://carcalc-sigma.vercel.app"),
+  verification: {
+    google: "oerkeM7Iz2TPNyYALrHOvVEf8s9ybijNwUeclnlL4zY",
+  },
   title: "CarCalc — קנייה או ליסינג: מה משתלם יותר?",
   description:
     "השוו בין קניית רכב חדש, רכב יד שנייה או ליסינג תפעולי וגלו מה הכי משתלם",
