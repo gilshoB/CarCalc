@@ -14,6 +14,8 @@ interface SearchableSelectProps {
   placeholder?: string;
   disabled?: boolean;
   error?: boolean;
+  /** Shows a spinner and disables the control while its options load. */
+  loading?: boolean;
 }
 
 /**
@@ -28,6 +30,7 @@ export default function SearchableSelect({
   placeholder,
   disabled,
   error,
+  loading,
 }: SearchableSelectProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -65,7 +68,7 @@ export default function SearchableSelect({
         type="text"
         value={open ? query : selectedLabel}
         placeholder={selectedLabel || placeholder}
-        disabled={disabled}
+        disabled={disabled || loading}
         onFocus={() => {
           setOpen(true);
           setQuery("");
@@ -97,9 +100,17 @@ export default function SearchableSelect({
           dark:bg-zinc-900 dark:text-zinc-100
           focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500
           ${error ? "border-red-500 dark:border-red-400" : "border-zinc-300 dark:border-zinc-700"}
-          ${disabled ? "opacity-50 cursor-not-allowed" : ""}
+          ${disabled || loading ? "opacity-50 cursor-not-allowed" : ""}
         `}
       />
+      {loading && (
+        <span className="absolute inset-y-0 end-2 flex items-center pointer-events-none">
+          <svg className="h-4 w-4 animate-spin text-brand-500" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          </svg>
+        </span>
+      )}
       {open && filtered.length > 0 && (
         <ul className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-lg border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
           {filtered.map((opt, i) => (

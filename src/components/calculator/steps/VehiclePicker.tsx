@@ -202,6 +202,7 @@ export default function VehiclePicker({ t, vehicle, onResolve, onManualEntry }: 
             onChange={handleManufacturer}
             options={manufacturers.map((x) => ({ value: x, label: x }))}
             placeholder={f.searchPlaceholder}
+            loading={loading === "manufacturers"}
           />
         </FormField>
 
@@ -212,6 +213,7 @@ export default function VehiclePicker({ t, vehicle, onResolve, onManualEntry }: 
             options={models.map((x) => ({ value: x, label: x }))}
             placeholder={f.searchPlaceholder}
             disabled={!manufacturer}
+            loading={loading === "models"}
           />
         </FormField>
 
@@ -220,6 +222,7 @@ export default function VehiclePicker({ t, vehicle, onResolve, onManualEntry }: 
             value={year}
             onChange={handleYear}
             options={toOptions(years)}
+            loading={loading === "years"}
           />
         </FormField>
 
@@ -228,6 +231,7 @@ export default function VehiclePicker({ t, vehicle, onResolve, onManualEntry }: 
             value={trim}
             onChange={handleTrim}
             options={trimOptions}
+            loading={loading === "trims" || loading === "resolve"}
           />
         </FormField>
 
@@ -240,13 +244,20 @@ export default function VehiclePicker({ t, vehicle, onResolve, onManualEntry }: 
                 { value: DRIVE_ALL, label: f.drivetrainAll },
                 ...drivetrains.map((d) => ({ value: d, label: d })),
               ]}
+              loading={loading === "resolve"}
             />
           </FormField>
         )}
       </div>
 
       {loading && (
-        <p className="mt-3 text-xs text-zinc-500 dark:text-zinc-400">{f.loading}</p>
+        <p className="mt-3 flex items-center gap-2 text-xs font-medium text-brand-600 dark:text-brand-400">
+          <svg className="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          </svg>
+          {f.loading}
+        </p>
       )}
 
       {resolveError && (
