@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { defaultLocale } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import GuideHero from "@/components/GuideHero";
+import ArticleJsonLd from "@/components/ArticleJsonLd";
 
 export default async function InsuranceGuidePage() {
   const cookieStore = await cookies();
@@ -10,6 +11,12 @@ export default async function InsuranceGuidePage() {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-12">
+      <ArticleJsonLd
+        locale={locale}
+        path="/guides/insurance"
+        headline={isHe ? "ביטוח רכב בישראל — חובה ומקיף" : "Car Insurance in Israel — Mandatory and Comprehensive"}
+        description={isHe ? "ביטוח חובה ומקיף לרכב בישראל — מה ההבדל, מה מכוסה וכמה זה עולה." : "Mandatory and comprehensive car insurance in Israel — what's covered and the cost."}
+      />
       <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-6">
         {isHe
           ? "ביטוח רכב בישראל — חובה ומקיף"

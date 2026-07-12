@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { defaultLocale } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import GuideHero from "@/components/GuideHero";
+import ArticleJsonLd from "@/components/ArticleJsonLd";
 
 export default async function CarLoansGuidePage() {
   const cookieStore = await cookies();
@@ -10,6 +11,12 @@ export default async function CarLoansGuidePage() {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-12">
+      <ArticleJsonLd
+        locale={locale}
+        path="/guides/car-loans"
+        headline={isHe ? "מדריך הלוואת רכב בישראל" : "Car Loan Guide for Israel"}
+        description={isHe ? "מדריך להלוואות רכב בישראל — ריבית, תקופה והעלות האמיתית של המימון." : "A guide to car loans in Israel — interest, term and the true cost of financing."}
+      />
       <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-6">
         {isHe ? "מדריך הלוואת רכב בישראל" : "Car Loan Guide for Israel"}
       </h1>

@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { defaultLocale } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import GuideHero from "@/components/GuideHero";
+import ArticleJsonLd from "@/components/ArticleJsonLd";
 
 export default async function ElectricVsGasolinePage() {
   const cookieStore = await cookies();
@@ -10,6 +11,12 @@ export default async function ElectricVsGasolinePage() {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-12">
+      <ArticleJsonLd
+        locale={locale}
+        path="/guides/electric-vs-gasoline"
+        headline={isHe ? "רכב חשמלי מול בנזין — מה באמת משתלם?" : "Electric vs Gasoline — What Really Costs Less?"}
+        description={isHe ? "השוואת עלויות בין רכב חשמלי לרכב בנזין בישראל — דלק, אחזקה ופחת." : "Cost comparison between electric and gasoline cars in Israel."}
+      />
       <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-6">
         {isHe
           ? "רכב חשמלי מול בנזין — מה באמת משתלם?"

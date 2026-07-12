@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { defaultLocale } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import GuideHero from "@/components/GuideHero";
+import ArticleJsonLd from "@/components/ArticleJsonLd";
 
 export default async function BuyVsLeasePage() {
   const cookieStore = await cookies();
@@ -10,6 +11,12 @@ export default async function BuyVsLeasePage() {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-12">
+      <ArticleJsonLd
+        locale={locale}
+        path="/guides/buy-vs-lease"
+        headline={isHe ? "קנייה מול ליסינג — מה באמת משתלם?" : "Buying vs Leasing — What Really Saves You More?"}
+        description={isHe ? "השוואה בין קניית רכב לבין ליסינג תפעולי בישראל — יתרונות, חסרונות ואיך מחליטים." : "Buying a car vs. operational leasing in Israel — pros, cons and how to decide."}
+      />
       <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-6">
         {isHe
           ? "קנייה מול ליסינג — מה באמת משתלם?"

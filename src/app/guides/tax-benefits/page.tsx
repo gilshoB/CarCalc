@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { defaultLocale } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import GuideHero from "@/components/GuideHero";
+import ArticleJsonLd from "@/components/ArticleJsonLd";
 
 export default async function TaxBenefitsGuidePage() {
   const cookieStore = await cookies();
@@ -10,6 +11,12 @@ export default async function TaxBenefitsGuidePage() {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-12">
+      <ArticleJsonLd
+        locale={locale}
+        path="/guides/tax-benefits"
+        headline={isHe ? "הטבות מס לעצמאים ברכב" : "Tax Benefits for Self-Employed — Car Expenses in Israel"}
+        description={isHe ? "הטבות מס לעצמאים על הוצאות רכב — הכרה במס הכנסה וקיזוז מע\"מ." : "Tax benefits for the self-employed on car expenses in Israel."}
+      />
       <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-6">
         {isHe
           ? "הטבות מס לעצמאים ברכב"

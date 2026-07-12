@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { defaultLocale } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import GuideHero from "@/components/GuideHero";
+import ArticleJsonLd from "@/components/ArticleJsonLd";
 
 export default async function DepreciationGuidePage() {
   const cookieStore = await cookies();
@@ -10,6 +11,12 @@ export default async function DepreciationGuidePage() {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-12">
+      <ArticleJsonLd
+        locale={locale}
+        path="/guides/depreciation"
+        headline={isHe ? "איך מחשבים פחת רכב בישראל" : "How Car Depreciation Works in Israel"}
+        description={isHe ? "איך מחושב פחת רכב ומה משפיע על שווי המכירה — קילומטראז', ידיים וליסינג." : "How car depreciation is calculated and what affects resale value in Israel."}
+      />
       <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-6">
         {isHe
           ? "איך מחשבים פחת רכב בישראל"
