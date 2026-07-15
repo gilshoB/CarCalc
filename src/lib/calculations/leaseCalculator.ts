@@ -115,6 +115,9 @@ export function calcLeaseScenario(
     }
   }
 
+  // 6b. Workplace reimbursement (net, monthly) for this lease car — reduces cost.
+  const workplaceBenefit = Math.round((lease.workplaceBenefitMonthly ?? 0) * 12 * years);
+
   // 7. Total cost
   const totalCost =
     totalLeasePayments +
@@ -124,6 +127,7 @@ export function calcLeaseScenario(
     fuel +
     testFees -
     taxBenefits -
+    workplaceBenefit - // net reimbursement from workplace
     investmentResult; // investment gain reduces effective cost
 
   const monthlyCost = Math.round(totalCost / (years * 12));
@@ -193,6 +197,7 @@ export function calcLeaseScenario(
     residualValue: 0, // car returned at end of lease
     taxBenefits,
     investmentResult,
+    workplaceBenefit,
   };
 
   return {

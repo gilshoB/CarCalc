@@ -155,6 +155,8 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
                 t={t}
                 isBusinessUse={input.isBusinessUse}
                 marginalTaxRate={input.marginalTaxRate}
+                buyWorkplaceBenefit={input.buy.workplaceBenefitMonthly}
+                leaseWorkplaceBenefit={input.lease.workplaceBenefitMonthly}
                 errors={errors}
                 onChange={updateField}
               />

@@ -53,6 +53,7 @@ export interface BuyCarDetails {
   // Per-scenario insurance (split from top-level for accuracy):
   mandatoryInsuranceQuote?: number; // override of CalculatorInput.mandatoryInsuranceQuote
   comprehensiveInsuranceQuote?: number; // override of CalculatorInput.comprehensiveInsuranceQuote
+  workplaceBenefitMonthly?: number; // net monthly reimbursement from workplace if owning this car
 }
 
 export interface LeaseCarDetails {
@@ -72,6 +73,7 @@ export interface LeaseCarDetails {
   // Per-scenario insurance overrides (only used if leaseIncludes.*=false):
   mandatoryInsuranceQuote?: number;
   comprehensiveInsuranceQuote?: number;
+  workplaceBenefitMonthly?: number; // net monthly reimbursement from workplace if using this lease car
 }
 
 export interface CalculatorInput {
@@ -178,6 +180,7 @@ export interface CostBreakdown {
   residualValue: number; // value of car at end (subtracted from cost)
   taxBenefits: number; // negative = reduces cost (business only)
   investmentResult: number; // positive = gain (reduces effective cost), negative = opportunity cost
+  workplaceBenefit: number; // total net workplace reimbursement over the period (reduces cost)
 }
 
 export interface YearlyBreakdown {

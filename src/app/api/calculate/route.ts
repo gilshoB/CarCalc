@@ -43,6 +43,7 @@ const CalculatorInputSchema = z.object({
     wasLeased: z.boolean().optional(),
     mandatoryInsuranceQuote: z.number().min(0).optional(),
     comprehensiveInsuranceQuote: z.number().min(0).optional(),
+    workplaceBenefitMonthly: z.number().min(0).optional(),
   }),
 
   lease: z.object({
@@ -61,6 +62,7 @@ const CalculatorInputSchema = z.object({
     vehicle: VehicleIdentitySchema.optional(),
     mandatoryInsuranceQuote: z.number().min(0).optional(),
     comprehensiveInsuranceQuote: z.number().min(0).optional(),
+    workplaceBenefitMonthly: z.number().min(0).optional(),
   }),
 
   cashOnHand: z.number().min(0),

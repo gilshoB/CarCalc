@@ -10,7 +10,7 @@ function makeResult(totalCost: number, monthlyCost: number): OptionResult {
       carPayment: 0, loanInterest: 0, loanOriginationFee: 0,
       registrationFees: 0, mandatoryInsurance: 0, comprehensiveInsurance: 0,
       testFees: 0, fuel: 0, maintenance: 0, depreciation: 0,
-      residualValue: 0, taxBenefits: 0, investmentResult: 0,
+      residualValue: 0, taxBenefits: 0, investmentResult: 0, workplaceBenefit: 0,
     },
     yearlyBreakdown: [],
   };

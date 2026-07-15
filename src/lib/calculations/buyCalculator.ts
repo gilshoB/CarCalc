@@ -117,6 +117,9 @@ export function calcBuyScenario(
   // out and is deliberately excluded from both sides rather than inflating them.)
   const investmentResult = 0;
 
+  // 6b. Workplace reimbursement (net, monthly) for owning this car — reduces cost.
+  const workplaceBenefit = Math.round((buy.workplaceBenefitMonthly ?? 0) * 12 * years);
+
   // 7. Total cost
   // Net cost of ownership = what you pay - what you get back
   const totalCost =
@@ -130,6 +133,7 @@ export function calcBuyScenario(
     maintenance -
     depreciation.residualValue - // subtract: car still has value
     taxBenefits -
+    workplaceBenefit - // subtract: net reimbursement from workplace
     investmentResult; // subtract: investment gain on free capital
 
   const monthlyCost = Math.round(totalCost / (years * 12));
@@ -189,6 +193,7 @@ export function calcBuyScenario(
     residualValue: depreciation.residualValue,
     taxBenefits,
     investmentResult,
+    workplaceBenefit,
   };
 
   return {
