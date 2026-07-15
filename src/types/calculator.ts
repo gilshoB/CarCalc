@@ -115,6 +115,9 @@ export interface CalculatorInput {
 
   // Depreciation override (from results page)
   depreciationOverride?: { yr1: number; yr2: number; yr3Plus: number };
+  // Direct override of the car's end-of-period sale value (₪) — from the
+  // inline editor on the residual row. Takes precedence over the % curves.
+  residualOverride?: number;
 
   // Maintenance override (from results page) — service-interval model
   maintenanceOverride?: {

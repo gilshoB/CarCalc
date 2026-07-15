@@ -28,6 +28,7 @@ export interface UseCalculatorReturn {
   maintenanceOverride: MaintenanceOverrideValues | null;
   setMaintenanceOverride: (v: MaintenanceOverrideValues | null) => void;
   recalculate: () => Promise<void>;
+  applyResidual: (value: number | null) => Promise<void>;
 
   backToForm: () => void;
   resetAll: () => void;
@@ -220,6 +221,14 @@ export function useCalculator(): UseCalculatorReturn {
     await doCalculate(input, depreciationOverride, maintenanceOverride);
   }, [input, depreciationOverride, maintenanceOverride, doCalculate]);
 
+  // Set the direct end-of-period sale-value override and recalculate in one step,
+  // using the explicit value so it never races the input state update.
+  const applyResidual = useCallback(async (value: number | null) => {
+    const updatedInput = { ...input, residualOverride: value ?? undefined };
+    setInput(updatedInput);
+    await doCalculate(updatedInput, depreciationOverride, maintenanceOverride);
+  }, [input, depreciationOverride, maintenanceOverride, doCalculate]);
+
   const backToForm = useCallback(() => {
     setShowResults(false);
   }, []);
@@ -253,6 +262,7 @@ export function useCalculator(): UseCalculatorReturn {
     maintenanceOverride,
     setMaintenanceOverride,
     recalculate,
+    applyResidual,
     backToForm,
     resetAll,
   };

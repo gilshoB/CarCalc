@@ -145,6 +145,23 @@ describe("calcBuyScenario", () => {
     expect(resultOverride.breakdown.residualValue).toBeLessThan(resultDefault.breakdown.residualValue);
   });
 
+  it("residualOverride sets the end-of-period sale value directly", () => {
+    const input = makeInput({ buy: { carPrice: 170000, catalogPrice: 170000, isUsed: false, fuelType: "gasoline", consumptionKmPerUnit: 14 }, residualOverride: 90000 });
+    const result = calcBuyScenario(input, market);
+
+    expect(result.breakdown.residualValue).toBe(90000);
+    expect(result.breakdown.depreciation).toBe(170000 - 90000);
+  });
+
+  it("residualOverride is clamped to [0, carPrice]", () => {
+    const tooHigh = calcBuyScenario(
+      makeInput({ buy: { carPrice: 170000, catalogPrice: 170000, isUsed: false, fuelType: "gasoline", consumptionKmPerUnit: 14 }, residualOverride: 999999 }),
+      market,
+    );
+    expect(tooHigh.breakdown.residualValue).toBe(170000);
+    expect(tooHigh.breakdown.depreciation).toBe(0);
+  });
+
   it("old car value reduces total cost by reducing loan interest", () => {
     // useLoan=true: old car reduces loan needed → less interest → lower total cost
     const inputNoOldCar = makeInput({ oldCarValue: 0, useLoan: true });

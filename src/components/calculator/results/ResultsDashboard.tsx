@@ -3,12 +3,11 @@
 import type { getTranslations } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import type { CalculatorOutput, CalculatorInput } from "@/types/calculator";
-import type { DepreciationOverrideValues, MaintenanceOverrideValues } from "@/types/form";
+import type { MaintenanceOverrideValues } from "@/types/form";
 import RecommendationCard from "./RecommendationCard";
 import ComparisonTable from "./ComparisonTable";
 import CostBreakdownChart from "./CostBreakdownChart";
 import CumulativeCostChart from "./CumulativeCostChart";
-import DepreciationOverride from "./DepreciationOverride";
 import MaintenanceOverride from "./MaintenanceOverride";
 import PeriodSelector from "./PeriodSelector";
 import AdUnit from "@/components/AdUnit";
@@ -21,10 +20,9 @@ interface ResultsDashboardProps {
   periodYears: number;
   onPeriodChange: (years: number) => void;
   isRecalculating: boolean;
-  depreciationOverride: DepreciationOverrideValues | null;
-  onDepreciationChange: (values: DepreciationOverrideValues | null) => void;
   onRecalculate: () => void;
-  depreciationDefaults: DepreciationOverrideValues;
+  residualOverride?: number;
+  onApplyResidual: (v: number | null) => void;
   maintenanceOverride: MaintenanceOverrideValues | null;
   onMaintenanceChange: (values: MaintenanceOverrideValues | null) => void;
   maintenanceDefaults: MaintenanceOverrideValues;
@@ -38,10 +36,9 @@ export default function ResultsDashboard({
   periodYears,
   onPeriodChange,
   isRecalculating,
-  depreciationOverride,
-  onDepreciationChange,
   onRecalculate,
-  depreciationDefaults,
+  residualOverride,
+  onApplyResidual,
   maintenanceOverride,
   onMaintenanceChange,
   maintenanceDefaults,
@@ -75,7 +72,15 @@ export default function ResultsDashboard({
 
       {/* Main results */}
       <RecommendationCard t={t} locale={locale} results={results} />
-      <ComparisonTable t={t} locale={locale} results={results} input={input} />
+      <ComparisonTable
+        t={t}
+        locale={locale}
+        results={results}
+        input={input}
+        residualOverride={residualOverride}
+        onApplyResidual={onApplyResidual}
+        isRecalculating={isRecalculating}
+      />
 
       {/* Ad */}
       <AdUnit slot="results-top" format="horizontal" className="my-4" />
@@ -97,13 +102,6 @@ export default function ResultsDashboard({
       </div>
 
       {/* Advanced */}
-      <DepreciationOverride
-        t={t}
-        override={depreciationOverride}
-        onChange={onDepreciationChange}
-        defaults={depreciationDefaults}
-      />
-
       <MaintenanceOverride
         t={t}
         locale={locale}
@@ -113,7 +111,7 @@ export default function ResultsDashboard({
         defaults={maintenanceDefaults}
       />
 
-      {(depreciationOverride || maintenanceOverride) && (
+      {maintenanceOverride && (
         <div className="flex justify-center">
           <button
             type="button"

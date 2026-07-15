@@ -5,6 +5,7 @@ import type { getTranslations } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import type { CalculatorOutput, CalculatorInput, VehicleIdentity } from "@/types/calculator";
 import { formatNumber } from "@/lib/formatters";
+import NumberInput from "@/components/ui/NumberInput";
 
 function vehicleLabel(
   vehicle: VehicleIdentity | undefined,
@@ -23,6 +24,9 @@ interface ComparisonTableProps {
   locale: Locale;
   results: CalculatorOutput;
   input: CalculatorInput;
+  residualOverride?: number;
+  onApplyResidual?: (v: number | null) => void;
+  isRecalculating?: boolean;
 }
 
 interface Row {
@@ -187,7 +191,14 @@ function CheckIcon({ className }: { className?: string }) {
   );
 }
 
-export default function ComparisonTable({ t, locale, results, input }: ComparisonTableProps) {
+export default function ComparisonTable({ t, locale, results, input, residualOverride, onApplyResidual, isRecalculating }: ComparisonTableProps) {
+  const [editingResidual, setEditingResidual] = useState(false);
+  const [residualDraft, setResidualDraft] = useState<number>(0);
+
+  const openResidualEditor = () => {
+    setResidualDraft(residualOverride ?? results.buy.breakdown.residualValue);
+    setEditingResidual((v) => !v);
+  };
   const c = t.results.comparison;
   const { buy, lease, recommendation, periodYears } = results;
   const buyWins = recommendation.winner === "buy";
@@ -299,16 +310,17 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
                           <ChevronToggleIcon expanded={isExpanded} className={`h-4 w-4 ${isExpanded ? "text-brand-600 dark:text-brand-400" : ""}`} />
                         </button>
                       )}
-                      {row.key === "residualValue" && (
-                        <a
-                          href="#depreciation-section"
+                      {row.key === "residualValue" && onApplyResidual && (
+                        <button
+                          type="button"
+                          onClick={openResidualEditor}
                           className="shrink-0 inline-flex items-center gap-1 rounded-full bg-brand-50 dark:bg-brand-950/40 px-2 py-0.5 text-[11px] font-medium text-brand-700 dark:text-brand-300 ring-1 ring-brand-200/60 dark:ring-brand-800/40 hover:bg-brand-100 dark:hover:bg-brand-900/60 transition-colors"
                         >
                           <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" />
                           </svg>
                           {c.editDepreciation}
-                        </a>
+                        </button>
                       )}
                       {row.key === "maintenance" && (
                         <a
@@ -357,6 +369,50 @@ export default function ComparisonTable({ t, locale, results, input }: Compariso
                             <span className="text-zinc-600 dark:text-zinc-300">{row.leaseFormula}</span>
                           </div>
                         )}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+
+                {row.key === "residualValue" && editingResidual && onApplyResidual && (
+                  <tr className="border-b border-zinc-100/80 dark:border-zinc-800/50 bg-brand-50/50 dark:bg-brand-950/20">
+                    <td colSpan={3} className="px-4 py-3">
+                      <div className="rounded-lg bg-white dark:bg-zinc-800/80 ring-1 ring-brand-200/70 dark:ring-brand-800/50 px-3 py-3 space-y-2">
+                        <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-200">
+                          {c.residualEditLabel}
+                        </label>
+                        <p className="text-[11px] leading-snug text-zinc-500 dark:text-zinc-400">
+                          {c.residualEditHint}
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1 min-w-0">
+                            <NumberInput
+                              value={residualDraft}
+                              onChange={setResidualDraft}
+                              min={0}
+                              step={1000}
+                              showZero
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => { onApplyResidual(residualDraft); setEditingResidual(false); }}
+                            disabled={isRecalculating}
+                            className="shrink-0 rounded-lg bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50 transition-colors"
+                          >
+                            {c.applyBtn}
+                          </button>
+                          {residualOverride != null && (
+                            <button
+                              type="button"
+                              onClick={() => { onApplyResidual(null); setEditingResidual(false); }}
+                              disabled={isRecalculating}
+                              className="shrink-0 rounded-lg bg-zinc-100 dark:bg-zinc-700 px-3 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-600 disabled:opacity-50 transition-colors"
+                            >
+                              {c.resetBtn}
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </td>
                   </tr>

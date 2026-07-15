@@ -20,13 +20,6 @@ interface CalculatorWizardProps {
   translations: ReturnType<typeof getTranslations>;
 }
 
-const DEPRECIATION_DEFAULTS: Record<FuelType, { yr1: number; yr2: number; yr3Plus: number }> = {
-  gasoline: { yr1: 15, yr2: 12, yr3Plus: 10 },
-  diesel: { yr1: 15, yr2: 12, yr3Plus: 10 },
-  hybrid: { yr1: 15, yr2: 12, yr3Plus: 10 },
-  electric: { yr1: 25, yr2: 20, yr3Plus: 15 },
-};
-
 // Mirrors DEFAULT_SERVICE_COST in formulas.ts (1,500 ₪ / 10,000 km == 0.15 ₪/km baseline)
 const MAINTENANCE_SERVICE_COST: Record<FuelType, number> = {
   gasoline: 1500,
@@ -42,7 +35,6 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
   const calc = useCalculator();
   const { currentStep, input, errors, updateField } = calc;
 
-  const depDefaults = DEPRECIATION_DEFAULTS[input.buy.fuelType];
   const maintDefaults = {
     serviceIntervalKm: MAINTENANCE_INTERVAL_KM,
     costPerService: MAINTENANCE_SERVICE_COST[input.buy.fuelType],
@@ -225,10 +217,9 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
             periodYears={input.comparisonPeriodYears}
             onPeriodChange={calc.changePeriod}
             isRecalculating={calc.isCalculating}
-            depreciationOverride={calc.depreciationOverride}
-            onDepreciationChange={calc.setDepreciationOverride}
             onRecalculate={calc.recalculate}
-            depreciationDefaults={depDefaults}
+            residualOverride={input.residualOverride}
+            onApplyResidual={calc.applyResidual}
             maintenanceOverride={calc.maintenanceOverride}
             onMaintenanceChange={calc.setMaintenanceOverride}
             maintenanceDefaults={maintDefaults}

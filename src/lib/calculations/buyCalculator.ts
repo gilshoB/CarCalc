@@ -60,6 +60,13 @@ export function calcBuyScenario(
     },
   );
 
+  // Direct override of the end-of-period sale value wins over the curve.
+  if (input.residualOverride != null) {
+    const residual = Math.max(0, Math.min(input.residualOverride, buy.carPrice));
+    depreciation.residualValue = residual;
+    depreciation.totalDepreciation = buy.carPrice - residual;
+  }
+
   // 4. Annual recurring costs
   const registration = calcRegistrationFee(
     catalogPrice,
