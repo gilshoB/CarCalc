@@ -119,10 +119,10 @@ describe("e2e — exact numerical outputs", () => {
     // Loan: 170000 - (50000 + 60000) = 60000
     expect(buy.breakdown.loanInterest).toBeGreaterThan(0);
 
-    // Depreciation: used car age 2, hybrid rates same as gasoline
-    // Ages 3, 4, 5 → all yr3Plus (0.10)
-    // 170000 * 0.90 * 0.90 * 0.90 = 123930
-    expect(buy.breakdown.residualValue).toBe(Math.round(170000 * 0.9 * 0.9 * 0.9));
+    // Depreciation: used car age 2, hybrid curve yr3Plus = 0.09
+    // Ages 3, 4, 5 → all yr3Plus (0.09)
+    // 170000 * 0.91 * 0.91 * 0.91 = 128107
+    expect(buy.breakdown.residualValue).toBe(Math.round(170000 * 0.91 * 0.91 * 0.91));
 
     // Lease: 3500*36 + 7900 = 133900
     expect(lease.breakdown.carPayment).toBe(133900);
@@ -242,9 +242,9 @@ describe("e2e — exact numerical outputs", () => {
       includeInvestment: false,
     });
 
-    // Electric depreciation: yr1=25%, yr2=20%, yr3+=15%
-    // 250000 * 0.75 * 0.80 * 0.85 * 0.85 * 0.85
-    const expectedResidual = Math.round(250000 * 0.75 * 0.80 * 0.85 * 0.85 * 0.85);
+    // Electric depreciation: yr1=22%, yr2=18%, yr3+=13%
+    // 250000 * 0.78 * 0.82 * 0.87 * 0.87 * 0.87
+    const expectedResidual = Math.round(250000 * 0.78 * 0.82 * 0.87 * 0.87 * 0.87);
     expect(buy.breakdown.residualValue).toBe(expectedResidual);
 
     // Fuel: (15000/6) * 0.55 * 5

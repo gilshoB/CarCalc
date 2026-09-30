@@ -6,7 +6,7 @@ import { calcLeaseScenario } from "@/lib/calculations/leaseCalculator";
 import { compareScenarios } from "@/lib/calculations/compare";
 import type { CalculatorInput, CalculatorOutput } from "@/types/calculator";
 
-const FuelTypeSchema = z.enum(["gasoline", "diesel", "electric", "hybrid"]);
+const FuelTypeSchema = z.enum(["gasoline", "diesel", "electric", "hybrid", "plugin_hybrid"]);
 
 const VehicleIdentitySchema = z.object({
   manufacturer: z.string(),
@@ -37,6 +37,7 @@ const CalculatorInputSchema = z.object({
     usedCarAge: z.number().int().min(0).optional(),
     fuelType: FuelTypeSchema,
     consumptionKmPerUnit: z.number().positive(),
+    plugElectricSharePct: z.number().min(0).max(100).optional(),
     vehicle: VehicleIdentitySchema.optional(),
     odometerKm: z.number().min(0).optional(),
     previousHands: z.number().int().min(1).optional(),
@@ -53,6 +54,7 @@ const CalculatorInputSchema = z.object({
     leaseCarAge: z.number().int().min(0).optional(),
     fuelType: FuelTypeSchema,
     consumptionKmPerUnit: z.number().positive(),
+    plugElectricSharePct: z.number().min(0).max(100).optional(),
     leaseIncludes: z.object({
       maintenance: z.boolean(),
       mandatoryInsurance: z.boolean(),

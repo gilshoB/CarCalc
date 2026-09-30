@@ -50,6 +50,10 @@ async function fetchGov(
 function mapFuelType(raw: string | undefined): FuelType | undefined {
   if (!raw) return undefined;
   const h = raw.trim();
+  // Plug-in hybrid first: gov.il marks these as "נטען"/"פלאג" or a "חשמל/בנזין"
+  // combo. Catch them before the plain electric/hybrid checks below.
+  if (h.includes("נטען") || h.includes("פלאג")) return "plugin_hybrid";
+  if (h.includes("חשמל") && h.includes("בנזין")) return "plugin_hybrid";
   if (h.includes("חשמל") && !h.includes("היבריד")) return "electric";
   if (h.includes("היבריד")) return "hybrid";
   if (h.includes("דיזל")) return "diesel";
@@ -87,13 +91,14 @@ function avg(nums: number[]): number | undefined {
  * Derive km/L from CO2 emissions (g/km).
  *  - Gasoline: 1 L of gasoline produces ~2310 g CO2 → km/L ≈ 2310 / CO2(g/km)
  *  - Diesel: 1 L produces ~2680 g CO2 → km/L ≈ 2680 / CO2
- *  - Hybrid: gasoline factor (the WLTP CO2 already reflects the hybrid system)
+ *  - Hybrid / plug-in hybrid: gasoline factor (the WLTP CO2 already reflects
+ *    the hybrid system).
  *  - Electric: no CO2 emissions; can't derive km/kWh from CO2.
  */
 function deriveKmPerLiter(co2: number | undefined, fuelType: FuelType | undefined): number | undefined {
   if (!co2 || co2 <= 0) return undefined;
   if (fuelType === "diesel") return Math.round((2680 / co2) * 10) / 10;
-  if (fuelType === "gasoline" || fuelType === "hybrid") return Math.round((2310 / co2) * 10) / 10;
+  if (fuelType === "gasoline" || fuelType === "hybrid" || fuelType === "plugin_hybrid") return Math.round((2310 / co2) * 10) / 10;
   return undefined;
 }
 

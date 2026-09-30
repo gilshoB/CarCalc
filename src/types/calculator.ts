@@ -1,6 +1,6 @@
 // ---- Fuel Types ----
 
-export type FuelType = "gasoline" | "diesel" | "electric" | "hybrid";
+export type FuelType = "gasoline" | "diesel" | "electric" | "hybrid" | "plugin_hybrid";
 
 // ---- Vehicle Identity (auto-filled from gov.il picker) ----
 
@@ -45,6 +45,9 @@ export interface BuyCarDetails {
   usedCarAge?: number; // age of used car at purchase (e.g. 2 = 2 years old)
   fuelType: FuelType;
   consumptionKmPerUnit: number; // km/L for combustion, km/kWh for electric
+  // Plug-in hybrids only: share of km driven on electricity (0-100). Splits the
+  // energy cost between cheap electricity and gasoline. Defaults to 50.
+  plugElectricSharePct?: number;
   vehicle?: VehicleIdentity; // optional — populated by the picker
   // Used-car adjustments (only meaningful when isUsed=true):
   odometerKm?: number; // current mileage
@@ -63,6 +66,8 @@ export interface LeaseCarDetails {
   leaseCarAge?: number; // age of car at lease start (usually 0)
   fuelType: FuelType;
   consumptionKmPerUnit: number; // km/L or km/kWh
+  // Plug-in hybrids only: share of km driven on electricity (0-100). Defaults to 50.
+  plugElectricSharePct?: number;
   leaseIncludes: {
     maintenance: boolean;
     mandatoryInsurance: boolean;

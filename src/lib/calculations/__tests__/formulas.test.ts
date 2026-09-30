@@ -10,10 +10,32 @@ import {
   calcCarVatReclaim,
   calcInvestmentReturn,
   calcInsurance,
+  typicalDepreciationPct,
 } from "../formulas";
 import { getTestMarketData } from "./testHelpers";
 
 const market = getTestMarketData();
+
+// ---- typicalDepreciationPct ----
+
+describe("typicalDepreciationPct", () => {
+  it("returns the standard cumulative loss per fuel type over 5 years", () => {
+    expect(typicalDepreciationPct("gasoline", 5)).toBe(45);
+    expect(typicalDepreciationPct("hybrid", 5)).toBe(42);
+    expect(typicalDepreciationPct("plugin_hybrid", 5)).toBe(52);
+    expect(typicalDepreciationPct("electric", 5)).toBe(58);
+  });
+
+  it("orders fuel types from best to worst value retention", () => {
+    const gas = typicalDepreciationPct("gasoline", 5);
+    const hyb = typicalDepreciationPct("hybrid", 5);
+    const phev = typicalDepreciationPct("plugin_hybrid", 5);
+    const ev = typicalDepreciationPct("electric", 5);
+    expect(hyb).toBeLessThan(gas);
+    expect(gas).toBeLessThan(phev);
+    expect(phev).toBeLessThan(ev);
+  });
+});
 
 // ---- calcDepreciation ----
 
@@ -30,11 +52,26 @@ describe("calcDepreciation", () => {
 
   it("new electric car, 3 years — higher depreciation", () => {
     const result = calcDepreciation(200000, 3, "electric", false);
-    // year 1: 200000 * 0.75 = 150000
-    // year 2: 150000 * 0.80 = 120000
-    // year 3: 120000 * 0.85 = 102000
-    expect(result.residualValue).toBe(Math.round(200000 * 0.75 * 0.80 * 0.85));
+    // year 1: 200000 * 0.78 = 156000
+    // year 2: 156000 * 0.82 = 127920
+    // year 3: 127920 * 0.87 = 111290
+    expect(result.residualValue).toBe(Math.round(200000 * 0.78 * 0.82 * 0.87));
     expect(result.totalDepreciation).toBe(200000 - result.residualValue);
+  });
+
+  it("plug-in hybrid sits between regular hybrid and electric", () => {
+    const hybrid = calcDepreciation(200000, 5, "hybrid", false).residualValue;
+    const phev = calcDepreciation(200000, 5, "plugin_hybrid", false).residualValue;
+    const electric = calcDepreciation(200000, 5, "electric", false).residualValue;
+    // PHEV depreciates faster than a regular hybrid but slower than a full EV,
+    // so its residual value lands between them.
+    expect(phev).toBeLessThan(hybrid);
+    expect(phev).toBeGreaterThan(electric);
+  });
+
+  it("plug-in hybrid uses the 18/14/12 curve", () => {
+    const result = calcDepreciation(200000, 3, "plugin_hybrid", false);
+    expect(result.residualValue).toBe(Math.round(200000 * 0.82 * 0.86 * 0.88));
   });
 
   it("used car (age 2) — starts at yr3Plus rate", () => {
@@ -144,6 +181,24 @@ describe("calcFuelCost", () => {
   it("hybrid — uses benzine95 price", () => {
     const expected = Math.round((15000 / 18) * 7.13 * 3);
     expect(calcFuelCost(15000, 3, "hybrid", 18, market.fuelPrices)).toBe(expected);
+  });
+
+  it("plug-in hybrid — blends electricity + gasoline (default 50%)", () => {
+    // 50% of 15000 km on electricity (5.5 km/kWh, 0.55) + 50% on gasoline (14 km/L, 7.13)
+    const elec = (15000 * 0.5 / 5.5) * 0.55;
+    const gas = (15000 * 0.5 / 14) * 7.13;
+    const expected = Math.round((elec + gas) * 3);
+    expect(calcFuelCost(15000, 3, "plugin_hybrid", 14, market.fuelPrices)).toBe(expected);
+  });
+
+  it("plug-in hybrid — 100% electric share ≈ pure-EV energy cost band", () => {
+    const allElectric = calcFuelCost(15000, 3, "plugin_hybrid", 14, market.fuelPrices, 100);
+    const allGas = calcFuelCost(15000, 3, "plugin_hybrid", 14, market.fuelPrices, 0);
+    const half = calcFuelCost(15000, 3, "plugin_hybrid", 14, market.fuelPrices, 50);
+    // More electric driving → cheaper; the 50% blend sits between the extremes.
+    expect(allElectric).toBeLessThan(allGas);
+    expect(half).toBeGreaterThan(allElectric);
+    expect(half).toBeLessThan(allGas);
   });
 
   it("different annual km values", () => {

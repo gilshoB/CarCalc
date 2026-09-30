@@ -5,6 +5,11 @@ import type { getTranslations } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import type { CalculatorOutput, CalculatorInput, VehicleIdentity } from "@/types/calculator";
 import { formatNumber } from "@/lib/formatters";
+import {
+  typicalDepreciationPct,
+  PHEV_ELECTRIC_KM_PER_KWH,
+  DEFAULT_PHEV_ELECTRIC_SHARE_PCT,
+} from "@/lib/calculations/formulas";
 import NumberInput from "@/components/ui/NumberInput";
 
 function vehicleLabel(
@@ -111,9 +116,27 @@ function buildFormulas(
       : f.noTestNeeded,
   };
 
+  // Plug-in hybrids split their driving between electricity and gasoline, so
+  // spell out the split instead of the plain gasoline formula.
+  const fuelFormulaFor = (
+    car: Pick<CalculatorInput["buy"], "fuelType" | "consumptionKmPerUnit" | "plugElectricSharePct">,
+  ) => {
+    if (car.fuelType === "plugin_hybrid") {
+      const elec = car.plugElectricSharePct ?? DEFAULT_PHEV_ELECTRIC_SHARE_PCT;
+      return tpl(f.fuelFormulaPlugin, {
+        km: fmt(input.annualKm),
+        elec,
+        gas: 100 - elec,
+        elecEff: PHEV_ELECTRIC_KM_PER_KWH,
+        consumption: car.consumptionKmPerUnit,
+        years,
+      });
+    }
+    return tpl(f.fuelFormula, { km: fmt(input.annualKm), consumption: car.consumptionKmPerUnit, years });
+  };
   formulas.fuel = {
-    buy: tpl(f.fuelFormula, { km: fmt(input.annualKm), consumption: input.buy.consumptionKmPerUnit, years }),
-    lease: tpl(f.fuelFormula, { km: fmt(input.annualKm), consumption: input.lease.consumptionKmPerUnit, years }),
+    buy: fuelFormulaFor(input.buy),
+    lease: fuelFormulaFor(input.lease),
   };
 
   // Maintenance is a service-interval model: every N km at an avg cost.
@@ -194,6 +217,14 @@ function CheckIcon({ className }: { className?: string }) {
 export default function ComparisonTable({ t, locale, results, input, residualOverride, onApplyResidual, isRecalculating }: ComparisonTableProps) {
   const [editingResidual, setEditingResidual] = useState(false);
   const [residualDraft, setResidualDraft] = useState<number>(0);
+  const [showDeprInfo, setShowDeprInfo] = useState(false);
+
+  // Category-level depreciation note (e.g. "EVs lose ~58% over 5 years"),
+  // surfaced in a small click tooltip next to the residual row.
+  const deprNote = tpl(t.results.formulas.depreciationNote[input.buy.fuelType], {
+    pct: typicalDepreciationPct(input.buy.fuelType, results.periodYears),
+    years: results.periodYears,
+  });
 
   const openResidualEditor = () => {
     setResidualDraft(residualOverride ?? results.buy.breakdown.residualValue);
@@ -299,6 +330,29 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
                       <span className="text-sm sm:text-base font-medium text-zinc-700 dark:text-zinc-300">
                         {row.label}
                       </span>
+                      {row.key === "residualValue" && (
+                        <span className="relative inline-flex">
+                          <button
+                            type="button"
+                            onClick={() => setShowDeprInfo((v) => !v)}
+                            aria-label={c.depreciationInfoLabel}
+                            aria-expanded={showDeprInfo}
+                            className="shrink-0 inline-flex items-center justify-center h-4 w-4 rounded-full text-brand-500 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 transition-colors"
+                          >
+                            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9 9a1 1 0 012 0v4a1 1 0 11-2 0V9zm1-4a1 1 0 100 2 1 1 0 000-2z" clipRule="evenodd" />
+                            </svg>
+                          </button>
+                          {showDeprInfo && (
+                            <span
+                              role="tooltip"
+                              className="absolute z-20 top-6 start-0 w-60 rounded-lg bg-zinc-800 dark:bg-zinc-700 px-3 py-2 text-xs leading-relaxed text-white shadow-lg ring-1 ring-black/10"
+                            >
+                              {deprNote}
+                            </span>
+                          )}
+                        </span>
+                      )}
                       {hasFormula && (
                         <button
                           type="button"

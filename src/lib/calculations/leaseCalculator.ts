@@ -68,6 +68,7 @@ export function calcLeaseScenario(
     lease.fuelType,
     lease.consumptionKmPerUnit,
     marketData.fuelPrices,
+    lease.plugElectricSharePct,
   );
 
   // 4. טסט
@@ -137,7 +138,7 @@ export function calcLeaseScenario(
   let cumulative = lease.leaseDownPayment;
 
   const annualLeasePayment = lease.monthlyPayment * 12;
-  const annualFuel = calcFuelCost(annualKm, 1, lease.fuelType, lease.consumptionKmPerUnit, marketData.fuelPrices);
+  const annualFuel = calcFuelCost(annualKm, 1, lease.fuelType, lease.consumptionKmPerUnit, marketData.fuelPrices, lease.plugElectricSharePct);
   const annualMaintenance = !lease.leaseIncludes.maintenance
     ? calcMaintenance(annualKm, 1, lease.fuelType, input.maintenanceOverride)
     : 0;

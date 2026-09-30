@@ -12,8 +12,16 @@ import type {
 const DEPRECIATION_CURVES: Record<FuelType, { yr1: number; yr2: number; yr3Plus: number }> = {
   gasoline: { yr1: 0.15, yr2: 0.12, yr3Plus: 0.10 },
   diesel: { yr1: 0.15, yr2: 0.12, yr3Plus: 0.10 },
-  hybrid: { yr1: 0.15, yr2: 0.12, yr3Plus: 0.10 },
-  electric: { yr1: 0.25, yr2: 0.20, yr3Plus: 0.15 },
+  // Regular (self-charging) hybrids hold value best of all — Toyota et al.
+  // ~42% over 5 years, a touch better than plain ICE.
+  hybrid: { yr1: 0.13, yr2: 0.11, yr3Plus: 0.09 },
+  // Plug-in hybrids depreciate faster than a regular hybrid but not as hard as
+  // a full EV — complexity + shrinking incentives. ~52% over 5 years.
+  plugin_hybrid: { yr1: 0.18, yr2: 0.14, yr3Plus: 0.12 },
+  // EVs depreciate faster than ICE but less severely than the 2023 panic:
+  // ~58% over 5 years (iSeeCars 2025), vs ~45% for ICE. Declining-balance
+  // 22/18/13 lands 5-year loss at ~58%.
+  electric: { yr1: 0.22, yr2: 0.18, yr3Plus: 0.13 },
 };
 
 export interface DepreciationAdjustments {
@@ -108,13 +116,32 @@ export function calcDepreciation(
 
 // ---- Fuel Cost ----
 
+// Representative efficiency of a plug-in hybrid while running on its battery.
+// PHEVs are heavier and less efficient than pure EVs, so a touch below the EV
+// baseline. Used to price the electric share of a PHEV's driving.
+export const PHEV_ELECTRIC_KM_PER_KWH = 5.5;
+export const DEFAULT_PHEV_ELECTRIC_SHARE_PCT = 50;
+
 export function calcFuelCost(
   annualKm: number,
   years: number,
   fuelType: FuelType,
   consumptionKmPerUnit: number,
   fuelPrices: FuelPrices,
+  plugElectricSharePct?: number,
 ): number {
+  // Plug-in hybrid: split driving between cheap electricity and gasoline.
+  // consumptionKmPerUnit is the gasoline economy (km/L); the electric portion
+  // uses a representative km/kWh figure.
+  if (fuelType === "plugin_hybrid") {
+    const share = Math.min(1, Math.max(0, (plugElectricSharePct ?? DEFAULT_PHEV_ELECTRIC_SHARE_PCT) / 100));
+    const electricKm = annualKm * share;
+    const gasolineKm = annualKm * (1 - share);
+    const electricCost = (electricKm / PHEV_ELECTRIC_KM_PER_KWH) * fuelPrices.electricityPerKwh;
+    const gasolineCost = (gasolineKm / consumptionKmPerUnit) * fuelPrices.benzine95;
+    return Math.round((electricCost + gasolineCost) * years);
+  }
+
   let pricePerUnit: number;
 
   if (fuelType === "electric") {
@@ -206,8 +233,25 @@ export const DEFAULT_SERVICE_COST: Record<FuelType, number> = {
   gasoline: 1500,
   diesel: 1650,
   hybrid: 1800,
+  plugin_hybrid: 1900,
   electric: 1200,
 };
+
+/**
+ * Typical cumulative depreciation (as a whole-number %) for a fuel type over N
+ * years, straight from the standard declining-balance curve — independent of
+ * used-car adjustments or the user's residual override. Used for the
+ * category-level explainer shown next to the depreciation row.
+ */
+export function typicalDepreciationPct(fuelType: FuelType, years: number): number {
+  const curve = DEPRECIATION_CURVES[fuelType];
+  let retained = 1;
+  for (let age = 1; age <= years; age++) {
+    const rate = age === 1 ? curve.yr1 : age === 2 ? curve.yr2 : curve.yr3Plus;
+    retained *= 1 - rate;
+  }
+  return Math.round((1 - retained) * 100);
+}
 
 export function calcMaintenance(
   annualKm: number,

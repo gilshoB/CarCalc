@@ -95,6 +95,7 @@ export function calcBuyScenario(
     buy.fuelType,
     buy.consumptionKmPerUnit,
     marketData.fuelPrices,
+    buy.plugElectricSharePct,
   );
 
   const maintenance = calcMaintenance(annualKm, years, buy.fuelType, input.maintenanceOverride);
@@ -159,7 +160,7 @@ export function calcBuyScenario(
   const annualInsurance =
     (buy.mandatoryInsuranceQuote ?? input.mandatoryInsuranceQuote) +
     (buy.comprehensiveInsuranceQuote ?? input.comprehensiveInsuranceQuote);
-  const annualFuel = calcFuelCost(annualKm, 1, buy.fuelType, buy.consumptionKmPerUnit, marketData.fuelPrices);
+  const annualFuel = calcFuelCost(annualKm, 1, buy.fuelType, buy.consumptionKmPerUnit, marketData.fuelPrices, buy.plugElectricSharePct);
   const annualMaintenance = calcMaintenance(annualKm, 1, buy.fuelType);
   const annualLoanPayment = loan.monthlyPayment * 12;
 

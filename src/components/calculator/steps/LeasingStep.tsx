@@ -15,6 +15,7 @@ const CONSUMPTION_DEFAULTS: Record<string, number> = {
   gasoline: 14,
   diesel: 16,
   hybrid: 18,
+  plugin_hybrid: 20,
   electric: 6,
 };
 
@@ -39,6 +40,7 @@ export default function LeasingStep({
     { value: "diesel", label: t.form.fuelTypes.diesel },
     { value: "electric", label: t.form.fuelTypes.electric },
     { value: "hybrid", label: t.form.fuelTypes.hybrid },
+    { value: "plugin_hybrid", label: t.form.fuelTypes.plugin_hybrid },
   ];
 
   const consumptionLabel = lease.fuelType === "electric"
@@ -166,6 +168,19 @@ export default function LeasingStep({
           />
         </FormField>
       </div>
+
+      {lease.fuelType === "plugin_hybrid" && (
+        <FormField label={t.form.plugElectricShare} hint={t.form.plugElectricShareHint}>
+          <NumberInput
+            value={lease.plugElectricSharePct ?? 50}
+            onChange={(v) => onChange("lease.plugElectricSharePct", v)}
+            suffix="%"
+            min={0}
+            max={100}
+            showZero
+          />
+        </FormField>
+      )}
 
       {/* What's included */}
       <div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">

@@ -25,6 +25,7 @@ const MAINTENANCE_SERVICE_COST: Record<FuelType, number> = {
   gasoline: 1500,
   diesel: 1650,
   hybrid: 1800,
+  plugin_hybrid: 1900,
   electric: 1200,
 };
 const MAINTENANCE_INTERVAL_KM = 10000;
