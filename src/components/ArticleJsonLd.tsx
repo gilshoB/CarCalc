@@ -1,4 +1,6 @@
-const BASE = "https://carcalc-sigma.vercel.app";
+import { SITE_URL } from "@/lib/site";
+
+const BASE = SITE_URL;
 const LOGO = `${BASE}/images/logo_new.png`;
 
 /**

@@ -7,6 +7,7 @@ import Image from "next/image";
 import { Analytics } from "@vercel/analytics/next";
 import LanguageToggle from "@/components/LanguageToggle";
 import "./globals.css";
+import { SITE_URL } from "@/lib/site";
 
 const heebo = Heebo({
   subsets: ["hebrew", "latin"],
@@ -21,7 +22,7 @@ const OG_IMAGE = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://carcalc-sigma.vercel.app"),
+  metadataBase: new URL(SITE_URL),
   verification: {
     google: "oerkeM7Iz2TPNyYALrHOvVEf8s9ybijNwUeclnlL4zY",
   },
