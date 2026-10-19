@@ -10,6 +10,7 @@ import CostBreakdownChart from "./CostBreakdownChart";
 import CumulativeCostChart from "./CumulativeCostChart";
 import MaintenanceOverride from "./MaintenanceOverride";
 import PeriodSelector from "./PeriodSelector";
+import SendResultsEmail from "./SendResultsEmail";
 import AdUnit from "@/components/AdUnit";
 
 interface ResultsDashboardProps {
@@ -81,6 +82,8 @@ export default function ResultsDashboard({
         onApplyResidual={onApplyResidual}
         isRecalculating={isRecalculating}
       />
+
+      <SendResultsEmail t={t} locale={locale} input={input} maintenanceOverride={maintenanceOverride} />
 
       {/* Ad */}
       <AdUnit slot="results-top" format="horizontal" className="my-4" />

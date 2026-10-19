@@ -24,6 +24,11 @@ export default async function PrivacyPage() {
             <p>
               האתר אינו אוסף מידע אישי מזהה. הנתונים שתזינו במחשבון (מחיר רכב, הלוואה וכו') מעובדים בצד השרת ואינם נשמרים.
             </p>
+            <p>
+              אם תבקשו לשלוח לכם את התוצאות במייל, כתובת המייל (והשם, אם הזנתם) ישמשו אך ורק לשליחת אותו מייל אחד.
+              איננו שומרים אותם ואיננו שולחים מיילים נוספים. השליחה מתבצעת דרך ספק שליחת המיילים Resend, ששומר
+              רישום טכני של המיילים שנשלחו.
+            </p>
 
             <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">עוגיות (Cookies)</h2>
             <p>
@@ -55,6 +60,11 @@ export default async function PrivacyPage() {
             <p>
               The site does not collect personally identifiable information. Data you enter in the calculator
               (car price, loan details, etc.) is processed server-side and is not stored.
+            </p>
+            <p>
+              If you ask us to email you your results, your email address (and name, if you entered one) is used
+              only to send that single email. We don&apos;t store it and won&apos;t email you again. Emails are sent
+              through our email provider, Resend, which keeps a technical log of sent messages.
             </p>
 
             <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">Cookies</h2>
