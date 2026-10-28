@@ -11,6 +11,9 @@ import Select from "@/components/ui/Select";
 import Checkbox from "@/components/ui/Checkbox";
 import VehiclePicker from "./VehiclePicker";
 
+const LEASE_TERMS = [2, 3, 4, 5];
+const DEFAULT_LEASE_TERM = 3;
+
 const CONSUMPTION_DEFAULTS: Record<string, number> = {
   gasoline: 14,
   diesel: 16,
@@ -126,6 +129,19 @@ export default function LeasingStep({
             value={lease.leaseDownPayment}
             onChange={(v) => onChange("lease.leaseDownPayment", v)}
             prefix="₪"
+          />
+        </FormField>
+
+        {/* The whole comparison runs over one lease contract — people re-decide
+            when it ends — so the term also sets the comparison period. */}
+        <FormField label={f.leaseTerm} hint={f.leaseTermHint}>
+          <Select
+            value={String(lease.leaseTerm || DEFAULT_LEASE_TERM)}
+            onChange={(v) => {
+              onChange("lease.leaseTerm", Number(v));
+              onChange("comparisonPeriodYears", Number(v));
+            }}
+            options={LEASE_TERMS.map((y) => ({ value: String(y), label: `${y} ${t.results.years}` }))}
           />
         </FormField>
 

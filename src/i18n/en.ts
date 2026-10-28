@@ -134,8 +134,8 @@ const en = {
     leasing: {
       title: "Leasing Option",
       monthlyPayment: "Monthly Payment",
-      leaseTerm: "Lease Term (years)",
-      leaseTermHint: "Duration of the lease contract — car is returned at the end",
+      leaseTerm: "Lease Contract Term",
+      leaseTermHint: "The car is returned at the end of the contract. The whole comparison is calculated over this period",
       downPayment: "Down Payment",
       carAge: "Car Age at Lease Start",
       carAgeHint: "Usually 0 (new car). If offered a 1-2 year old car, enter its age",
@@ -233,9 +233,10 @@ const en = {
   },
   results: {
     title: "Results",
-    periodLabel: "Comparison Period",
+    periodLabel: "The comparison covers the lease contract term:",
+    periodNote: "Most people revisit the decision when each contract ends, so we compare over exactly that period. The buy side credits the car's value at the end of it. If you keep a car you bought for longer, depreciation in later years is lower, and so is its yearly cost.",
     years: "years",
-    pageIntro: "Choose the comparison period in years — each change recalculates the total and monthly cost for that period. The table below breaks down every cost, buy vs. lease; open any row to see how it was computed, and you can even adjust depreciation and maintenance assumptions further down. Remember — this is an estimate to help you decide, not financial advice.",
+    pageIntro: "The comparison covers the lease contract term — the total and monthly cost of each option over that period. The table below breaks down every cost, buy vs. lease; open any row to see how it was computed, and you can even adjust depreciation and maintenance assumptions further down. Remember — this is an estimate to help you decide, not financial advice.",
     recommendation: {
       bestDeal: "Best deal",
       buyName: "Buy",

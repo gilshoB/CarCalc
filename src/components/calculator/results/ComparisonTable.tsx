@@ -280,7 +280,7 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
           <thead>
             <tr>
               <th className="sticky top-[4.5rem] z-10 bg-zinc-100 dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700 text-start text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 py-3 ps-4 pe-3 whitespace-nowrap">
-                {input.comparisonPeriodYears} {t.results.years}
+                {periodYears} {t.results.years}
               </th>
               <th className="sticky top-[4.5rem] z-10 bg-zinc-100 dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700 text-end text-xs font-bold uppercase tracking-wider py-3 px-3 w-[140px]">
                 <div className={`inline-flex items-center gap-1.5 ${buyWins ? "text-brand-600 dark:text-brand-400" : "text-zinc-400 dark:text-zinc-500"}`}>

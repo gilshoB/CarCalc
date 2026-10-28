@@ -9,7 +9,6 @@ import ComparisonTable from "./ComparisonTable";
 import CostBreakdownChart from "./CostBreakdownChart";
 import CumulativeCostChart from "./CumulativeCostChart";
 import MaintenanceOverride from "./MaintenanceOverride";
-import PeriodSelector from "./PeriodSelector";
 import SendResultsEmail from "./SendResultsEmail";
 import AdUnit from "@/components/AdUnit";
 
@@ -19,7 +18,6 @@ interface ResultsDashboardProps {
   results: CalculatorOutput;
   input: CalculatorInput;
   periodYears: number;
-  onPeriodChange: (years: number) => void;
   isRecalculating: boolean;
   onRecalculate: () => void;
   residualOverride?: number;
@@ -35,7 +33,6 @@ export default function ResultsDashboard({
   results,
   input,
   periodYears,
-  onPeriodChange,
   isRecalculating,
   onRecalculate,
   residualOverride,
@@ -51,14 +48,13 @@ export default function ResultsDashboard({
         {t.results.pageIntro}
       </p>
 
-      {/* Sticky period selector — table width, stays visible while scrolling */}
-      <div className="sticky top-0 z-30 mx-auto w-full max-w-2xl rounded-xl bg-white/90 px-4 py-3 ring-1 ring-zinc-200/60 backdrop-blur dark:bg-zinc-900/90 dark:ring-zinc-700/50">
-        <PeriodSelector
-          t={t}
-          selected={periodYears}
-          onChange={onPeriodChange}
-          disabled={isRecalculating}
-        />
+      {/* Comparison period = one lease contract (set in the leasing step) */}
+      <div className="mx-auto w-full max-w-2xl rounded-xl bg-white px-4 py-3 ring-1 ring-zinc-200/60 dark:bg-zinc-900 dark:ring-zinc-700/50">
+        <div className="text-sm font-bold text-zinc-700 dark:text-zinc-300">
+          {t.results.periodLabel}{" "}
+          <span className="text-brand-700 dark:text-brand-300">{periodYears} {t.results.years}</span>
+        </div>
+        <p className="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">{t.results.periodNote}</p>
       </div>
 
       {isRecalculating && (

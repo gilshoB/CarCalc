@@ -216,7 +216,6 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
             results={calc.results}
             input={input}
             periodYears={input.comparisonPeriodYears}
-            onPeriodChange={calc.changePeriod}
             isRecalculating={calc.isCalculating}
             onRecalculate={calc.recalculate}
             residualOverride={input.residualOverride}

@@ -21,7 +21,6 @@ export interface UseCalculatorReturn {
 
   results: CalculatorOutput | null;
   showResults: boolean;
-  changePeriod: (years: number) => Promise<void>;
 
   depreciationOverride: DepreciationOverrideValues | null;
   setDepreciationOverride: (v: DepreciationOverrideValues | null) => void;
@@ -211,12 +210,6 @@ export function useCalculator(): UseCalculatorReturn {
     await doCalculate(input, depreciationOverride, maintenanceOverride);
   }, [input, depreciationOverride, maintenanceOverride, doCalculate]);
 
-  const changePeriod = useCallback(async (years: number) => {
-    const updatedInput = { ...input, comparisonPeriodYears: years };
-    setInput(updatedInput);
-    await doCalculate(updatedInput, depreciationOverride, maintenanceOverride);
-  }, [input, depreciationOverride, maintenanceOverride, doCalculate]);
-
   const recalculate = useCallback(async () => {
     await doCalculate(input, depreciationOverride, maintenanceOverride);
   }, [input, depreciationOverride, maintenanceOverride, doCalculate]);
@@ -256,7 +249,6 @@ export function useCalculator(): UseCalculatorReturn {
     apiError,
     results,
     showResults,
-    changePeriod,
     depreciationOverride,
     setDepreciationOverride,
     maintenanceOverride,

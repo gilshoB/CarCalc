@@ -104,6 +104,12 @@ export const CalculatorInputSchema = z.object({
 
 /** Run the full buy-vs-lease comparison for an already-validated input. */
 export async function runCalculation(input: CalculatorInput): Promise<CalculatorOutput> {
+  // The comparison always covers one lease contract — people re-decide when
+  // it ends, and we can't know the terms of a future lease.
+  if (input.lease.leaseTerm > 0) {
+    input.comparisonPeriodYears = input.lease.leaseTerm;
+  }
+
   const marketData = await getMarketData();
 
   // If the user didn't override the investment return, use the market default.
