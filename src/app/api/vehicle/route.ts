@@ -47,6 +47,33 @@ async function fetchGov(
   return data.result.records;
 }
 
+// Escape a value for a single-quoted SQL literal ("פיג'ו" → 'פיג''ו').
+function sqlStr(v: string): string {
+  return `'${v.replace(/'/g, "''")}'`;
+}
+
+// gov.il's datastore_search applies `limit` to raw rows *before* `distinct`
+// de-dupes them, so distinct lists come back truncated (8 of 129 makes).
+// datastore_search_sql runs a real SELECT DISTINCT, so pick-lists use it.
+async function fetchGovSql(sql: string, tag: string): Promise<DatastoreRecord[]> {
+  const qs = new URLSearchParams({ sql });
+  const url = `https://data.gov.il/api/3/action/datastore_search_sql?${qs.toString()}`;
+  const res = await fetch(url, {
+    signal: AbortSignal.timeout(GOV_TIMEOUT_MS),
+    next: { revalidate: REVALIDATE_SECONDS, tags: [tag, "vehicle-data"] },
+  });
+  if (!res.ok) {
+    throw new Error(`gov.il sql returned ${res.status}`);
+  }
+  const data = (await res.json()) as DatastoreResponse;
+  if (!data.success || !data.result) {
+    throw new Error("gov.il sql unsuccessful response");
+  }
+  return data.result.records;
+}
+
+const WLTP_TABLE = `"${WLTP_RESOURCE}"`;
+
 function mapFuelType(raw: string | undefined): FuelType | undefined {
   if (!raw) return undefined;
   const h = raw.trim();
@@ -117,14 +144,8 @@ export function isLatinModel(name: string): boolean {
 // ---- Operations ----
 
 async function opManufacturers() {
-  const records = await fetchGov(
-    WLTP_RESOURCE,
-    {
-      distinct: "true",
-      fields: "tozar",
-      filters: JSON.stringify({ sug_degem: PRIVATE_CAR }),
-      limit: "1000",
-    },
+  const records = await fetchGovSql(
+    `SELECT DISTINCT tozar FROM ${WLTP_TABLE} WHERE sug_degem = ${sqlStr(PRIVATE_CAR)}`,
     "vehicle-makes",
   );
   const list = records
@@ -136,14 +157,9 @@ async function opManufacturers() {
 }
 
 async function opModels(manufacturer: string) {
-  const records = await fetchGov(
-    WLTP_RESOURCE,
-    {
-      distinct: "true",
-      fields: "kinuy_mishari,shnat_yitzur",
-      filters: JSON.stringify({ tozar: manufacturer, sug_degem: PRIVATE_CAR }),
-      limit: "2000",
-    },
+  const records = await fetchGovSql(
+    `SELECT DISTINCT kinuy_mishari, shnat_yitzur FROM ${WLTP_TABLE}` +
+      ` WHERE tozar = ${sqlStr(manufacturer)} AND sug_degem = ${sqlStr(PRIVATE_CAR)}`,
     `vehicle-models:${manufacturer}`,
   );
   // Names presented exactly as they appear — kept filters: private cars only,
@@ -157,14 +173,10 @@ async function opModels(manufacturer: string) {
 }
 
 async function opYears(manufacturer: string, model: string) {
-  const records = await fetchGov(
-    WLTP_RESOURCE,
-    {
-      distinct: "true",
-      fields: "shnat_yitzur",
-      filters: JSON.stringify({ tozar: manufacturer, kinuy_mishari: model, sug_degem: PRIVATE_CAR }),
-      limit: "200",
-    },
+  const records = await fetchGovSql(
+    `SELECT DISTINCT shnat_yitzur FROM ${WLTP_TABLE}` +
+      ` WHERE tozar = ${sqlStr(manufacturer)} AND kinuy_mishari = ${sqlStr(model)}` +
+      ` AND sug_degem = ${sqlStr(PRIVATE_CAR)}`,
     `vehicle-years:${manufacturer}:${model}`,
   );
   const years = records
@@ -175,14 +187,10 @@ async function opYears(manufacturer: string, model: string) {
 }
 
 async function opTrims(manufacturer: string, model: string, year: number) {
-  const records = await fetchGov(
-    WLTP_RESOURCE,
-    {
-      distinct: "true",
-      fields: "ramat_gimur",
-      filters: JSON.stringify({ tozar: manufacturer, kinuy_mishari: model, shnat_yitzur: year, sug_degem: PRIVATE_CAR }),
-      limit: "200",
-    },
+  const records = await fetchGovSql(
+    `SELECT DISTINCT ramat_gimur FROM ${WLTP_TABLE}` +
+      ` WHERE tozar = ${sqlStr(manufacturer)} AND kinuy_mishari = ${sqlStr(model)}` +
+      ` AND shnat_yitzur = ${Number(year)} AND sug_degem = ${sqlStr(PRIVATE_CAR)}`,
     `vehicle-trims:${manufacturer}:${model}:${year}`,
   );
   const trims = records
