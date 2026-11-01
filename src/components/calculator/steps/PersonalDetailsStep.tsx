@@ -22,10 +22,10 @@ export default function PersonalDetailsStep({
   const f = t.form.personalDetails;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       <div>
-        <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">{f.title}</h2>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{f.subtitle}</p>
+        <h2 className="text-[34px] sm:text-[40px] font-extrabold leading-[1.05] tracking-[-0.035em]">{f.title}</h2>
+        <p className="mt-2 text-base leading-relaxed text-muted">{f.subtitle}</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -35,10 +35,10 @@ export default function PersonalDetailsStep({
             value={name}
             onChange={(e) => onChange("name", e.target.value)}
             className={`
-              w-full rounded-lg border bg-white px-3 py-2 text-sm
+              w-full h-14 rounded-[14px] border-2 bg-white px-4 text-[17px] text-ink
               dark:bg-zinc-900 dark:text-zinc-100
-              focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500
-              ${errors["name"] ? "border-red-500" : "border-zinc-300 dark:border-zinc-700"}
+              focus:outline-none focus:border-ink
+              ${errors["name"] ? "border-red-500" : "border-line"}
             `}
           />
         </FormField>
@@ -49,10 +49,10 @@ export default function PersonalDetailsStep({
             value={email}
             onChange={(e) => onChange("email", e.target.value)}
             className={`
-              w-full rounded-lg border bg-white px-3 py-2 text-sm
+              w-full h-14 rounded-[14px] border-2 bg-white px-4 text-[17px] text-ink
               dark:bg-zinc-900 dark:text-zinc-100
-              focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500
-              ${errors["email"] ? "border-red-500" : "border-zinc-300 dark:border-zinc-700"}
+              focus:outline-none focus:border-ink
+              ${errors["email"] ? "border-red-500" : "border-line"}
             `}
           />
         </FormField>

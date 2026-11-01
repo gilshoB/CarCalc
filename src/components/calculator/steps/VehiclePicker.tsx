@@ -182,18 +182,18 @@ export default function VehiclePicker({ t, vehicle, onResolve, onManualEntry }: 
   const isCommon = !vehicle?.trim || vehicle.trim === COMMON_TRIM;
 
   return (
-    <div className="rounded-xl border border-zinc-200 bg-zinc-50/60 p-4 dark:border-zinc-700 dark:bg-zinc-800/40">
+    <div className="rounded-[20px] bg-soft p-6">
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">{f.title}</h3>
+        <h3 className="text-lg font-bold">{f.title}</h3>
         <button
           type="button"
           onClick={onManualEntry}
-          className="inline-flex items-center gap-1 rounded-lg border border-brand-300 bg-white px-3 py-1.5 text-xs font-semibold text-brand-700 shadow-sm hover:bg-brand-50 transition-colors dark:border-brand-700 dark:bg-zinc-900 dark:text-brand-300 dark:hover:bg-zinc-800"
+          className="inline-flex items-center gap-1 rounded-xl bg-white px-3.5 py-2 text-sm font-semibold text-ink underline-offset-4 hover:underline transition-colors"
         >
           {f.manualEntry}
         </button>
       </div>
-      <p className="mb-4 text-xs text-zinc-500 dark:text-zinc-400">{f.hint}</p>
+      <p className="mb-4 text-[13px] text-muted">{f.hint}</p>
 
       <div className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
         <FormField label={f.manufacturer}>
@@ -251,7 +251,7 @@ export default function VehiclePicker({ t, vehicle, onResolve, onManualEntry }: 
       </div>
 
       {loading && (
-        <p className="mt-3 flex items-center gap-2 text-xs font-medium text-brand-600 dark:text-brand-400">
+        <p className="mt-3 flex items-center gap-2 text-[13px] font-medium text-ink">
           <svg className="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
@@ -261,16 +261,16 @@ export default function VehiclePicker({ t, vehicle, onResolve, onManualEntry }: 
       )}
 
       {resolveError && (
-        <p className="mt-3 text-xs text-amber-600 dark:text-amber-400">{f.resolveError}</p>
+        <p className="mt-3 text-[13px] font-medium text-[#9a5b00]">{f.resolveError}</p>
       )}
 
       {!loading && showAmbiguous && (
-        <p className="mt-3 text-xs text-amber-600 dark:text-amber-400">
+        <p className="mt-3 text-[13px] font-medium text-[#9a5b00]">
           {isCommon ? f.ambiguousCommonNote : f.ambiguousNote}
         </p>
       )}
 
-      <p className="mt-3 text-xs text-zinc-400 dark:text-zinc-500">{f.manualEntryHint}</p>
+      <p className="mt-3 text-[13px] text-muted">{f.manualEntryHint}</p>
     </div>
   );
 }

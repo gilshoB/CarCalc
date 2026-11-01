@@ -41,10 +41,10 @@ export default function InvestStep({
   const investableAmount = Math.max(0, relevantCapital - leaseDownPayment);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       <div>
-        <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">{f.investTitle}</h2>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{f.investSubtitle}</p>
+        <h2 className="text-[34px] sm:text-[40px] font-extrabold leading-[1.05] tracking-[-0.035em]">{f.investTitle}</h2>
+        <p className="mt-2 text-base leading-relaxed text-muted">{f.investSubtitle}</p>
       </div>
 
       {/* Investment */}
@@ -55,11 +55,12 @@ export default function InvestStep({
           label={lease.investmentQuestion}
         />
         {includeInvestment && (
-          <div className="mt-3 space-y-3">
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">{lease.investmentExplain}</p>
-            <p className="text-sm font-medium text-brand-600 dark:text-brand-400">
-              {lease.investmentAmount}: {formatNumber(investableAmount, locale)} ₪
-            </p>
+          <div className="mt-4 space-y-4">
+            <p className="text-sm text-[#3d3d38]">{lease.investmentExplain}</p>
+            <div className="rounded-[14px] border-2 border-line px-4 py-3.5 flex flex-col gap-1">
+              <span className="text-[13px] text-muted">{lease.investmentAmount}</span>
+              <span className="text-[22px] font-extrabold">{formatNumber(investableAmount, locale)} ₪</span>
+            </div>
             <FormField label={lease.investmentReturn} hint={lease.investmentHint}>
               <NumberInput
                 value={investmentReturnRate ?? defaultInvestmentReturn}

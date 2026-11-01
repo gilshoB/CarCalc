@@ -268,10 +268,10 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
   };
 
   return (
-    <div className="rounded-2xl bg-white shadow-md ring-1 ring-zinc-200/60 dark:bg-zinc-900 dark:ring-zinc-700/50 max-w-2xl mx-auto">
+    <div className="rounded-[24px] bg-white max-w-[720px] w-full mx-auto overflow-hidden">
       {/* Header */}
-      <div className="px-4 sm:px-5 py-4 border-b border-zinc-100 dark:border-zinc-800">
-        <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50">{c.title}</h3>
+      <div className="px-5 sm:px-6 py-[18px] border-b border-[#eeeeea]">
+        <h3 className="text-lg font-bold">{c.title}</h3>
       </div>
 
       {/* Table */}
@@ -279,17 +279,17 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
         <table className="w-full border-separate border-spacing-0">
           <thead>
             <tr>
-              <th className="sticky top-[4.5rem] z-10 bg-zinc-100 dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700 text-start text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 py-3 ps-4 pe-3 whitespace-nowrap">
+              <th className="sticky top-20 z-10 bg-[#f2f2ee] text-start text-xs font-semibold text-muted py-3 ps-4 pe-3 whitespace-nowrap">
                 {periodYears} {t.results.years}
               </th>
-              <th className="sticky top-[4.5rem] z-10 bg-zinc-100 dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700 text-end text-xs font-bold uppercase tracking-wider py-3 px-3 w-[140px]">
-                <div className={`inline-flex items-center gap-1.5 ${buyWins ? "text-brand-600 dark:text-brand-400" : "text-zinc-400 dark:text-zinc-500"}`}>
+              <th className="sticky top-20 z-10 bg-[#f2f2ee] text-end text-xs font-bold py-3 px-3 w-[140px]">
+                <div className={`inline-flex items-center gap-1.5 ${buyWins ? "rounded-full bg-lime px-2.5 py-0.5 text-ink" : "text-ink"}`}>
                   {buyWins && <CheckIcon className="h-4 w-4" />}
                   {c.buy}
                 </div>
               </th>
-              <th className="sticky top-[4.5rem] z-10 bg-zinc-100 dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700 text-end text-xs font-bold uppercase tracking-wider py-3 ps-3 pe-4 w-[140px]">
-                <div className={`inline-flex items-center gap-1.5 ${!buyWins ? "text-amber-600 dark:text-amber-400" : "text-zinc-400 dark:text-zinc-500"}`}>
+              <th className="sticky top-20 z-10 bg-[#f2f2ee] text-end text-xs font-bold py-3 ps-3 pe-4 w-[140px]">
+                <div className={`inline-flex items-center gap-1.5 ${!buyWins ? "rounded-full bg-lime px-2.5 py-0.5 text-ink" : "text-ink"}`}>
                   {!buyWins && <CheckIcon className="h-4 w-4" />}
                   {c.lease}
                 </div>
@@ -298,16 +298,16 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
           </thead>
           <tbody>
             {/* Vehicle identity row — echoes the cars chosen at the top */}
-            <tr className="border-b border-zinc-100/80 dark:border-zinc-800/50 bg-zinc-50/60 dark:bg-zinc-800/30">
+            <tr className="border-b border-[#eeeeea] bg-[#fafaf8]">
               <td className="ps-4 pe-3 py-3">
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+                <span className="text-xs font-semibold text-muted">
                   {c.vehicleRowLabel}
                 </span>
               </td>
-              <td className="text-end px-3 py-3 align-top text-xs font-medium text-zinc-600 dark:text-zinc-300">
+              <td className="text-end px-3 py-3 align-top text-[13px] font-medium text-[#3d3d38]">
                 {vehicleLabel(input.buy.vehicle, t)}
               </td>
-              <td className="text-end ps-3 pe-4 py-3 align-top text-xs font-medium text-zinc-600 dark:text-zinc-300">
+              <td className="text-end ps-3 pe-4 py-3 align-top text-[13px] font-medium text-[#3d3d38]">
                 {vehicleLabel(input.lease.vehicle, t)}
               </td>
             </tr>
@@ -319,15 +319,15 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
               return (
                 <Fragment key={row.key}>
                 <tr
-                  className={`border-b border-zinc-100/80 dark:border-zinc-800/50 ${
+                  className={`border-b border-[#eeeeea] ${
                     i % 2 === 0
-                      ? "bg-white dark:bg-zinc-900"
-                      : "bg-zinc-50/40 dark:bg-zinc-800/20"
+                      ? "bg-white"
+                      : "bg-[#fcfcfa]"
                   }`}
                 >
                   <td className="ps-4 pe-3 py-3.5 align-top">
                     <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
-                      <span className="text-sm sm:text-base font-medium text-zinc-700 dark:text-zinc-300">
+                      <span className="text-[15px] font-medium text-ink">
                         {row.label}
                       </span>
                       {row.key === "residualValue" && (
@@ -337,7 +337,7 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
                             onClick={() => setShowDeprInfo((v) => !v)}
                             aria-label={c.depreciationInfoLabel}
                             aria-expanded={showDeprInfo}
-                            className="shrink-0 inline-flex items-center justify-center h-4 w-4 rounded-full text-brand-500 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 transition-colors"
+                            className="shrink-0 inline-flex items-center justify-center h-5 w-5 rounded-full text-ink hover:opacity-70 transition"
                           >
                             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9 9a1 1 0 012 0v4a1 1 0 11-2 0V9zm1-4a1 1 0 100 2 1 1 0 000-2z" clipRule="evenodd" />
@@ -346,7 +346,7 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
                           {showDeprInfo && (
                             <span
                               role="tooltip"
-                              className="absolute z-20 top-6 start-0 w-60 rounded-lg bg-zinc-800 dark:bg-zinc-700 px-3 py-2 text-xs leading-relaxed text-white shadow-lg ring-1 ring-black/10"
+                              className="absolute z-20 top-6 start-0 w-60 rounded-xl bg-ink px-3 py-2 text-xs leading-relaxed text-white shadow-lg ring-1 ring-black/10"
                             >
                               {deprNote}
                             </span>
@@ -359,16 +359,16 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
                           onClick={() => toggleRow(row.key)}
                           aria-label={isExpanded ? "collapse" : "expand"}
                           aria-expanded={isExpanded}
-                          className="shrink-0 rounded-full p-0.5 text-zinc-400 hover:text-brand-600 hover:bg-brand-50 dark:text-zinc-500 dark:hover:text-brand-400 dark:hover:bg-brand-900/30 transition-colors"
+                          className="shrink-0 rounded-full p-0.5 text-[#8a8a84] hover:text-ink hover:bg-soft transition-colors"
                         >
-                          <ChevronToggleIcon expanded={isExpanded} className={`h-4 w-4 ${isExpanded ? "text-brand-600 dark:text-brand-400" : ""}`} />
+                          <ChevronToggleIcon expanded={isExpanded} className={`h-4 w-4 ${isExpanded ? "text-ink" : ""}`} />
                         </button>
                       )}
                       {row.key === "residualValue" && onApplyResidual && (
                         <button
                           type="button"
                           onClick={openResidualEditor}
-                          className="shrink-0 inline-flex items-center gap-1 rounded-full bg-brand-50 dark:bg-brand-950/40 px-2 py-0.5 text-[11px] font-medium text-brand-700 dark:text-brand-300 ring-1 ring-brand-200/60 dark:ring-brand-800/40 hover:bg-brand-100 dark:hover:bg-brand-900/60 transition-colors"
+                          className="shrink-0 inline-flex items-center gap-1 rounded-full bg-lime px-2.5 py-0.5 text-xs font-semibold text-ink hover:brightness-95 transition"
                         >
                           <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" />
@@ -379,7 +379,7 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
                       {row.key === "maintenance" && (
                         <a
                           href="#maintenance-section"
-                          className="shrink-0 inline-flex items-center gap-1 rounded-full bg-brand-50 dark:bg-brand-950/40 px-2 py-0.5 text-[11px] font-medium text-brand-700 dark:text-brand-300 ring-1 ring-brand-200/60 dark:ring-brand-800/40 hover:bg-brand-100 dark:hover:bg-brand-900/60 transition-colors"
+                          className="shrink-0 inline-flex items-center gap-1 rounded-full bg-[#f2f2ee] px-2.5 py-0.5 text-xs font-semibold text-ink hover:bg-[#e8e8e2] transition-colors"
                         >
                           <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" />
@@ -392,35 +392,35 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
 
                   <td className={`text-end px-3 py-3.5 align-top text-base tabular-nums font-bold ${
                     isCredit && row.buyValue < 0
-                      ? "text-emerald-600 dark:text-emerald-400"
-                      : "text-zinc-800 dark:text-zinc-200"
+                      ? "text-[#3f6212]"
+                      : "text-ink"
                   }`}>
                     {fmtVal(row.buyValue, isCredit)}
                   </td>
 
                   <td className={`text-end ps-3 pe-4 py-3.5 align-top text-base tabular-nums font-bold ${
                     isCredit && row.leaseValue < 0
-                      ? "text-emerald-600 dark:text-emerald-400"
-                      : "text-zinc-800 dark:text-zinc-200"
+                      ? "text-[#3f6212]"
+                      : "text-ink"
                   }`}>
                     {fmtVal(row.leaseValue, isCredit)}
                   </td>
                 </tr>
 
                 {isExpanded && hasFormula && (
-                  <tr className="border-b border-zinc-100/80 dark:border-zinc-800/50 bg-zinc-50/60 dark:bg-zinc-800/30">
+                  <tr className="border-b border-[#eeeeea] bg-[#fafaf8]">
                     <td colSpan={3} className="px-4 pb-3 pt-0">
-                      <div className="rounded-lg bg-zinc-100/80 dark:bg-zinc-800/60 px-3 py-2.5 text-xs leading-relaxed space-y-1.5">
+                      <div className="rounded-xl bg-[#f2f2ee] px-3.5 py-2.5 text-[13px] leading-relaxed space-y-1.5">
                         {row.buyFormula && (
                           <div className="flex gap-1.5">
-                            <span className="font-semibold text-brand-600 dark:text-brand-400 shrink-0">{c.buy}:</span>
-                            <span className="text-zinc-600 dark:text-zinc-300">{row.buyFormula}</span>
+                            <span className="font-bold text-ink shrink-0">{c.buy}:</span>
+                            <span className="text-[#3d3d38]">{row.buyFormula}</span>
                           </div>
                         )}
                         {row.leaseFormula && (
                           <div className="flex gap-1.5">
-                            <span className="font-semibold text-amber-600 dark:text-amber-400 shrink-0">{c.lease}:</span>
-                            <span className="text-zinc-600 dark:text-zinc-300">{row.leaseFormula}</span>
+                            <span className="font-bold text-ink shrink-0">{c.lease}:</span>
+                            <span className="text-[#3d3d38]">{row.leaseFormula}</span>
                           </div>
                         )}
                       </div>
@@ -429,13 +429,13 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
                 )}
 
                 {row.key === "residualValue" && editingResidual && onApplyResidual && (
-                  <tr className="border-b border-zinc-100/80 dark:border-zinc-800/50 bg-brand-50/50 dark:bg-brand-950/20">
+                  <tr className="border-b border-[#eeeeea] bg-brand-50">
                     <td colSpan={3} className="px-4 py-3">
-                      <div className="rounded-lg bg-white dark:bg-zinc-800/80 ring-1 ring-brand-200/70 dark:ring-brand-800/50 px-3 py-3 space-y-2">
-                        <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-200">
+                      <div className="rounded-xl bg-white ring-2 ring-ink px-4 py-4 space-y-2">
+                        <label className="block text-sm font-bold text-ink">
                           {c.residualEditLabel}
                         </label>
-                        <p className="text-[11px] leading-snug text-zinc-500 dark:text-zinc-400">
+                        <p className="text-xs leading-snug text-muted">
                           {c.residualEditHint}
                         </p>
                         <div className="flex items-center gap-2">
@@ -452,7 +452,7 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
                             type="button"
                             onClick={() => { onApplyResidual(residualDraft); setEditingResidual(false); }}
                             disabled={isRecalculating}
-                            className="shrink-0 rounded-lg bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50 transition-colors"
+                            className="shrink-0 h-14 rounded-[14px] bg-ink px-5 text-sm font-bold text-white hover:bg-black disabled:opacity-50 transition-colors"
                           >
                             {c.applyBtn}
                           </button>
@@ -461,7 +461,7 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
                               type="button"
                               onClick={() => { onApplyResidual(null); setEditingResidual(false); }}
                               disabled={isRecalculating}
-                              className="shrink-0 rounded-lg bg-zinc-100 dark:bg-zinc-700 px-3 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-600 disabled:opacity-50 transition-colors"
+                              className="shrink-0 h-14 rounded-[14px] bg-soft px-5 text-sm font-bold text-ink hover:bg-[#e8e8e2] disabled:opacity-50 transition-colors"
                             >
                               {c.resetBtn}
                             </button>
@@ -477,38 +477,38 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
           </tbody>
 
           <tfoot>
-            <tr className="bg-zinc-50 dark:bg-zinc-800/40 [&>td]:border-t-2 [&>td]:border-zinc-200 dark:[&>td]:border-zinc-700">
+            <tr className="bg-ink text-white">
               <td className="ps-4 pe-3 py-4">
-                <span className="text-base font-bold text-zinc-900 dark:text-zinc-50">{c.total}</span>
+                <span className="text-base font-bold">{c.total}</span>
               </td>
               <td className={`text-end px-3 py-4 text-xl tabular-nums font-extrabold whitespace-nowrap ${
-                buyWins ? "text-brand-700 dark:text-brand-300" : "text-zinc-800 dark:text-zinc-200"
+                buyWins ? "text-lime" : "text-white"
               }`}>
                 {formatNumber(buy.totalCost, locale)} ₪
               </td>
               <td className={`text-end ps-3 pe-4 py-4 text-xl tabular-nums font-extrabold whitespace-nowrap ${
-                !buyWins ? "text-amber-700 dark:text-amber-300" : "text-zinc-800 dark:text-zinc-200"
+                !buyWins ? "text-lime" : "text-white"
               }`}>
                 {formatNumber(lease.totalCost, locale)} ₪
               </td>
             </tr>
-            <tr className="bg-zinc-50 dark:bg-zinc-800/40">
+            <tr className="bg-ink">
               <td className="ps-4 pe-3 pb-4">
-                <span className="text-sm text-zinc-400 dark:text-zinc-500">{c.monthlyCost}</span>
+                <span className="text-[13px] text-[#c8c8c1]">{c.monthlyCost}</span>
               </td>
-              <td className="text-end px-3 pb-4 text-base tabular-nums font-semibold text-zinc-500 dark:text-zinc-400 whitespace-nowrap">
+              <td className="text-end px-3 pb-4 text-[15px] tabular-nums font-semibold text-[#c8c8c1] whitespace-nowrap">
                 {formatNumber(buy.monthlyCost, locale)} ₪
               </td>
-              <td className="text-end ps-3 pe-4 pb-4 text-base tabular-nums font-semibold text-zinc-500 dark:text-zinc-400 whitespace-nowrap">
+              <td className="text-end ps-3 pe-4 pb-4 text-[15px] tabular-nums font-semibold text-[#c8c8c1] whitespace-nowrap">
                 {formatNumber(lease.monthlyCost, locale)} ₪
               </td>
             </tr>
             {monthlyDelta > 0 && (
-              <tr className="bg-zinc-50 dark:bg-zinc-800/40">
+              <tr className="bg-ink">
                 <td colSpan={3} className="px-4 sm:px-5 pb-4">
-                  <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 dark:bg-emerald-950/40 ring-1 ring-emerald-200/60 dark:ring-emerald-800/40 px-3.5 py-1.5">
-                    <CheckIcon className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                    <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+                  <div className="inline-flex items-center gap-2 rounded-full bg-lime px-3.5 py-1.5">
+                    <CheckIcon className="h-4 w-4 text-ink" />
+                    <span className="text-sm font-bold text-ink">
                       {tpl(c.monthlySavings, {
                         option: buyWins ? c.buy : c.lease,
                         amount: formatNumber(monthlyDelta, locale),
@@ -523,7 +523,7 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
       </div>
 
       {(buy.breakdown.taxBenefits > 0 || lease.breakdown.taxBenefits > 0) && (
-        <p className="px-4 sm:px-5 py-3 text-[11px] leading-relaxed text-zinc-400 dark:text-zinc-500 border-t border-zinc-100 dark:border-zinc-800">
+        <p className="px-4 sm:px-5 py-3 text-xs leading-relaxed text-muted">
           {c.taxNote}
         </p>
       )}

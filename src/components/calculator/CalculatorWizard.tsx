@@ -58,7 +58,7 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
     <div>
       {/* Wizard Form */}
       {!calc.showResults && (
-        <div className="mx-auto max-w-2xl">
+        <div className="mx-auto max-w-[720px]">
           {currentStep > 1 && (
             <StepIndicator
               currentStep={currentStep}
@@ -67,7 +67,9 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
             />
           )}
 
-          <div className="rounded-2xl bg-white p-6 shadow-md ring-1 ring-zinc-200/60 dark:bg-zinc-900 dark:ring-zinc-700/50 sm:p-8">
+          <div className={`rounded-[28px] p-7 sm:p-9 ${
+            currentStep === 1 ? "bg-ink text-white" : currentStep === 3 ? "bg-lime" : "bg-white"
+          }`}>
             {currentStep === 1 && (
               <InstructionsStep
                 t={t}
@@ -157,18 +159,18 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
 
             {/* Error message */}
             {calc.apiError && (
-              <div className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
+              <div className="mt-4 rounded-[14px] bg-red-50 p-4 text-sm font-medium text-red-700">
                 {calc.apiError}
               </div>
             )}
 
             {/* Navigation buttons */}
             {currentStep > 1 && (
-              <div className="mt-8 flex items-center justify-between">
+              <div className="mt-8 flex items-center justify-between gap-3">
                 <button
                   type="button"
                   onClick={calc.prevStep}
-                  className="rounded-lg border border-zinc-300 px-5 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                  className={`h-14 rounded-[14px] px-6 text-base font-bold transition-colors ${currentStep === 3 ? "bg-white/70 hover:bg-white" : "bg-soft hover:bg-[#e8e8e2]"} text-ink`}
                 >
                   {t.wizard.back}
                 </button>
@@ -177,7 +179,7 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
                   <button
                     type="button"
                     onClick={calc.nextStep}
-                    className="rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    className="h-14 rounded-[14px] bg-ink px-9 text-base font-bold text-white hover:bg-black transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2"
                   >
                     {t.wizard.next}
                   </button>
@@ -186,7 +188,7 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
                     type="button"
                     onClick={calc.calculate}
                     disabled={calc.isCalculating}
-                    className="rounded-lg bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:opacity-50"
+                    className="h-16 rounded-[14px] bg-lime px-10 text-lg font-extrabold text-ink ring-2 ring-inset ring-ink hover:brightness-95 transition focus:outline-none focus-visible:ring-4 disabled:opacity-50"
                   >
                     {calc.isCalculating ? t.wizard.calculating : t.wizard.calculate}
                   </button>
@@ -199,12 +201,12 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
 
       {/* Results */}
       {calc.showResults && calc.results && (
-        <div className="mt-8">
+        <div className="mx-auto max-w-[1072px]">
           <div className="mb-6">
             <button
               type="button"
               onClick={calc.backToForm}
-              className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
+              className="h-11 rounded-xl bg-white px-5 text-[15px] font-semibold text-ink hover:bg-soft transition-colors"
             >
               {t.wizard.back}
             </button>
@@ -229,7 +231,7 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
             <button
               type="button"
               onClick={calc.resetAll}
-              className="rounded-xl bg-brand-600 px-8 py-3 text-base font-semibold text-white shadow-sm hover:bg-brand-700 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-brand-500 dark:hover:bg-brand-600"
+              className="h-14 rounded-[14px] bg-lime px-10 text-base font-extrabold text-ink ring-2 ring-inset ring-ink hover:brightness-95 transition focus:outline-none focus-visible:ring-4"
             >
               {t.wizard.startOver}
             </button>

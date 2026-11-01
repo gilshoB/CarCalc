@@ -22,14 +22,15 @@ export default function AnnualKmStep({ t, locale, annualKm, onChange }: AnnualKm
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">{f.title}</h2>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{f.subtitle}</p>
+        <h2 className="text-[34px] sm:text-[40px] font-extrabold leading-[1.05] tracking-[-0.035em]">{f.title}</h2>
+        <p className="mt-2 text-base leading-relaxed">{f.subtitle}</p>
       </div>
 
-      <div className="text-center">
-        <span className="text-3xl font-extrabold text-brand-600 dark:text-brand-400 tabular-nums">
-          {f.valueLabel.replace("{km}", formatNumber(value, locale))}
+      <div className="flex items-baseline gap-3">
+        <span className="text-[72px] sm:text-[96px] font-extrabold leading-none tracking-[-0.05em] tabular-nums">
+          {formatNumber(value, locale)}
         </span>
+        <span className="text-xl font-bold">{f.valueLabel.replace("{km}", "").trim()}</span>
       </div>
 
       <div className="px-1">
@@ -40,9 +41,10 @@ export default function AnnualKmStep({ t, locale, annualKm, onChange }: AnnualKm
           step={STEP_KM}
           value={value}
           onChange={(e) => onChange("annualKm", Number(e.target.value))}
-          className="w-full h-2 cursor-pointer rounded-full accent-brand-600"
+          aria-label={f.title}
+          className="w-full h-2 cursor-pointer rounded-full accent-ink"
         />
-        <div className="mt-2 flex justify-between text-xs text-zinc-400 dark:text-zinc-500 tabular-nums">
+        <div className="mt-2 flex justify-between text-[13px] font-medium tabular-nums">
           <span>{formatNumber(MIN_KM, locale)}</span>
           <span>{formatNumber(MAX_KM, locale)}+</span>
         </div>

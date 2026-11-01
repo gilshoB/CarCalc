@@ -21,7 +21,7 @@ export default function LanguageToggle({
   return (
     <button
       onClick={toggleLocale}
-      className="rounded-lg border border-zinc-300 px-3 py-1.5 text-sm font-medium transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
+      className="rounded-xl bg-white px-3.5 py-2 text-sm font-semibold text-ink transition-colors hover:bg-lime"
     >
       {label}
     </button>

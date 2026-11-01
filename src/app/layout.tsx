@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import { Heebo } from "next/font/google";
+import { Rubik } from "next/font/google";
 import { cookies } from "next/headers";
 import { defaultLocale, getDirection, getTranslations } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
-import Image from "next/image";
 import { Analytics } from "@vercel/analytics/next";
 import LanguageToggle from "@/components/LanguageToggle";
 import "./globals.css";
 import { SITE_URL } from "@/lib/site";
 
-const heebo = Heebo({
+const rubik = Rubik({
   subsets: ["hebrew", "latin"],
-  variable: "--font-heebo",
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-rubik",
 });
 
 const OG_IMAGE = {
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     images: [OG_IMAGE.url],
   },
   other: {
-    "theme-color": "#5c8d89",
+    "theme-color": "#0e0e0e",
   },
 };
 
@@ -69,38 +69,32 @@ export default async function RootLayout({
           />
         )}
       </head>
-      <body className={`${heebo.variable} font-sans antialiased`}>
-        <header className="sticky top-0 z-50 border-b border-zinc-200/60 bg-white/80 backdrop-blur-md shadow-sm dark:border-zinc-800 dark:bg-zinc-950/80">
-          <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 h-20">
-            <a href="/" className="flex items-center shrink-0">
-              <Image
-                src="/images/logo_new.png"
-                alt="CarCalc"
-                width={1992}
-                height={941}
-                className="h-14 w-auto rounded-md"
-                priority
-              />
+      <body className={`${rubik.variable} font-sans antialiased`}>
+        <header className="sticky top-0 z-50 bg-[#ededE8]/90 backdrop-blur-md">
+          <div className="mx-auto flex max-w-[1240px] items-center justify-between gap-3 px-6 h-20">
+            <a href="/" aria-label="CarCalc" className="flex items-center gap-1 shrink-0 text-[22px] font-extrabold tracking-[-0.04em] text-ink" dir="ltr">
+              CARCALC
+              <span aria-hidden="true" className="ms-1 inline-block h-[9px] w-[9px] border-2 border-ink bg-lime" />
             </a>
             <nav className="hidden sm:flex items-center gap-1">
-                <a href="/" className="rounded-md px-2.5 py-1.5 text-sm text-zinc-600 hover:text-brand-600 hover:bg-brand-50 dark:text-zinc-400 dark:hover:text-brand-400 dark:hover:bg-brand-950/30 transition-colors">
+                <a href="/" className="rounded-xl px-3 py-2 text-[15px] font-medium text-ink hover:bg-white transition-colors">
                   {t.nav.calculator}
                 </a>
                 <details className="relative group">
-                  <summary className="list-none cursor-pointer rounded-md px-2.5 py-1.5 text-sm text-zinc-600 hover:text-brand-600 hover:bg-brand-50 dark:text-zinc-400 dark:hover:text-brand-400 dark:hover:bg-brand-950/30 transition-colors flex items-center gap-1">
+                  <summary className="cursor-pointer rounded-xl px-3 py-2 text-[15px] font-medium text-ink hover:bg-white transition-colors flex items-center gap-1">
                     {t.nav.guides}
-                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
                   </summary>
-                  <div className="absolute end-0 top-full mt-1 w-56 rounded-lg border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-900 z-50 py-1">
-                    <a href="/guides/buy-vs-lease" className="block px-4 py-2 text-sm text-zinc-700 hover:bg-brand-50 hover:text-brand-600 dark:text-zinc-300 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">{t.nav.guideBuyVsLease}</a>
-                    <a href="/guides/depreciation" className="block px-4 py-2 text-sm text-zinc-700 hover:bg-brand-50 hover:text-brand-600 dark:text-zinc-300 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">{t.nav.guideDepreciation}</a>
-                    <a href="/guides/car-loans" className="block px-4 py-2 text-sm text-zinc-700 hover:bg-brand-50 hover:text-brand-600 dark:text-zinc-300 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">{t.nav.guideCarLoans}</a>
-                    <a href="/guides/insurance" className="block px-4 py-2 text-sm text-zinc-700 hover:bg-brand-50 hover:text-brand-600 dark:text-zinc-300 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">{t.nav.guideInsurance}</a>
-                    <a href="/guides/electric-vs-gasoline" className="block px-4 py-2 text-sm text-zinc-700 hover:bg-brand-50 hover:text-brand-600 dark:text-zinc-300 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">{t.nav.guideElectricVsGasoline}</a>
-                    <a href="/guides/tax-benefits" className="block px-4 py-2 text-sm text-zinc-700 hover:bg-brand-50 hover:text-brand-600 dark:text-zinc-300 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">{t.nav.guideTaxBenefits}</a>
+                  <div className="absolute end-0 top-full mt-2 w-60 rounded-2xl bg-white shadow-xl ring-1 ring-black/5 z-50 p-2">
+                    <a href="/guides/buy-vs-lease" className="block rounded-xl px-4 py-2.5 text-sm text-ink hover:bg-soft">{t.nav.guideBuyVsLease}</a>
+                    <a href="/guides/depreciation" className="block rounded-xl px-4 py-2.5 text-sm text-ink hover:bg-soft">{t.nav.guideDepreciation}</a>
+                    <a href="/guides/car-loans" className="block rounded-xl px-4 py-2.5 text-sm text-ink hover:bg-soft">{t.nav.guideCarLoans}</a>
+                    <a href="/guides/insurance" className="block rounded-xl px-4 py-2.5 text-sm text-ink hover:bg-soft">{t.nav.guideInsurance}</a>
+                    <a href="/guides/electric-vs-gasoline" className="block rounded-xl px-4 py-2.5 text-sm text-ink hover:bg-soft">{t.nav.guideElectricVsGasoline}</a>
+                    <a href="/guides/tax-benefits" className="block rounded-xl px-4 py-2.5 text-sm text-ink hover:bg-soft">{t.nav.guideTaxBenefits}</a>
                   </div>
                 </details>
-                <a href="/about" className="rounded-md px-2.5 py-1.5 text-sm text-zinc-600 hover:text-brand-600 hover:bg-brand-50 dark:text-zinc-400 dark:hover:text-brand-400 dark:hover:bg-brand-950/30 transition-colors">
+                <a href="/about" className="rounded-xl px-3 py-2 text-[15px] font-medium text-ink hover:bg-white transition-colors">
                   {t.nav.about}
                 </a>
             </nav>
@@ -108,34 +102,43 @@ export default async function RootLayout({
               <LanguageToggle locale={locale} label={t.nav.language} />
               {/* Mobile hamburger menu */}
               <details className="relative sm:hidden">
-                <summary className="list-none cursor-pointer rounded-md p-2 text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800 transition-colors">
+                <summary aria-label="Menu" className="cursor-pointer rounded-xl p-2.5 text-ink hover:bg-white transition-colors">
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                   </svg>
                 </summary>
-                <div className="absolute end-0 top-full mt-2 w-64 rounded-lg border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-900 z-50 py-2">
-                  <a href="/" className="block px-4 py-2.5 text-sm text-zinc-700 hover:bg-brand-50 hover:text-brand-600 dark:text-zinc-300 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">{t.nav.calculator}</a>
-                  <div className="mx-3 my-1 border-t border-zinc-100 dark:border-zinc-800" />
-                  <p className="px-4 py-1.5 text-xs font-medium text-zinc-400 dark:text-zinc-500">{t.nav.guides}</p>
-                  <a href="/guides/buy-vs-lease" className="block px-6 py-2 text-sm text-zinc-700 hover:bg-brand-50 hover:text-brand-600 dark:text-zinc-300 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">{t.nav.guideBuyVsLease}</a>
-                  <a href="/guides/depreciation" className="block px-6 py-2 text-sm text-zinc-700 hover:bg-brand-50 hover:text-brand-600 dark:text-zinc-300 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">{t.nav.guideDepreciation}</a>
-                  <a href="/guides/car-loans" className="block px-6 py-2 text-sm text-zinc-700 hover:bg-brand-50 hover:text-brand-600 dark:text-zinc-300 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">{t.nav.guideCarLoans}</a>
-                  <a href="/guides/insurance" className="block px-6 py-2 text-sm text-zinc-700 hover:bg-brand-50 hover:text-brand-600 dark:text-zinc-300 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">{t.nav.guideInsurance}</a>
-                  <a href="/guides/electric-vs-gasoline" className="block px-6 py-2 text-sm text-zinc-700 hover:bg-brand-50 hover:text-brand-600 dark:text-zinc-300 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">{t.nav.guideElectricVsGasoline}</a>
-                  <a href="/guides/tax-benefits" className="block px-6 py-2 text-sm text-zinc-700 hover:bg-brand-50 hover:text-brand-600 dark:text-zinc-300 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">{t.nav.guideTaxBenefits}</a>
-                  <div className="mx-3 my-1 border-t border-zinc-100 dark:border-zinc-800" />
-                  <a href="/about" className="block px-4 py-2.5 text-sm text-zinc-700 hover:bg-brand-50 hover:text-brand-600 dark:text-zinc-300 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">{t.nav.about}</a>
+                <div className="absolute end-0 top-full mt-2 w-64 rounded-2xl bg-white shadow-xl ring-1 ring-black/5 z-50 p-2">
+                  <a href="/" className="block rounded-xl px-4 py-2.5 text-sm text-ink hover:bg-soft">{t.nav.calculator}</a>
+                  <div className="mx-3 my-1 border-t border-line" />
+                  <p className="px-4 py-1.5 text-xs font-semibold text-muted">{t.nav.guides}</p>
+                  <a href="/guides/buy-vs-lease" className="block rounded-xl px-6 py-2 text-sm text-ink hover:bg-soft">{t.nav.guideBuyVsLease}</a>
+                  <a href="/guides/depreciation" className="block rounded-xl px-6 py-2 text-sm text-ink hover:bg-soft">{t.nav.guideDepreciation}</a>
+                  <a href="/guides/car-loans" className="block rounded-xl px-6 py-2 text-sm text-ink hover:bg-soft">{t.nav.guideCarLoans}</a>
+                  <a href="/guides/insurance" className="block rounded-xl px-6 py-2 text-sm text-ink hover:bg-soft">{t.nav.guideInsurance}</a>
+                  <a href="/guides/electric-vs-gasoline" className="block rounded-xl px-6 py-2 text-sm text-ink hover:bg-soft">{t.nav.guideElectricVsGasoline}</a>
+                  <a href="/guides/tax-benefits" className="block rounded-xl px-6 py-2 text-sm text-ink hover:bg-soft">{t.nav.guideTaxBenefits}</a>
+                  <div className="mx-3 my-1 border-t border-line" />
+                  <a href="/about" className="block rounded-xl px-4 py-2.5 text-sm text-ink hover:bg-soft">{t.nav.about}</a>
                 </div>
               </details>
             </div>
           </div>
         </header>
         {children}
-        <footer className="border-t border-zinc-200/60 dark:border-zinc-800 mt-12 py-6 text-center text-xs text-zinc-400 dark:text-zinc-500">
-          <div className="mx-auto max-w-5xl px-4 flex items-center justify-center gap-4">
-            <span>&copy; {new Date().getFullYear()} CarCalc</span>
-            <a href="/about" className="hover:text-zinc-600 dark:hover:text-zinc-300 underline">{t.nav.about}</a>
-            <a href="/privacy" className="hover:text-zinc-600 dark:hover:text-zinc-300 underline">{t.nav.privacy}</a>
+        <footer className="mx-auto mt-12 max-w-[1240px] px-6 pb-6">
+          <div className="rounded-[28px] bg-ink px-8 py-10 sm:px-12 flex flex-wrap items-end justify-between gap-6 text-[#b5b5ae]">
+            <div className="flex flex-col gap-3 min-w-0">
+              <span dir="ltr" className="flex items-center gap-1 self-start rtl:self-end text-[40px] font-extrabold tracking-[-0.045em] text-white leading-none">
+                CARCALC
+                <span aria-hidden="true" className="ms-1.5 inline-block h-3.5 w-3.5 bg-lime" />
+              </span>
+              <span className="text-[13px] leading-relaxed max-w-xl">{t.footer.disclaimer}</span>
+            </div>
+            <nav aria-label="footer" className="flex flex-wrap items-center gap-5 text-sm">
+              <a href="/about" className="text-white hover:text-lime">{t.nav.about}</a>
+              <a href="/privacy" className="text-white hover:text-lime">{t.nav.privacy}</a>
+              <span>&copy; {new Date().getFullYear()} CarCalc</span>
+            </nav>
           </div>
         </footer>
         <Analytics />

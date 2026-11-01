@@ -13,17 +13,17 @@ interface FormFieldProps {
 export default function FormField({ label, hint, error, required, children, validationMessages }: FormFieldProps) {
   const errorText = error ? (validationMessages?.[error] || error) : undefined;
   return (
-    <div className="space-y-1">
-      <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+    <div className="flex flex-col gap-2">
+      <label className="block text-[15px] font-bold">
         {label}
         {required && <span className="text-red-500 ms-1">*</span>}
       </label>
       {children}
       {hint && !errorText && (
-        <p className="text-xs text-zinc-500 dark:text-zinc-400">{hint}</p>
+        <p className="text-[13px] leading-relaxed text-muted">{hint}</p>
       )}
       {errorText && (
-        <p className="text-xs text-red-600 dark:text-red-400">{errorText}</p>
+        <p className="text-[13px] font-medium text-red-700">{errorText}</p>
       )}
     </div>
   );

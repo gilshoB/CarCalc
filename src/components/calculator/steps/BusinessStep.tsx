@@ -29,15 +29,15 @@ export default function BusinessStep({
   const pd = t.form.personalDetails;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       <div>
-        <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">{f.businessTitle}</h2>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{f.businessSubtitle}</p>
+        <h2 className="text-[34px] sm:text-[40px] font-extrabold leading-[1.05] tracking-[-0.035em]">{f.businessTitle}</h2>
+        <p className="mt-2 text-base leading-relaxed text-muted">{f.businessSubtitle}</p>
       </div>
 
       {/* 1. Osek Murshe */}
       <div>
-        <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-2">{f.businessSection}</h3>
+        <h3 className="text-lg font-bold mb-3">{f.businessSection}</h3>
         <Toggle
           checked={isBusinessUse}
           onChange={(v) => onChange("isBusinessUse", v)}
@@ -45,8 +45,8 @@ export default function BusinessStep({
         />
         {isBusinessUse && (
           <>
-            <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">{pd.isOsekMursheHint}</p>
-            <div className="mt-3">
+            <p className="mt-3 rounded-[14px] bg-soft px-4 py-3 text-sm leading-relaxed text-[#3d3d38]">{pd.isOsekMursheHint}</p>
+            <div className="mt-4">
               <FormField label={pd.marginalTaxRate} hint={pd.marginalTaxRateHint} error={errors["marginalTaxRate"]} required>
                 <NumberInput
                   value={marginalTaxRate ?? 0}
@@ -63,8 +63,8 @@ export default function BusinessStep({
       </div>
 
       {/* 2. Workplace reimbursement — buy scenario */}
-      <div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-        <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-2">{f.workplaceSectionBuy}</h3>
+      <div className="pt-2">
+        <h3 className="text-lg font-bold mb-3">{f.workplaceSectionBuy}</h3>
         <FormField label={f.workplaceBenefitLabel} hint={f.workplaceBenefitHint}>
           <NumberInput
             value={buyWorkplaceBenefit ?? 0}
@@ -75,8 +75,8 @@ export default function BusinessStep({
       </div>
 
       {/* 3. Workplace reimbursement — lease scenario */}
-      <div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-        <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-2">{f.workplaceSectionLease}</h3>
+      <div className="pt-2">
+        <h3 className="text-lg font-bold mb-3">{f.workplaceSectionLease}</h3>
         <FormField label={f.workplaceBenefitLabel} hint={f.workplaceBenefitHint}>
           <NumberInput
             value={leaseWorkplaceBenefit ?? 0}

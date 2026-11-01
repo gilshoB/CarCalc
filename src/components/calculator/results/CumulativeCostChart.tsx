@@ -34,17 +34,17 @@ export default function CumulativeCostChart({
   }));
 
   return (
-    <div className="rounded-2xl bg-white shadow-md ring-1 ring-zinc-200/60 p-5 dark:bg-zinc-900 dark:ring-zinc-700/50">
-      <h3 className="mb-4 text-base font-bold text-zinc-900 dark:text-zinc-50">
+    <div className="rounded-[24px] bg-white p-6">
+      <h3 className="mb-4 text-base font-bold">
         {t.results.charts.cumulativeTitle}
       </h3>
       <div style={{ direction: "ltr" }}>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={data} margin={{ left: 20, right: 20 }}>
-            <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#a1a1aa" }} />
+            <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#6b6b65" }} />
             <YAxis
               tickFormatter={(v) => formatCurrency(v, locale)}
-              tick={{ fontSize: 11, fill: "#a1a1aa" }}
+              tick={{ fontSize: 11, fill: "#6b6b65" }}
             />
             <Tooltip
               formatter={(value) => formatCurrency(Number(value), locale)}
@@ -54,16 +54,16 @@ export default function CumulativeCostChart({
             <Line
               type="monotone"
               dataKey={t.results.charts.buyLabel}
-              stroke="#5c8d89"
+              stroke="#0e0e0e"
               strokeWidth={2.5}
-              dot={{ r: 4, fill: "#5c8d89" }}
+              dot={{ r: 4, fill: "#0e0e0e" }}
             />
             <Line
               type="monotone"
               dataKey={t.results.charts.leaseLabel}
-              stroke="#f59e0b"
+              stroke="#b5b5ae"
               strokeWidth={2.5}
-              dot={{ r: 4, fill: "#f59e0b" }}
+              dot={{ r: 4, fill: "#b5b5ae" }}
             />
           </LineChart>
         </ResponsiveContainer>

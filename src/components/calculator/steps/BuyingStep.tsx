@@ -84,10 +84,10 @@ export default function BuyingStep({
   const showFields = manualMode || buy.vehicle != null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       <div>
-        <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">{f.title}</h2>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{f.subtitle}</p>
+        <h2 className="text-[34px] sm:text-[40px] font-extrabold leading-[1.05] tracking-[-0.035em]">{f.title}</h2>
+        <p className="mt-2 text-base leading-relaxed text-muted">{f.subtitle}</p>
       </div>
 
       {!manualMode && (
@@ -103,14 +103,14 @@ export default function BuyingStep({
         <button
           type="button"
           onClick={() => setManualMode(false)}
-          className="text-xs font-medium text-brand-600 hover:underline dark:text-brand-400"
+          className="text-sm font-semibold text-ink underline underline-offset-4"
         >
           {t.form.vehiclePicker.title}
         </button>
       )}
 
       {!showFields && (
-        <p className="rounded-lg bg-zinc-50 px-3 py-2 text-xs text-zinc-500 dark:bg-zinc-800/40 dark:text-zinc-400">
+        <p className="rounded-[14px] bg-soft px-4 py-3 text-sm text-muted">
           {t.form.vehiclePicker.pickPrompt}
         </p>
       )}
@@ -189,10 +189,10 @@ export default function BuyingStep({
       </div>
 
       {buy.isUsed && (
-        <div className="space-y-4 rounded-xl border border-zinc-200 bg-zinc-50/60 p-4 dark:border-zinc-700 dark:bg-zinc-800/40">
+        <div className="space-y-4 rounded-[20px] bg-soft p-6">
           <div>
-            <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">{t.form.usedCar.sectionTitle}</h3>
-            <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">{t.form.usedCar.sectionHint}</p>
+            <h3 className="text-lg font-bold">{t.form.usedCar.sectionTitle}</h3>
+            <p className="mt-0.5 text-[13px] text-muted">{t.form.usedCar.sectionHint}</p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <FormField label={f.usedCarAge} hint={f.usedCarAgeHint} error={errors["buy.usedCarAge"]} required>
@@ -232,14 +232,14 @@ export default function BuyingStep({
               onChange={(v) => onChange("buy.wasLeased", v)}
               label={t.form.usedCar.wasLeased}
             />
-            <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{t.form.usedCar.wasLeasedHint}</p>
+            <p className="mt-1 text-[13px] text-muted">{t.form.usedCar.wasLeasedHint}</p>
           </div>
         </div>
       )}
 
       {/* Insurance for purchased car */}
-      <div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-        <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-3">{f.insuranceSection}</h3>
+      <div className="pt-2">
+        <h3 className="text-lg font-bold mb-3">{f.insuranceSection}</h3>
         <div className="grid gap-4 sm:grid-cols-2">
           <FormField label={f.mandatoryInsuranceQuote} error={errors["buy.mandatoryInsuranceQuote"]} required>
             <NumberInput

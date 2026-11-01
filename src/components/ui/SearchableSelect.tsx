@@ -96,10 +96,10 @@ export default function SearchableSelect({
           }
         }}
         className={`
-          w-full rounded-lg border bg-white px-3 py-2 text-sm
+          w-full h-14 rounded-[14px] border-2 bg-white px-4 text-[17px] text-ink
           dark:bg-zinc-900 dark:text-zinc-100
-          focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500
-          ${error ? "border-red-500 dark:border-red-400" : "border-zinc-300 dark:border-zinc-700"}
+          focus:outline-none focus:border-ink
+          ${error ? "border-red-500 dark:border-red-400" : "border-line"}
           ${disabled || loading ? "opacity-50 cursor-not-allowed" : ""}
         `}
       />
@@ -112,7 +112,7 @@ export default function SearchableSelect({
         </span>
       )}
       {open && filtered.length > 0 && (
-        <ul className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-lg border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
+        <ul className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-2xl bg-white p-1.5 shadow-xl ring-1 ring-black/5 dark:border-zinc-700 dark:bg-zinc-900">
           {filtered.map((opt, i) => (
             <li
               key={opt.value}
@@ -121,10 +121,10 @@ export default function SearchableSelect({
                 select(opt);
               }}
               onMouseEnter={() => setHighlight(i)}
-              className={`cursor-pointer px-3 py-2 text-sm ${
+              className={`cursor-pointer rounded-xl px-3 py-2.5 text-[15px] ${
                 i === highlight
-                  ? "bg-brand-50 text-brand-700 dark:bg-brand-900/40 dark:text-brand-200"
-                  : "text-zinc-700 dark:text-zinc-200"
+                  ? "bg-lime text-ink"
+                  : "text-ink"
               }`}
             >
               {opt.label}

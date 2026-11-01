@@ -19,33 +19,34 @@ export default function HomeContent({ t }: { t: ReturnType<typeof getTranslation
   };
 
   return (
-    <section className="mx-auto mt-16 max-w-2xl space-y-12">
+    <section className="mt-12 flex flex-wrap items-start gap-4">
       {/* About */}
-      <div className="space-y-4">
-        <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">{h.aboutTitle}</h2>
+      <div className="flex-[1_1_360px] min-w-0 rounded-[28px] bg-lime p-10 flex flex-col gap-4">
+        <h2 className="text-[32px] sm:text-[36px] font-extrabold leading-[1.05] tracking-[-0.03em]">{h.aboutTitle}</h2>
         {h.aboutParagraphs.map((p, i) => (
-          <p key={i} className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+          <p key={i} className="text-base leading-[1.7]">
             {p}
           </p>
         ))}
+        <a href="/guides/buy-vs-lease" className="font-bold underline underline-offset-4">
+          {t.bento.guideLink} ←
+        </a>
       </div>
 
       {/* FAQ */}
-      <div className="space-y-2">
-        <h2 className="mb-4 text-2xl font-bold text-zinc-900 dark:text-zinc-50">{h.faqTitle}</h2>
-        <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
-          {h.faq.map((f, i) => (
-            <details key={i} className="group py-3">
-              <summary className="flex cursor-pointer items-center justify-between gap-3 text-sm font-semibold text-zinc-800 dark:text-zinc-200">
-                {f.q}
-                <span className="text-zinc-400 transition-transform group-open:rotate-180" aria-hidden="true">
-                  ⌄
-                </span>
-              </summary>
-              <p className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">{f.a}</p>
-            </details>
-          ))}
-        </div>
+      <div className="flex-[1.7_1_520px] min-w-0 rounded-[28px] bg-white p-8 sm:p-10 flex flex-col gap-2">
+        <h2 className="mb-3 text-[32px] font-extrabold tracking-[-0.03em]">{h.faqTitle}</h2>
+        {h.faq.map((f, i) => (
+          <details key={i} className="group rounded-2xl bg-soft px-5 py-5">
+            <summary className="flex cursor-pointer items-center justify-between gap-4 text-[17px] font-bold">
+              {f.q}
+              <span className="text-xl leading-none transition-transform group-open:rotate-45" aria-hidden="true">
+                +
+              </span>
+            </summary>
+            <p className="mt-3 text-[15px] leading-relaxed text-[#3d3d38]">{f.a}</p>
+          </details>
+        ))}
       </div>
 
       <script

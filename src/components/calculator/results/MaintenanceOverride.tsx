@@ -35,19 +35,19 @@ export default function MaintenanceOverride({
       : 0;
 
   return (
-    <div id="maintenance-section" className="scroll-mt-20 rounded-2xl bg-white shadow-md ring-1 ring-zinc-200/60 p-5 dark:bg-zinc-900 dark:ring-zinc-700/50">
+    <div id="maintenance-section" className="scroll-mt-24 rounded-[24px] bg-white p-6">
       <div className="flex items-center justify-between mb-1">
-        <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-50">{m.title}</h3>
+        <h3 className="text-base font-bold">{m.title}</h3>
         {isOverriding && (
           <button
             onClick={() => onChange(null)}
-            className="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400 transition-colors"
+            className="text-sm font-semibold text-ink underline underline-offset-4"
           >
             {m.reset}
           </button>
         )}
       </div>
-      <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4">{m.subtitle}</p>
+      <p className="text-[13px] leading-relaxed text-muted mb-4">{m.subtitle}</p>
 
       <Toggle
         checked={isOverriding}
@@ -83,7 +83,7 @@ export default function MaintenanceOverride({
               />
             </FormField>
           </div>
-          <p className="text-sm font-medium text-brand-600 dark:text-brand-400">
+          <p className="text-sm font-semibold text-ink">
             {m.annualEstimate.replace("{amount}", formatNumber(annual, locale))}
           </p>
         </div>
