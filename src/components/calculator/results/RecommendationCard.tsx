@@ -30,21 +30,21 @@ export default function RecommendationCard({ t, locale, results }: Recommendatio
       }`}
     >
       <span className={`text-[13px] font-semibold ${winner ? "text-[#3d3d38]" : "text-muted"}`}>{label}</span>
-      <span className={`text-[28px] font-extrabold tabular-nums whitespace-nowrap ${winner ? "" : "text-[#3d3d38]"}`}>
+      <span className={`text-[22px] sm:text-[28px] font-extrabold tabular-nums whitespace-nowrap ${winner ? "" : "text-[#3d3d38]"}`}>
         {formatNumber(value, locale)} ₪
       </span>
     </div>
   );
 
   return (
-    <section aria-label={r.title} className="mx-auto w-full max-w-[720px] rounded-[24px] bg-white p-7 flex flex-col gap-5">
-      <div className="flex flex-wrap items-stretch gap-5">
-        <div className="flex-[1_1_300px] min-w-0 flex flex-col items-center justify-center gap-1.5 text-center">
+    <section aria-label={r.title} className="mx-auto w-full max-w-[720px] rounded-[24px] bg-white p-5 sm:p-7 flex flex-col gap-5">
+      <div className="flex flex-col sm:flex-row items-stretch gap-5">
+        <div className="flex-1 min-w-0 flex flex-col items-center justify-center gap-1.5 text-center">
           <span className="rounded-full bg-lime px-3 py-1 text-[13px] font-bold">{r.bestDeal}</span>
           <h3 className="mt-1 text-[56px] font-extrabold leading-none tracking-[-0.04em]">{winnerName}</h3>
           <p className="mt-2 text-sm leading-relaxed text-muted tabular-nums">{shortLine}</p>
         </div>
-        <div className="shrink-0 min-w-[180px] rounded-[18px] bg-ink px-6 py-[18px] flex flex-col items-center justify-center gap-1 text-white">
+        <div className="w-full sm:w-auto shrink-0 sm:min-w-[180px] rounded-[18px] bg-ink px-6 py-[18px] flex flex-col items-center justify-center gap-1 text-white">
           <span className="text-xs font-semibold text-[#c8c8c1]">{r.savings}</span>
           <span className="text-[32px] font-extrabold tracking-[-0.02em] text-lime tabular-nums whitespace-nowrap">
             {formatNumber(recommendation.savingsAmount, locale)} ₪

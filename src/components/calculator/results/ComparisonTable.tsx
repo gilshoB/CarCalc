@@ -279,16 +279,16 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
         <table className="w-full border-separate border-spacing-0">
           <thead>
             <tr>
-              <th className="sticky top-20 z-10 bg-[#f2f2ee] text-start text-xs font-semibold text-muted py-3 ps-4 pe-3 whitespace-nowrap">
+              <th className="sticky top-20 z-10 bg-[#f2f2ee] text-start text-xs font-semibold text-muted py-3 ps-3 sm:ps-4 pe-2 sm:pe-3 whitespace-nowrap">
                 {periodYears} {t.results.years}
               </th>
-              <th className="sticky top-20 z-10 bg-[#f2f2ee] text-end text-xs font-bold py-3 px-3 w-[140px]">
+              <th className="sticky top-20 z-10 bg-[#f2f2ee] text-end text-xs font-bold py-3 px-2 sm:px-3 w-[92px] sm:w-[140px]">
                 <div className={`inline-flex items-center gap-1.5 ${buyWins ? "rounded-full bg-lime px-2.5 py-0.5 text-ink" : "text-ink"}`}>
                   {buyWins && <CheckIcon className="h-4 w-4" />}
                   {c.buy}
                 </div>
               </th>
-              <th className="sticky top-20 z-10 bg-[#f2f2ee] text-end text-xs font-bold py-3 ps-3 pe-4 w-[140px]">
+              <th className="sticky top-20 z-10 bg-[#f2f2ee] text-end text-xs font-bold py-3 ps-2 sm:ps-3 pe-3 sm:pe-4 w-[92px] sm:w-[140px]">
                 <div className={`inline-flex items-center gap-1.5 ${!buyWins ? "rounded-full bg-lime px-2.5 py-0.5 text-ink" : "text-ink"}`}>
                   {!buyWins && <CheckIcon className="h-4 w-4" />}
                   {c.lease}
@@ -299,15 +299,15 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
           <tbody>
             {/* Vehicle identity row — echoes the cars chosen at the top */}
             <tr className="border-b border-[#eeeeea] bg-[#fafaf8]">
-              <td className="ps-4 pe-3 py-3">
+              <td className="ps-3 sm:ps-4 pe-2 sm:pe-3 py-3">
                 <span className="text-xs font-semibold text-muted">
                   {c.vehicleRowLabel}
                 </span>
               </td>
-              <td className="text-end px-3 py-3 align-top text-[13px] font-medium text-[#3d3d38]">
+              <td className="text-end px-2 sm:px-3 py-3 align-top text-[13px] font-medium text-[#3d3d38]">
                 {vehicleLabel(input.buy.vehicle, t)}
               </td>
-              <td className="text-end ps-3 pe-4 py-3 align-top text-[13px] font-medium text-[#3d3d38]">
+              <td className="text-end ps-2 sm:ps-3 pe-3 sm:pe-4 py-3 align-top text-[13px] font-medium text-[#3d3d38]">
                 {vehicleLabel(input.lease.vehicle, t)}
               </td>
             </tr>
@@ -325,9 +325,9 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
                       : "bg-[#fcfcfa]"
                   }`}
                 >
-                  <td className="ps-4 pe-3 py-3.5 align-top">
+                  <td className="ps-3 sm:ps-4 pe-2 sm:pe-3 py-3.5 align-top">
                     <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
-                      <span className="text-[15px] font-medium text-ink">
+                      <span className="text-sm sm:text-[15px] font-medium text-ink">
                         {row.label}
                       </span>
                       {row.key === "residualValue" && (
@@ -390,7 +390,7 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
                     </div>
                   </td>
 
-                  <td className={`text-end px-3 py-3.5 align-top text-base tabular-nums font-bold ${
+                  <td className={`text-end px-2 sm:px-3 py-3.5 align-top text-sm sm:text-base tabular-nums font-bold ${
                     isCredit && row.buyValue < 0
                       ? "text-[#3f6212]"
                       : "text-ink"
@@ -398,7 +398,7 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
                     {fmtVal(row.buyValue, isCredit)}
                   </td>
 
-                  <td className={`text-end ps-3 pe-4 py-3.5 align-top text-base tabular-nums font-bold ${
+                  <td className={`text-end ps-2 sm:ps-3 pe-3 sm:pe-4 py-3.5 align-top text-sm sm:text-base tabular-nums font-bold ${
                     isCredit && row.leaseValue < 0
                       ? "text-[#3f6212]"
                       : "text-ink"
@@ -478,28 +478,28 @@ export default function ComparisonTable({ t, locale, results, input, residualOve
 
           <tfoot>
             <tr className="bg-ink text-white">
-              <td className="ps-4 pe-3 py-4">
+              <td className="ps-3 sm:ps-4 pe-2 sm:pe-3 py-4">
                 <span className="text-base font-bold">{c.total}</span>
               </td>
-              <td className={`text-end px-3 py-4 text-xl tabular-nums font-extrabold whitespace-nowrap ${
+              <td className={`text-end px-2 sm:px-3 py-4 text-base sm:text-xl tabular-nums font-extrabold whitespace-nowrap ${
                 buyWins ? "text-lime" : "text-white"
               }`}>
                 {formatNumber(buy.totalCost, locale)} ₪
               </td>
-              <td className={`text-end ps-3 pe-4 py-4 text-xl tabular-nums font-extrabold whitespace-nowrap ${
+              <td className={`text-end ps-2 sm:ps-3 pe-3 sm:pe-4 py-4 text-base sm:text-xl tabular-nums font-extrabold whitespace-nowrap ${
                 !buyWins ? "text-lime" : "text-white"
               }`}>
                 {formatNumber(lease.totalCost, locale)} ₪
               </td>
             </tr>
             <tr className="bg-ink">
-              <td className="ps-4 pe-3 pb-4">
+              <td className="ps-3 sm:ps-4 pe-2 sm:pe-3 pb-4">
                 <span className="text-[13px] text-[#c8c8c1]">{c.monthlyCost}</span>
               </td>
-              <td className="text-end px-3 pb-4 text-[15px] tabular-nums font-semibold text-[#c8c8c1] whitespace-nowrap">
+              <td className="text-end px-2 sm:px-3 pb-4 text-[13px] sm:text-[15px] tabular-nums font-semibold text-[#c8c8c1] whitespace-nowrap">
                 {formatNumber(buy.monthlyCost, locale)} ₪
               </td>
-              <td className="text-end ps-3 pe-4 pb-4 text-[15px] tabular-nums font-semibold text-[#c8c8c1] whitespace-nowrap">
+              <td className="text-end ps-2 sm:ps-3 pe-3 sm:pe-4 pb-4 text-[13px] sm:text-[15px] tabular-nums font-semibold text-[#c8c8c1] whitespace-nowrap">
                 {formatNumber(lease.monthlyCost, locale)} ₪
               </td>
             </tr>

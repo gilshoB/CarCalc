@@ -54,6 +54,14 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
       .catch(() => {});
   }, []);
 
+  // While results are shown, hide the home hero tiles (see globals.css) so
+  // scrolling up from the results doesn't land back on the landing page.
+  const showingResults = calc.showResults && !!calc.results;
+  useEffect(() => {
+    document.documentElement.toggleAttribute("data-results", showingResults);
+    return () => document.documentElement.removeAttribute("data-results");
+  }, [showingResults]);
+
   return (
     <div>
       {/* Wizard Form */}
