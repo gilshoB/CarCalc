@@ -15,9 +15,9 @@ const rubik = Rubik({
 });
 
 const OG_IMAGE = {
-  url: "/images/logo_new.png",
-  width: 1992,
-  height: 941,
+  url: "/images/og-image.png",
+  width: 1200,
+  height: 630,
   alt: "CarCalc",
 };
 
