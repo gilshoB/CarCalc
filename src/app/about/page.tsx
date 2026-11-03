@@ -1,7 +1,10 @@
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { defaultLocale } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import GuideHero from "@/components/GuideHero";
+
+export const metadata: Metadata = { alternates: { canonical: "/about" } };
 
 export default async function AboutPage() {
   const cookieStore = await cookies();

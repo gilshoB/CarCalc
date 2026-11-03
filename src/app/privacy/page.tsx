@@ -1,6 +1,9 @@
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { defaultLocale, getTranslations } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
+
+export const metadata: Metadata = { alternates: { canonical: "/privacy" } };
 
 export default async function PrivacyPage() {
   const cookieStore = await cookies();

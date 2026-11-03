@@ -1,8 +1,11 @@
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { defaultLocale, getTranslations } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import CalculatorWizard from "@/components/calculator/CalculatorWizard";
 import HomeContent from "@/components/HomeContent";
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 export default async function Home() {
   const cookieStore = await cookies();

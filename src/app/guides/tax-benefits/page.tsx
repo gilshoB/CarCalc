@@ -1,8 +1,11 @@
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { defaultLocale } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import GuideHero from "@/components/GuideHero";
 import ArticleJsonLd from "@/components/ArticleJsonLd";
+
+export const metadata: Metadata = { alternates: { canonical: "/guides/tax-benefits" } };
 
 export default async function TaxBenefitsGuidePage() {
   const cookieStore = await cookies();
