@@ -49,15 +49,17 @@ export default function ResultsDashboard({
       </p>
 
       {/* Comparison period = one lease contract (set in the leasing step) */}
-      <div className="mx-auto w-full max-w-[720px] rounded-[24px] bg-white p-7 flex flex-col items-center gap-4 text-center">
-        <div className="w-full max-w-[360px] rounded-[22px] bg-ink px-8 py-6 flex flex-col items-center gap-1.5 text-white">
-          <span className="text-sm font-semibold text-[#c8c8c1]">{t.bento.periodBoxLabel}</span>
-          <span className="text-[56px] font-extrabold leading-[1.05] tracking-[-0.03em] text-lime whitespace-nowrap">
-            {periodYears} {t.results.years}
-          </span>
-          <span className="text-sm text-[#c8c8c1]">{t.bento.periodBoxSub}</span>
+      <div className="mx-auto w-full max-w-[720px] rounded-[20px] bg-white px-4 py-4 sm:px-5 flex items-start gap-4">
+        <div className="shrink-0 rounded-xl bg-ink px-3 py-2 flex flex-col items-center leading-none text-white">
+          <span className="text-xl font-extrabold text-lime tabular-nums">{periodYears}</span>
+          <span className="mt-1 text-[11px] font-semibold">{t.results.years}</span>
         </div>
-        <p className="max-w-[560px] text-sm leading-[1.7] text-muted">{t.results.periodNote}</p>
+        <div className="min-w-0 flex flex-col gap-1">
+          <span className="text-sm font-bold">
+            {t.bento.periodBoxLabel}: {t.bento.periodBoxSub}
+          </span>
+          <p className="text-[13px] leading-relaxed text-muted">{t.results.periodNote}</p>
+        </div>
       </div>
 
       {isRecalculating && (
