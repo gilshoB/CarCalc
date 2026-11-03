@@ -65,7 +65,7 @@ const en = {
   },
   bento: {
     eyebrow: "Buy vs. lease calculator",
-    headline: "Lease, buy used, or finance?",
+    headline: "Lease, second-hand, or finance?",
     tagline: "Don't guess. Calc.",
     heroText: "Compare buying a car (new or used) with leasing for a monthly payment — with every real cost included.",
     cta: "Get started",
