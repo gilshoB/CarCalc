@@ -61,7 +61,7 @@ export default function NumberInput({
   return (
     <div className="relative">
       {prefix && (
-        <span className="absolute inset-y-0 start-0 flex items-center ps-3 text-sm text-zinc-500 pointer-events-none">
+        <span className="absolute inset-y-0 start-0 flex items-center ps-4 text-[15px] font-medium text-muted pointer-events-none">
           {prefix}
         </span>
       )}
@@ -77,31 +77,31 @@ export default function NumberInput({
         max={max}
         step={step}
         className={`
-          w-full rounded-lg border px-3 py-2 text-sm
+          w-full h-14 rounded-[14px] border-2 px-4 text-[17px] text-ink
           dark:text-zinc-100
-          focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500
-          ${prefix ? "ps-8" : ""}
-          ${badge ? "pe-28" : suffix ? "pe-12" : ""}
+          focus:outline-none focus:border-ink
+          ${prefix ? "ps-10" : ""}
+          ${badge ? "pe-36" : suffix ? "pe-12" : ""}
           ${autoFilled
-            ? "bg-emerald-50 dark:bg-emerald-950/30"
+            ? "bg-white"
             : "bg-white dark:bg-zinc-900"
           }
           ${error
             ? "border-red-500 dark:border-red-400"
             : autoFilled
-              ? "border-emerald-300 dark:border-emerald-800"
-              : "border-zinc-300 dark:border-zinc-700"
+              ? "border-ink"
+              : "border-line"
           }
         `}
       />
       {badge ? (
-        <span className="absolute inset-y-0 end-0 flex items-center pe-2 pointer-events-none">
-          <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
+        <span className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
+          <span className="rounded-lg bg-lime px-2 py-0.5 text-xs font-bold text-ink">
             {badge}
           </span>
         </span>
       ) : suffix ? (
-        <span className="absolute inset-y-0 end-0 flex items-center pe-3 text-sm text-zinc-500 pointer-events-none">
+        <span className="absolute inset-y-0 end-0 flex items-center pe-4 text-[15px] text-muted pointer-events-none">
           {suffix}
         </span>
       ) : null}

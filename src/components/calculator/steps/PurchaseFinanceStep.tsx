@@ -39,14 +39,14 @@ export default function PurchaseFinanceStep({
   const loanAmount = loanNeeded ? carPrice - availableCapital : 0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       <div>
-        <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">{f.purchaseTitle}</h2>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{f.purchaseSubtitle}</p>
+        <h2 className="text-[34px] sm:text-[40px] font-extrabold leading-[1.05] tracking-[-0.035em]">{f.purchaseTitle}</h2>
+        <p className="mt-2 text-base leading-relaxed text-muted">{f.purchaseSubtitle}</p>
       </div>
 
       <div>
-        <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-3">{f.capitalSection}</h3>
+        <h3 className="text-lg font-bold mb-3">{f.capitalSection}</h3>
         <div className="grid gap-4 sm:grid-cols-2">
           <FormField label={fin.cashOnHand} hint={fin.cashOnHandHint} error={errors["cashOnHand"]} required validationMessages={t.form.validation}>
             <NumberInput
@@ -65,20 +65,20 @@ export default function PurchaseFinanceStep({
             />
           </FormField>
         </div>
-        <p className="mt-2 rounded-lg bg-brand-50 px-3 py-2 text-xs text-brand-700 dark:bg-brand-950 dark:text-brand-300">
+        <p className="mt-3 rounded-[14px] bg-soft px-4 py-3 text-sm leading-relaxed text-[#3d3d38]">
           {fin.capitalHint}
         </p>
       </div>
 
-      <div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-        <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-2">{buy.loanSection}</h3>
+      <div className="pt-2">
+        <h3 className="text-lg font-bold mb-3">{buy.loanSection}</h3>
         {!loanNeeded ? (
-          <p className="text-xs text-emerald-600 dark:text-emerald-400">{buy.loanNotNeeded}</p>
+          <p className="rounded-[14px] bg-brand-100 px-4 py-3 text-sm font-medium text-ink">✓ {buy.loanNotNeeded}</p>
         ) : (
-          <div className="space-y-3">
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">{buy.loanExplain}</p>
-            <p className="text-sm font-medium text-brand-600 dark:text-brand-400">
-              {buy.loanAmount}: {formatNumber(loanAmount, locale)} ₪
+          <div className="space-y-4 rounded-[18px] bg-ink p-5 sm:p-6 text-white [&_.text-red-700]:text-red-300">
+            <p className="text-sm text-[#c8c8c1]">{buy.loanExplain}</p>
+            <p className="text-xl font-extrabold">
+              {buy.loanAmount}: <span className="text-lime">{formatNumber(loanAmount, locale)} ₪</span>
             </p>
             <div className="grid gap-4 sm:grid-cols-2">
               <FormField label={buy.interestRate} error={errors["financing.interestRate"]}>

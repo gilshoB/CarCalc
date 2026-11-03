@@ -66,8 +66,8 @@ export default function CostBreakdownChart({
   }).filter((d) => d[t.results.charts.buyLabel] !== 0 || d[t.results.charts.leaseLabel] !== 0);
 
   return (
-    <div className="rounded-2xl bg-white shadow-md ring-1 ring-zinc-200/60 p-5 dark:bg-zinc-900 dark:ring-zinc-700/50">
-      <h3 className="mb-4 text-base font-bold text-zinc-900 dark:text-zinc-50">
+    <div className="rounded-[24px] bg-white p-6">
+      <h3 className="mb-4 text-base font-bold">
         {t.results.charts.breakdownTitle}
       </h3>
       <div style={{ direction: "ltr" }}>
@@ -76,7 +76,7 @@ export default function CostBreakdownChart({
             <XAxis
               type="number"
               tickFormatter={(v) => formatCurrency(v, locale)}
-              tick={{ fontSize: 11, fill: "#a1a1aa" }}
+              tick={{ fontSize: 11, fill: "#6b6b65" }}
             />
             <YAxis
               type="category"
@@ -89,8 +89,8 @@ export default function CostBreakdownChart({
               contentStyle={{ borderRadius: "12px", border: "1px solid #e4e4e7", fontSize: "12px", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.05)" }}
             />
             <Legend />
-            <Bar dataKey={t.results.charts.buyLabel} fill="#5c8d89" radius={[0, 4, 4, 0]} />
-            <Bar dataKey={t.results.charts.leaseLabel} fill="#f59e0b" radius={[0, 4, 4, 0]} />
+            <Bar dataKey={t.results.charts.buyLabel} fill="#0e0e0e" radius={[0, 4, 4, 0]} />
+            <Bar dataKey={t.results.charts.leaseLabel} fill="#b5b5ae" radius={[0, 4, 4, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

@@ -57,12 +57,12 @@ export default function SendResultsEmail({ t, locale, input, maintenanceOverride
   };
 
   return (
-    <div className="mx-auto max-w-2xl rounded-2xl bg-white p-5 ring-1 ring-zinc-200/70 dark:bg-zinc-900 dark:ring-zinc-700/50">
-      <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-50">{s.title}</h3>
-      <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{s.subtitle}</p>
+    <div className="mx-auto w-full max-w-[720px] rounded-[24px] bg-white p-6">
+      <h3 className="text-lg font-bold">{s.title}</h3>
+      <p className="mt-1 text-sm text-muted">{s.subtitle}</p>
 
       {status === "sent" ? (
-        <p className="mt-4 rounded-lg bg-emerald-50 px-3 py-2.5 text-sm font-medium text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
+        <p className="mt-4 rounded-[14px] bg-brand-100 px-4 py-3 text-sm font-medium text-ink">
           {s.sent}
         </p>
       ) : (
@@ -78,22 +78,22 @@ export default function SendResultsEmail({ t, locale, input, maintenanceOverride
             placeholder={s.placeholder}
             aria-label={s.placeholder}
             aria-invalid={status === "invalid"}
-            className={`min-w-0 flex-1 rounded-lg border bg-white px-3 py-2.5 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-zinc-800 dark:text-zinc-100 ${
-              status === "invalid" ? "border-red-500" : "border-zinc-300 dark:border-zinc-700"
+            className={`min-w-0 flex-1 h-[52px] rounded-xl border-2 bg-white px-4 text-[15px] text-ink focus:outline-none focus:border-ink ${
+              status === "invalid" ? "border-red-500" : "border-line"
             }`}
           />
           <button
             type="submit"
             disabled={status === "sending"}
-            className="shrink-0 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:opacity-50"
+            className="shrink-0 h-[52px] rounded-xl bg-ink px-6 text-[15px] font-bold text-white transition-colors hover:bg-black focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 disabled:opacity-50"
           >
             {status === "sending" ? s.sending : s.button}
           </button>
         </form>
       )}
 
-      {status === "invalid" && <p className="mt-2 text-sm text-red-600 dark:text-red-400">{s.invalid}</p>}
-      {status === "error" && <p className="mt-2 text-sm text-red-600 dark:text-red-400">{s.error}</p>}
+      {status === "invalid" && <p className="mt-2 text-sm text-red-700">{s.invalid}</p>}
+      {status === "error" && <p className="mt-2 text-sm text-red-700">{s.error}</p>}
     </div>
   );
 }

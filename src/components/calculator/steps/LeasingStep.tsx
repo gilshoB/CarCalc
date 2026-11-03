@@ -84,8 +84,8 @@ export default function LeasingStep({
   const showFields = manualMode || lease.vehicle != null;
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">{f.title}</h2>
+    <div className="space-y-7">
+      <h2 className="text-[34px] sm:text-[40px] font-extrabold leading-[1.05] tracking-[-0.035em]">{f.title}</h2>
 
       {!manualMode && (
         <VehiclePicker
@@ -100,14 +100,14 @@ export default function LeasingStep({
         <button
           type="button"
           onClick={() => setManualMode(false)}
-          className="text-xs font-medium text-brand-600 hover:underline dark:text-brand-400"
+          className="text-sm font-semibold text-ink underline underline-offset-4"
         >
           {t.form.vehiclePicker.title}
         </button>
       )}
 
       {!showFields && (
-        <p className="rounded-lg bg-zinc-50 px-3 py-2 text-xs text-zinc-500 dark:bg-zinc-800/40 dark:text-zinc-400">
+        <p className="rounded-[14px] bg-soft px-4 py-3 text-sm text-muted">
           {t.form.vehiclePicker.pickPrompt}
         </p>
       )}
@@ -199,8 +199,8 @@ export default function LeasingStep({
       )}
 
       {/* What's included */}
-      <div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-        <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-3">{f.includes}</h3>
+      <div className="pt-2">
+        <h3 className="text-lg font-bold mb-3">{f.includes}</h3>
         <div className="grid gap-3 sm:grid-cols-2">
           <Checkbox
             checked={lease.leaseIncludes.maintenance}
@@ -227,8 +227,8 @@ export default function LeasingStep({
 
       {/* Insurance for lease car — only fields not included in lease */}
       {(needsMandatoryInsurance || needsComprehensiveInsurance) && (
-        <div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-          <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-3">{f.insuranceSection}</h3>
+        <div className="pt-2">
+          <h3 className="text-lg font-bold mb-3">{f.insuranceSection}</h3>
           <div className="grid gap-4 sm:grid-cols-2">
             {needsMandatoryInsurance && (
               <FormField label={f.mandatoryInsuranceQuote}>

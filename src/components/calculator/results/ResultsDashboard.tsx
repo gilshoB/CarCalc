@@ -42,24 +42,27 @@ export default function ResultsDashboard({
   maintenanceDefaults,
 }: ResultsDashboardProps) {
   return (
-    <section id="results" className="space-y-6">
+    <section id="results" className="flex flex-col gap-5">
       {/* Results intro — explains the period selector, the table, and the caveat */}
-      <p className="mx-auto max-w-2xl text-center text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+      <p className="mx-auto max-w-[720px] text-center text-sm text-muted leading-[1.7]">
         {t.results.pageIntro}
       </p>
 
       {/* Comparison period = one lease contract (set in the leasing step) */}
-      <div className="mx-auto w-full max-w-2xl rounded-xl bg-white px-4 py-3 ring-1 ring-zinc-200/60 dark:bg-zinc-900 dark:ring-zinc-700/50">
-        <div className="text-sm font-bold text-zinc-700 dark:text-zinc-300">
-          {t.results.periodLabel}{" "}
-          <span className="text-brand-700 dark:text-brand-300">{periodYears} {t.results.years}</span>
+      <div className="mx-auto w-full max-w-[720px] rounded-[24px] bg-white p-7 flex flex-col items-center gap-4 text-center">
+        <div className="w-full max-w-[360px] rounded-[22px] bg-ink px-8 py-6 flex flex-col items-center gap-1.5 text-white">
+          <span className="text-sm font-semibold text-[#c8c8c1]">{t.bento.periodBoxLabel}</span>
+          <span className="text-[56px] font-extrabold leading-[1.05] tracking-[-0.03em] text-lime whitespace-nowrap">
+            {periodYears} {t.results.years}
+          </span>
+          <span className="text-sm text-[#c8c8c1]">{t.bento.periodBoxSub}</span>
         </div>
-        <p className="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">{t.results.periodNote}</p>
+        <p className="max-w-[560px] text-sm leading-[1.7] text-muted">{t.results.periodNote}</p>
       </div>
 
       {isRecalculating && (
-        <div className="flex items-center justify-center gap-2 py-3 text-sm text-zinc-400 dark:text-zinc-500">
-          <svg className="animate-spin h-4 w-4 text-brand-500" viewBox="0 0 24 24" fill="none">
+        <div className="flex items-center justify-center gap-2 py-3 text-sm text-muted">
+          <svg className="animate-spin h-4 w-4 text-ink" viewBox="0 0 24 24" fill="none">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
@@ -85,7 +88,7 @@ export default function ResultsDashboard({
       <AdUnit slot="results-top" format="horizontal" className="my-4" />
 
       {/* Charts */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-5 lg:grid-cols-2">
         <CostBreakdownChart
           t={t}
           locale={locale}
@@ -116,7 +119,7 @@ export default function ResultsDashboard({
             type="button"
             onClick={onRecalculate}
             disabled={isRecalculating}
-            className="rounded-lg bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:opacity-50"
+            className="h-14 rounded-[14px] bg-ink px-8 text-base font-bold text-white hover:bg-black transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 disabled:opacity-50"
           >
             {isRecalculating ? t.wizard.calculating : t.wizard.calculate}
           </button>
@@ -124,7 +127,7 @@ export default function ResultsDashboard({
       )}
 
       {/* Data source */}
-      <div className="text-center text-[11px] text-zinc-400 dark:text-zinc-500 pt-2">
+      <div className="text-center text-xs text-[#6b6b65] pt-2">
         {t.results.marketData.source} ({results.marketDataUsed.year}) · {t.results.marketData.lastUpdated}: {new Date(results.marketDataUsed.lastUpdated).toLocaleDateString(locale === "he" ? "he-IL" : "en-IL")}
       </div>
     </section>

@@ -1,7 +1,7 @@
 import { SITE_URL } from "@/lib/site";
 
 const BASE = SITE_URL;
-const LOGO = `${BASE}/images/logo_new.png`;
+const LOGO = `${BASE}/images/icon-512.png`;
 
 /**
  * Invisible Article structured data for a guide page — helps search engines
