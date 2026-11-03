@@ -23,7 +23,7 @@ export default function FormField({ label, hint, error, required, children, vali
         <p className="text-[13px] leading-relaxed text-muted">{hint}</p>
       )}
       {errorText && (
-        <p className="text-[13px] font-medium text-red-700">{errorText}</p>
+        <p data-field-error="" className="text-[13px] font-medium text-red-700">{errorText}</p>
       )}
     </div>
   );

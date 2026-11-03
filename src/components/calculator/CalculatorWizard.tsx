@@ -178,7 +178,13 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
                 {currentStep < 8 ? (
                   <button
                     type="button"
-                    onClick={calc.nextStep}
+                    onClick={() => {
+                      if (calc.nextStep()) return;
+                      // Blocked: bring the first error message into view.
+                      requestAnimationFrame(() =>
+                        document.querySelector("[data-field-error]")?.scrollIntoView({ behavior: "smooth", block: "center" }),
+                      );
+                    }}
                     className="h-14 rounded-[14px] bg-ink px-9 text-base font-bold text-white hover:bg-black transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2"
                   >
                     {t.wizard.next}

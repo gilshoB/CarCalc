@@ -107,7 +107,10 @@ export default function LeasingStep({
       )}
 
       {!showFields && (
-        <p className="rounded-[14px] bg-soft px-4 py-3 text-sm text-muted">
+        <p
+          data-field-error={Object.keys(errors).length > 0 ? "" : undefined}
+          className={`rounded-[14px] px-4 py-3 text-sm ${Object.keys(errors).length > 0 ? "bg-red-50 font-semibold text-red-700" : "bg-soft text-muted"}`}
+        >
           {t.form.vehiclePicker.pickPrompt}
         </p>
       )}
