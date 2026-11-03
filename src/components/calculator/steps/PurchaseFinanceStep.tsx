@@ -75,7 +75,7 @@ export default function PurchaseFinanceStep({
         {!loanNeeded ? (
           <p className="rounded-[14px] bg-brand-100 px-4 py-3 text-sm font-medium text-ink">✓ {buy.loanNotNeeded}</p>
         ) : (
-          <div className="space-y-4 rounded-[18px] bg-ink p-5 sm:p-6 text-white">
+          <div className="space-y-4 rounded-[18px] bg-ink p-5 sm:p-6 text-white [&_.text-red-700]:text-red-300">
             <p className="text-sm text-[#c8c8c1]">{buy.loanExplain}</p>
             <p className="text-xl font-extrabold">
               {buy.loanAmount}: <span className="text-lime">{formatNumber(loanAmount, locale)} ₪</span>

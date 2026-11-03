@@ -16,11 +16,14 @@ export default async function Home() {
       <section className="flex flex-wrap gap-4">
         <div className="flex-[2_1_560px] min-w-0 rounded-[28px] bg-ink text-white p-8 sm:p-14 flex flex-col justify-between gap-12 min-h-[420px]">
           <span className="text-sm font-medium text-[#b5b5ae]">{b.eyebrow}</span>
-          <h1 className="text-[56px] sm:text-[84px] font-extrabold leading-[0.98] tracking-[-0.045em] text-balance">
-            {b.headline1}
-            <br />
-            <span className="text-lime">{b.headline2}</span>
-          </h1>
+          <div className="flex flex-col gap-4">
+            <h1 className="text-[40px] sm:text-[60px] font-extrabold leading-[1.05] tracking-[-0.04em] text-balance">
+              {b.headline}
+            </h1>
+            <p className="text-[44px] sm:text-[72px] font-extrabold leading-[0.98] tracking-[-0.045em] text-lime">
+              {b.tagline}
+            </p>
+          </div>
           <div className="flex flex-wrap items-center justify-between gap-5">
             <p className="max-w-[420px] text-[17px] leading-relaxed text-[#c8c8c1]">{b.heroText}</p>
             <a

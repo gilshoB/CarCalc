@@ -57,12 +57,7 @@ export default function ResultsDashboard({
           </span>
           <span className="text-sm text-[#c8c8c1]">{t.bento.periodBoxSub}</span>
         </div>
-        <div className="flex max-w-[560px] flex-col gap-2">
-          <span className="text-xl font-extrabold">
-            {t.results.periodLabel} {periodYears} {t.results.years}
-          </span>
-          <p className="text-sm leading-[1.7] text-muted">{t.results.periodNote}</p>
-        </div>
+        <p className="max-w-[560px] text-sm leading-[1.7] text-muted">{t.results.periodNote}</p>
       </div>
 
       {isRecalculating && (

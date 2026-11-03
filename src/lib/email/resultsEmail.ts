@@ -79,7 +79,7 @@ export function buildResultsEmail(input: CalculatorInput, results: CalculatorOut
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:24px 12px;">
     <tr><td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" dir="${dir}" style="max-width:600px;background:#ffffff;border-radius:12px;overflow:hidden;">
-        <tr><td style="background:#3f7f8c;padding:20px;text-align:center;">
+        <tr><td style="background:#ffffff;padding:20px;text-align:center;border-bottom:1px solid #ededE8;">
           <img src="${SITE_URL}/images/email-logo@2x.png" alt="CarCalc" width="320" height="72" style="display:inline-block;max-width:320px;width:100%;height:auto;border:0;">
         </td></tr>
         <tr><td style="padding:24px 24px 8px;text-align:${align};">
@@ -123,7 +123,7 @@ export function buildResultsEmail(input: CalculatorInput, results: CalculatorOut
           </table>
         </td></tr>
         <tr><td style="padding:20px 24px;text-align:center;">
-          <a href="${SITE_URL}" style="display:inline-block;background:#3f7f8c;color:#ffffff;text-decoration:none;font-weight:bold;font-size:15px;padding:12px 22px;border-radius:8px;">${e.cta}</a>
+          <a href="${SITE_URL}" style="display:inline-block;background:#0e0e0e;color:#ffffff;text-decoration:none;font-weight:bold;font-size:15px;padding:12px 22px;border-radius:8px;">${e.cta}</a>
         </td></tr>
         <tr><td style="padding:0 24px 24px;text-align:${align};">
           <p style="margin:0 0 8px;font-size:12px;color:#a1a1aa;line-height:1.6;">${e.disclaimer}</p>

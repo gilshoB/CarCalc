@@ -65,12 +65,12 @@ const en = {
   },
   bento: {
     eyebrow: "Buy vs. lease calculator",
-    headline1: "Don't guess.",
-    headline2: "Calc.",
+    headline: "Lease, buy used, or finance?",
+    tagline: "Don't guess. Calc.",
     heroText: "Compare buying a car (new or used) with leasing for a monthly payment — with every real cost included.",
     cta: "Get started",
     optionsTitle: "options, one comparison",
-    chartTitle: "Cumulative cost over 5 years",
+    chartTitle: "Cumulative cost over 3 years",
     sampleLabel: "Illustrative example",
     dataTitle: "Ministry of Transport data",
     dataText: "Fuel type, consumption, catalog price and fee group are filled in for you.",
@@ -251,7 +251,6 @@ const en = {
   },
   results: {
     title: "Results",
-    periodLabel: "The comparison covers the lease contract term:",
     periodNote: "Most people revisit the decision when each contract ends, so we compare over exactly that period. The buy side credits the car's value at the end of it. If you keep a car you bought for longer, depreciation in later years is lower, and so is its yearly cost.",
     years: "years",
     pageIntro: "The comparison covers the lease contract term — the total and monthly cost of each option over that period. The table below breaks down every cost, buy vs. lease; open any row to see how it was computed, and you can even adjust depreciation and maintenance assumptions further down. Remember — this is an estimate to help you decide, not financial advice.",
