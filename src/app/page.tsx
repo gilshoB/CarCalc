@@ -14,9 +14,9 @@ export default async function Home() {
   const b = t.bento;
 
   return (
-    <main className="mx-auto max-w-[1240px] px-6 pt-4 pb-6 flex flex-col gap-4">
-      {/* Hero bento */}
-      <section className="flex flex-wrap gap-4">
+    <main className="mx-auto max-w-[1240px] px-4 sm:px-6 pt-4 pb-6 flex flex-col gap-4">
+      {/* Hero bento (hidden while results are shown) */}
+      <section data-home-hero className="flex flex-wrap gap-4">
         <div className="flex-[2_1_560px] min-w-0 rounded-[28px] bg-ink text-white p-8 sm:p-14 flex flex-col justify-between gap-12 min-h-[420px]">
           <span className="text-sm font-medium text-[#b5b5ae]">{b.eyebrow}</span>
           <div className="flex flex-col gap-4">
@@ -50,7 +50,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="flex flex-wrap gap-4">
+      <section data-home-hero className="flex flex-wrap gap-4">
         <div className="flex-[1.6_1_480px] min-w-0 rounded-[28px] bg-white p-8 flex flex-col gap-5">
           <div className="flex flex-wrap items-baseline justify-between gap-3">
             <span className="text-xl font-bold">{b.chartTitle}</span>
@@ -83,7 +83,7 @@ export default async function Home() {
       </section>
 
       {/* Calculator Wizard */}
-      <section id="start" className="scroll-mt-24 pt-8">
+      <section id="start" className="scroll-mt-24 pt-8 [html[data-results]_&]:pt-0">
         <CalculatorWizard locale={locale} translations={t} />
       </section>
 

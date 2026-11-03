@@ -58,9 +58,16 @@ export function buildResultsEmail(input: CalculatorInput, results: CalculatorOut
     return subtract ? `-${n(v)} ₪` : `${n(v)} ₪`;
   };
 
-  const td = `padding:8px 10px;border-bottom:1px solid #e4e4e7;font-size:14px;color:#3f3f46;text-align:${align};`;
-  const tdNum = `padding:8px 10px;border-bottom:1px solid #e4e4e7;font-size:14px;color:#18181b;text-align:center;white-space:nowrap;`;
-  const th = `padding:8px 10px;font-size:13px;color:#71717a;text-align:center;border-bottom:2px solid #d4d4d8;`;
+  const FONT = "'Rubik',Arial,Helvetica,sans-serif";
+  const td = `padding:10px 12px;border-bottom:1px solid #eeeeea;font-size:14px;color:#0e0e0e;text-align:${align};`;
+  const tdNum = `padding:10px 12px;border-bottom:1px solid #eeeeea;font-size:14px;font-weight:bold;color:#0e0e0e;text-align:center;white-space:nowrap;`;
+  const th = `padding:10px 12px;font-size:12px;font-weight:bold;color:#55554f;background:#f2f2ee;text-align:center;`;
+  const winnerTh = `${th}color:#0e0e0e;`;
+  const buyWins = recommendation.winner === "buy";
+  const pill = (label: string) =>
+    `<span style="display:inline-block;background:#d4f53c;color:#0e0e0e;border-radius:99px;padding:3px 10px;">✓ ${label}</span>`;
+  const buyHead = buyWins ? pill(c.buy) : c.buy;
+  const leaseHead = buyWins ? c.lease : pill(c.lease);
 
   const breakdownHtml = visibleRows
     .map(
@@ -72,62 +79,60 @@ export function buildResultsEmail(input: CalculatorInput, results: CalculatorOut
     )
     .join("");
 
+  const totalCell = (v: number, win: boolean) =>
+    `<td style="padding:14px 12px 4px;font-size:18px;font-weight:bold;text-align:center;white-space:nowrap;color:${win ? "#d4f53c" : "#ffffff"};">${n(v)} ₪</td>`;
+  const monthlyCell = (v: number) =>
+    `<td style="padding:0 12px 14px;font-size:14px;text-align:center;white-space:nowrap;color:#c8c8c1;">${n(v)} ₪</td>`;
+
   const html = `<!doctype html>
 <html lang="${locale}" dir="${dir}">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${e.subject}</title></head>
-<body style="margin:0;padding:0;background:#f4f4f5;font-family:Arial,Helvetica,sans-serif;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:24px 12px;">
+<body style="margin:0;padding:0;background:#ededE8;font-family:${FONT};">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#ededE8;padding:24px 12px;">
     <tr><td align="center">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" dir="${dir}" style="max-width:600px;background:#ffffff;border-radius:12px;overflow:hidden;">
-        <tr><td style="background:#ffffff;padding:20px;text-align:center;border-bottom:1px solid #ededE8;">
-          <img src="${SITE_URL}/images/email-logo@2x.png" alt="CarCalc" width="320" height="72" style="display:inline-block;max-width:320px;width:100%;height:auto;border:0;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" dir="${dir}" style="max-width:600px;">
+        <tr><td style="background:#ffffff;border-radius:24px;padding:16px;text-align:center;">
+          <img src="${SITE_URL}/images/email-logo@2x.png" alt="CarCalc" width="220" height="50" style="display:inline-block;width:220px;max-width:100%;height:auto;border:0;">
         </td></tr>
-        <tr><td style="padding:24px 24px 8px;text-align:${align};">
-          <p style="margin:0 0 12px;font-size:16px;color:#18181b;">${greeting}</p>
-          <p style="margin:0;font-size:15px;color:#52525b;line-height:1.6;">${e.intro}</p>
+        <tr><td style="height:12px;line-height:12px;font-size:0;">&nbsp;</td></tr>
+        <tr><td style="background:#ffffff;border-radius:24px;padding:24px;text-align:${align};">
+          <p style="margin:0 0 10px;font-size:16px;font-weight:bold;color:#0e0e0e;">${greeting}</p>
+          <p style="margin:0;font-size:15px;color:#55554f;line-height:1.6;">${e.intro}</p>
         </td></tr>
-        <tr><td style="padding:16px 24px;">
-          <div style="background:#ecfdf5;border:1px solid #a7f3d0;border-radius:10px;padding:16px;text-align:center;">
-            <div style="font-size:20px;font-weight:bold;color:#065f46;">🏆 ${headline}</div>
-            <div style="margin-top:8px;font-size:14px;color:#047857;line-height:1.6;">${explanation}</div>
-          </div>
+        <tr><td style="height:12px;line-height:12px;font-size:0;">&nbsp;</td></tr>
+        <tr><td style="background:#0e0e0e;border-radius:24px;padding:24px;text-align:center;">
+          <div style="display:inline-block;background:#d4f53c;color:#0e0e0e;border-radius:99px;padding:4px 14px;font-size:13px;font-weight:bold;">${r.bestDeal}</div>
+          <div style="margin-top:12px;font-size:22px;font-weight:bold;line-height:1.35;color:#ffffff;">${headline}</div>
+          <div style="margin-top:10px;font-size:14px;color:#c8c8c1;line-height:1.6;">${explanation}</div>
         </td></tr>
-        <tr><td style="padding:8px 24px;">
+        <tr><td style="height:12px;line-height:12px;font-size:0;">&nbsp;</td></tr>
+        <tr><td style="background:#ffffff;border-radius:24px;padding:8px 0 0;overflow:hidden;">
+          <div style="padding:12px 20px 12px;font-size:16px;font-weight:bold;color:#0e0e0e;text-align:${align};">${e.breakdownTitle} · ${periodYears} ${t.results.years}</div>
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
             <tr>
               <th style="${th}"></th>
-              <th style="${th}">${c.buy}</th>
-              <th style="${th}">${c.lease}</th>
-            </tr>
-            <tr>
-              <td style="${td}font-weight:bold;">${c.total} (${periodYears} ${t.results.years})</td>
-              <td style="${tdNum}font-weight:bold;">${n(buy.totalCost)} ₪</td>
-              <td style="${tdNum}font-weight:bold;">${n(lease.totalCost)} ₪</td>
-            </tr>
-            <tr>
-              <td style="${td}font-weight:bold;">${c.monthlyCost}</td>
-              <td style="${tdNum}font-weight:bold;">${n(buy.monthlyCost)} ₪</td>
-              <td style="${tdNum}font-weight:bold;">${n(lease.monthlyCost)} ₪</td>
-            </tr>
-          </table>
-        </td></tr>
-        <tr><td style="padding:16px 24px 8px;text-align:${align};">
-          <div style="font-size:15px;font-weight:bold;color:#18181b;margin-bottom:6px;">${e.breakdownTitle}</div>
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
-            <tr>
-              <th style="${th}"></th>
-              <th style="${th}">${c.buy}</th>
-              <th style="${th}">${c.lease}</th>
+              <th style="${buyWins ? winnerTh : th}">${buyHead}</th>
+              <th style="${buyWins ? th : winnerTh}">${leaseHead}</th>
             </tr>
             ${breakdownHtml}
+            <tr style="background:#0e0e0e;">
+              <td style="padding:14px 12px 4px;font-size:15px;font-weight:bold;color:#ffffff;text-align:${align};">${c.total}</td>
+              ${totalCell(buy.totalCost, buyWins)}
+              ${totalCell(lease.totalCost, !buyWins)}
+            </tr>
+            <tr style="background:#0e0e0e;">
+              <td style="padding:0 12px 14px;font-size:13px;color:#c8c8c1;text-align:${align};">${c.monthlyCost}</td>
+              ${monthlyCell(buy.monthlyCost)}
+              ${monthlyCell(lease.monthlyCost)}
+            </tr>
           </table>
         </td></tr>
-        <tr><td style="padding:20px 24px;text-align:center;">
-          <a href="${SITE_URL}" style="display:inline-block;background:#0e0e0e;color:#ffffff;text-decoration:none;font-weight:bold;font-size:15px;padding:12px 22px;border-radius:8px;">${e.cta}</a>
+        <tr><td style="padding:24px 0 8px;text-align:center;">
+          <a href="${SITE_URL}" style="display:inline-block;background:#d4f53c;color:#0e0e0e;text-decoration:none;font-weight:bold;font-size:15px;padding:14px 26px;border-radius:14px;border:2px solid #0e0e0e;">${e.cta} ${dir === "rtl" ? "←" : "→"}</a>
         </td></tr>
-        <tr><td style="padding:0 24px 24px;text-align:${align};">
-          <p style="margin:0 0 8px;font-size:12px;color:#a1a1aa;line-height:1.6;">${e.disclaimer}</p>
-          <p style="margin:0;font-size:12px;color:#a1a1aa;line-height:1.6;">${e.footer}</p>
+        <tr><td style="padding:12px 8px 0;text-align:center;">
+          <p style="margin:0 0 6px;font-size:12px;color:#6b6b65;line-height:1.6;">${e.disclaimer}</p>
+          <p style="margin:0;font-size:12px;color:#6b6b65;line-height:1.6;">${e.footer}</p>
         </td></tr>
       </table>
     </td></tr>
@@ -140,7 +145,7 @@ export function buildResultsEmail(input: CalculatorInput, results: CalculatorOut
     "",
     e.intro,
     "",
-    `🏆 ${headline}`,
+    headline,
     explanation,
     "",
     `${c.total} (${periodYears} ${t.results.years}): ${c.buy} ${n(buy.totalCost)} ₪ | ${c.lease} ${n(lease.totalCost)} ₪`,

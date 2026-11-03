@@ -57,3 +57,16 @@ details > summary {
 details > summary::-webkit-details-marker {
   display: none;
 }
+
+/* While the results are on screen, the page is the results: hide the home hero tiles. */
+html[data-results] [data-home-hero] {
+  display: none;
+}
+
+/* Don't leave a blank gap where AdSense had no ad to show. */
+ins.adsbygoogle[data-ad-status="unfilled"] {
+  display: none !important;
+}
+.ad-container:has(ins.adsbygoogle[data-ad-status="unfilled"]) {
+  display: none;
+}
