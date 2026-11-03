@@ -118,7 +118,7 @@ export default function BuyingStep({
       {showFields && (
       <>
       <div className="grid gap-4 sm:grid-cols-2">
-        <FormField label={f.carPrice} error={errors["buy.carPrice"]} required>
+        <FormField label={f.carPrice} error={errors["buy.carPrice"]} required validationMessages={t.form.validation}>
           <NumberInput
             value={buy.carPrice}
             onChange={(v) => onChange("buy.carPrice", v)}
@@ -155,7 +155,7 @@ export default function BuyingStep({
           label={`${f.consumption} (${consumptionLabel})`}
           error={errors["buy.consumptionKmPerUnit"]}
           required
-        >
+         validationMessages={t.form.validation}>
           <NumberInput
             value={buy.consumptionKmPerUnit}
             onChange={(v) => onChange("buy.consumptionKmPerUnit", v)}
@@ -195,7 +195,7 @@ export default function BuyingStep({
             <p className="mt-0.5 text-[13px] text-muted">{t.form.usedCar.sectionHint}</p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <FormField label={f.usedCarAge} hint={f.usedCarAgeHint} error={errors["buy.usedCarAge"]} required>
+            <FormField label={f.usedCarAge} hint={f.usedCarAgeHint} error={errors["buy.usedCarAge"]} required validationMessages={t.form.validation}>
               <NumberInput
                 value={buy.usedCarAge ?? 0}
                 onChange={(v) => onChange("buy.usedCarAge", v)}
@@ -241,7 +241,7 @@ export default function BuyingStep({
       <div className="pt-2">
         <h3 className="text-lg font-bold mb-3">{f.insuranceSection}</h3>
         <div className="grid gap-4 sm:grid-cols-2">
-          <FormField label={f.mandatoryInsuranceQuote} error={errors["buy.mandatoryInsuranceQuote"]} required>
+          <FormField label={f.mandatoryInsuranceQuote} error={errors["buy.mandatoryInsuranceQuote"]} required validationMessages={t.form.validation}>
             <NumberInput
               value={buy.mandatoryInsuranceQuote ?? 0}
               onChange={(v) => onChange("buy.mandatoryInsuranceQuote", v)}
@@ -249,7 +249,7 @@ export default function BuyingStep({
               error={!!errors["buy.mandatoryInsuranceQuote"]}
             />
           </FormField>
-          <FormField label={f.comprehensiveInsuranceQuote} error={errors["buy.comprehensiveInsuranceQuote"]} required>
+          <FormField label={f.comprehensiveInsuranceQuote} error={errors["buy.comprehensiveInsuranceQuote"]} required validationMessages={t.form.validation}>
             <NumberInput
               value={buy.comprehensiveInsuranceQuote ?? 0}
               onChange={(v) => onChange("buy.comprehensiveInsuranceQuote", v)}

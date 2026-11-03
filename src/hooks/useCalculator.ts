@@ -50,7 +50,7 @@ function validateStep(step: number, input: CalculatorInput): FormErrors {
   switch (step) {
     case 2: // Personal Details (name + email only)
       if (input.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email)) {
-        errors["email"] = "Invalid email address";
+        errors["email"] = "invalidEmail";
       }
       break;
 

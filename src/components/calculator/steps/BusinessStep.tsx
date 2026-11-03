@@ -47,7 +47,7 @@ export default function BusinessStep({
           <>
             <p className="mt-3 rounded-[14px] bg-soft px-4 py-3 text-sm leading-relaxed text-[#3d3d38]">{pd.isOsekMursheHint}</p>
             <div className="mt-4">
-              <FormField label={pd.marginalTaxRate} hint={pd.marginalTaxRateHint} error={errors["marginalTaxRate"]} required>
+              <FormField label={pd.marginalTaxRate} hint={pd.marginalTaxRateHint} error={errors["marginalTaxRate"]} required validationMessages={t.form.validation}>
                 <NumberInput
                   value={marginalTaxRate ?? 0}
                   onChange={(v) => onChange("marginalTaxRate", v)}

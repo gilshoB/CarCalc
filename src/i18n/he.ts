@@ -247,6 +247,7 @@ const he = {
     validation: {
       required: "שדה חובה",
       positiveNumber: "יש להזין מספר חיובי",
+      invalidEmail: "כתובת מייל לא תקינה",
     },
   },
   results: {

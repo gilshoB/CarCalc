@@ -44,7 +44,7 @@ export default function NumberInput({
 
   const handleBlur = useCallback(() => {
     setFocused(false);
-    const parsed = parseFloat(displayValue);
+    const parsed = parseFloat(displayValue.replace(/,/g, ""));
     if (!isNaN(parsed)) {
       onChange(parsed);
     } else if (displayValue === "") {
@@ -52,9 +52,13 @@ export default function NumberInput({
     }
   }, [displayValue, onChange]);
 
+  // Commit on every keystroke so "Next" always validates what's on screen.
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setDisplayValue(e.target.value);
-  }, []);
+    const raw = e.target.value;
+    setDisplayValue(raw);
+    const parsed = parseFloat(raw.replace(/,/g, ""));
+    onChange(isNaN(parsed) ? 0 : parsed);
+  }, [onChange]);
 
   const formattedValue = value === 0 && !showZero ? "" : value.toLocaleString();
 

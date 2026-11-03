@@ -81,7 +81,7 @@ export default function PurchaseFinanceStep({
               {buy.loanAmount}: <span className="text-lime">{formatNumber(loanAmount, locale)} ₪</span>
             </p>
             <div className="grid gap-4 sm:grid-cols-2">
-              <FormField label={buy.interestRate} error={errors["financing.interestRate"]}>
+              <FormField label={buy.interestRate} error={errors["financing.interestRate"]} validationMessages={t.form.validation}>
                 <NumberInput
                   value={interestRate}
                   onChange={(v) => onChange("financing.interestRate", v)}
@@ -90,7 +90,7 @@ export default function PurchaseFinanceStep({
                   error={!!errors["financing.interestRate"]}
                 />
               </FormField>
-              <FormField label={buy.loanTerm} error={errors["financing.loanTermYears"]}>
+              <FormField label={buy.loanTerm} error={errors["financing.loanTermYears"]} validationMessages={t.form.validation}>
                 <NumberInput
                   value={loanTermYears}
                   onChange={(v) => onChange("financing.loanTermYears", v)}

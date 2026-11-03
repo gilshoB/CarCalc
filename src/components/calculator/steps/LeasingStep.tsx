@@ -115,7 +115,7 @@ export default function LeasingStep({
       {showFields && (
       <>
       <div className="grid gap-4 sm:grid-cols-2">
-        <FormField label={f.monthlyPayment} error={errors["lease.monthlyPayment"]} required>
+        <FormField label={f.monthlyPayment} error={errors["lease.monthlyPayment"]} required validationMessages={t.form.validation}>
           <NumberInput
             value={lease.monthlyPayment}
             onChange={(v) => onChange("lease.monthlyPayment", v)}
@@ -173,7 +173,7 @@ export default function LeasingStep({
           label={`${f.consumption} (${consumptionLabel})`}
           error={errors["lease.consumptionKmPerUnit"]}
           required
-        >
+         validationMessages={t.form.validation}>
           <NumberInput
             value={lease.consumptionKmPerUnit}
             onChange={(v) => onChange("lease.consumptionKmPerUnit", v)}

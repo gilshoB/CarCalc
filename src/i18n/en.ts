@@ -247,6 +247,7 @@ const en = {
     validation: {
       required: "Required field",
       positiveNumber: "Must be a positive number",
+      invalidEmail: "Invalid email address",
     },
   },
   results: {

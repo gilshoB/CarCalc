@@ -29,7 +29,7 @@ export default function PersonalDetailsStep({
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <FormField label={f.name} error={errors["name"]}>
+        <FormField label={f.name} error={errors["name"]} validationMessages={t.form.validation}>
           <input
             type="text"
             value={name}
@@ -43,7 +43,7 @@ export default function PersonalDetailsStep({
           />
         </FormField>
 
-        <FormField label={f.email} hint={f.emailHint} error={errors["email"]}>
+        <FormField label={f.email} hint={f.emailHint} error={errors["email"]} validationMessages={t.form.validation}>
           <input
             type="email"
             value={email}
