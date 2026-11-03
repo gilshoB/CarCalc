@@ -58,7 +58,8 @@ details > summary::-webkit-details-marker {
   display: none;
 }
 
-/* While the results are on screen, the page is the results: hide the home hero tiles. */
+/* Inside the calculator (any step after the intro, or the results) the page is the
+   calculator: hide the home hero tiles. */
 html[data-results] [data-home-hero] {
   display: none;
 }

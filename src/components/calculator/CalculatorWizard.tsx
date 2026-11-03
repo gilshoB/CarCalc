@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { Locale, getTranslations } from "@/i18n/config";
 import type { FuelType } from "@/types/calculator";
 import { useCalculator } from "@/hooks/useCalculator";
@@ -54,13 +54,29 @@ export default function CalculatorWizard({ locale, translations: t }: Calculator
       .catch(() => {});
   }, []);
 
-  // While results are shown, hide the home hero tiles (see globals.css) so
-  // scrolling up from the results doesn't land back on the landing page.
+  // Once the user is inside the calculator (any step after the intro, or the
+  // results), hide the home hero tiles (see globals.css) so scrolling up
+  // doesn't land back on the landing page.
   const showingResults = calc.showResults && !!calc.results;
+  const inCalculator = showingResults || currentStep > 1;
   useEffect(() => {
-    document.documentElement.toggleAttribute("data-results", showingResults);
+    document.documentElement.toggleAttribute("data-results", inCalculator);
     return () => document.documentElement.removeAttribute("data-results");
-  }, [showingResults]);
+  }, [inCalculator]);
+
+  // On every step change, bring the top of the wizard (step indicator + title)
+  // into view instead of leaving the page scrolled to where the old step ended.
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    if (calc.showResults) return;
+    requestAnimationFrame(() => {
+      document.getElementById("start")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [currentStep, calc.showResults]);
 
   return (
     <div>
