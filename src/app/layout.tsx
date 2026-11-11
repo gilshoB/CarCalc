@@ -97,6 +97,9 @@ export default async function RootLayout({
                 <a href="/about" className="rounded-xl px-3 py-2 text-[15px] font-medium text-ink hover:bg-white transition-colors">
                   {t.nav.about}
                 </a>
+                <a href="/contact" className="rounded-xl px-3 py-2 text-[15px] font-medium text-ink hover:bg-white transition-colors">
+                  {t.nav.contact}
+                </a>
             </nav>
             <div className="flex items-center gap-2">
               <LanguageToggle locale={locale} label={t.nav.language} />
@@ -119,6 +122,7 @@ export default async function RootLayout({
                   <a href="/guides/tax-benefits" className="block rounded-xl px-6 py-2 text-sm text-ink hover:bg-soft">{t.nav.guideTaxBenefits}</a>
                   <div className="mx-3 my-1 border-t border-line" />
                   <a href="/about" className="block rounded-xl px-4 py-2.5 text-sm text-ink hover:bg-soft">{t.nav.about}</a>
+                  <a href="/contact" className="block rounded-xl px-4 py-2.5 text-sm text-ink hover:bg-soft">{t.nav.contact}</a>
                 </div>
               </details>
             </div>
@@ -136,6 +140,7 @@ export default async function RootLayout({
             </div>
             <nav aria-label="footer" className="flex flex-wrap items-center gap-5 text-sm">
               <a href="/about" className="text-white hover:text-lime">{t.nav.about}</a>
+              <a href="/contact" className="text-white hover:text-lime">{t.nav.contact}</a>
               <a href="/privacy" className="text-white hover:text-lime">{t.nav.privacy}</a>
               <span>&copy; {new Date().getFullYear()} CarCalc</span>
             </nav>
