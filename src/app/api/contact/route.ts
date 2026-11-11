@@ -6,8 +6,8 @@ import { z } from "zod";
 
 const RequestSchema = z.object({
   kind: z.enum(["question", "feedback", "suggestion"]),
-  name: z.string().trim().max(100).optional().default(""),
-  email: z.union([z.literal(""), z.string().trim().email().max(254)]).optional().default(""),
+  name: z.string().trim().min(1).max(100),
+  email: z.string().trim().email().max(254),
   message: z.string().trim().min(5).max(5000),
   // Honeypot: real visitors never see or fill this field.
   website: z.string().optional().default(""),
@@ -35,12 +35,11 @@ export async function POST(request: NextRequest) {
   if (data.website) return NextResponse.json({ ok: true });
 
   const kind = KIND_LABEL[data.kind];
-  const from = data.name || data.email || "אנונימי";
-  const subject = `CarCalc — ${kind} מ${from}`;
-  const text = `${kind}\nשם: ${data.name || "-"}\nמייל: ${data.email || "-"}\n\n${data.message}`;
+  const subject = `CarCalc — ${kind} מ${data.name}`;
+  const text = `${kind}\nשם: ${data.name}\nמייל: ${data.email}\n\n${data.message}`;
   const html = `<div dir="rtl" style="font-family:Arial,sans-serif;font-size:15px;color:#0e0e0e">
 <p><b>${kind}</b></p>
-<p>שם: ${escapeHtml(data.name || "-")}<br>מייל: ${escapeHtml(data.email || "-")}</p>
+<p>שם: ${escapeHtml(data.name)}<br>מייל: ${escapeHtml(data.email)}</p>
 <p style="white-space:pre-wrap">${escapeHtml(data.message)}</p></div>`;
 
   try {
@@ -50,7 +49,7 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         from: EMAIL_FROM,
         to: [CONTACT_EMAIL],
-        ...(data.email ? { reply_to: data.email } : {}),
+        reply_to: data.email,
         subject,
         html,
         text,

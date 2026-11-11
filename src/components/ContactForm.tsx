@@ -16,12 +16,13 @@ export default function ContactForm({ t }: { t: ReturnType<typeof getTranslation
   const [message, setMessage] = useState("");
   const [website, setWebsite] = useState("");
   const [status, setStatus] = useState<Status>("idle");
-  const [fieldError, setFieldError] = useState<"message" | "email" | null>(null);
+  const [fieldError, setFieldError] = useState<"name" | "email" | "message" | null>(null);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!name.trim()) return setFieldError("name");
+    if (!EMAIL_RE.test(email.trim())) return setFieldError("email");
     if (message.trim().length < 5) return setFieldError("message");
-    if (email.trim() && !EMAIL_RE.test(email.trim())) return setFieldError("email");
     setFieldError(null);
     setStatus("sending");
     try {
@@ -66,11 +67,24 @@ export default function ContactForm({ t }: { t: ReturnType<typeof getTranslation
 
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="flex flex-col gap-2">
-          <span className="text-[15px] font-bold">{c.name}</span>
-          <input value={name} onChange={(e) => setName(e.target.value)} maxLength={100} autoComplete="name" className={`${input} h-14`} />
+          <span className="text-[15px] font-bold">
+            {c.name}
+            <span className="text-red-500 ms-1">*</span>
+          </span>
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            maxLength={100}
+            autoComplete="name"
+            className={`${input} h-14 ${fieldError === "name" ? "border-red-500" : ""}`}
+          />
+          {fieldError === "name" && <span className="text-[13px] font-medium text-red-700">{t.form.validation.required}</span>}
         </label>
         <label className="flex flex-col gap-2">
-          <span className="text-[15px] font-bold">{c.email}</span>
+          <span className="text-[15px] font-bold">
+            {c.email}
+            <span className="text-red-500 ms-1">*</span>
+          </span>
           <input
             type="email"
             dir="ltr"
