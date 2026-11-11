@@ -2,10 +2,14 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { defaultLocale } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
-import GuideHero from "@/components/GuideHero";
-import ArticleJsonLd from "@/components/ArticleJsonLd";
+import { GuideShell, H2, Calc, CalcLink, CalcCta, Terms, Example, Bullets, Table, Note, Ref } from "@/components/guide";
 
-export const metadata: Metadata = { alternates: { canonical: "/guides/insurance" } };
+export const metadata: Metadata = {
+  title: "ביטוח רכב למתחילים: חובה, צד ג׳ ומקיף | CarCalc",
+  description:
+    "מה ההבדל בין ביטוח חובה, צד ג׳ ומקיף, מה זו השתתפות עצמית, כמה זה עולה בערך, מה קורה עם ביטוח בליסינג, ואיך משלמים פחות.",
+  alternates: { canonical: "/guides/insurance" },
+};
 
 export default async function InsuranceGuidePage() {
   const cookieStore = await cookies();
@@ -13,255 +17,392 @@ export default async function InsuranceGuidePage() {
   const isHe = locale === "he";
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12">
-      <ArticleJsonLd
-        locale={locale}
-        path="/guides/insurance"
-        headline={isHe ? "ביטוח רכב בישראל — חובה ומקיף" : "Car Insurance in Israel — Mandatory and Comprehensive"}
-        description={isHe ? "ביטוח חובה ומקיף לרכב בישראל — מה ההבדל, מה מכוסה וכמה זה עולה." : "Mandatory and comprehensive car insurance in Israel — what's covered and the cost."}
-      />
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-6">
-        {isHe
-          ? "ביטוח רכב בישראל — חובה ומקיף"
-          : "Car Insurance in Israel — Mandatory and Comprehensive"}
-      </h1>
+    <GuideShell
+      locale={locale}
+      path="/guides/insurance"
+      illustration="insurance"
+      title={isHe ? "ביטוח רכב למתחילים: חובה, צד ג׳ ומקיף" : "Car insurance for beginners: mandatory, third-party and comprehensive"}
+      description={
+        isHe
+          ? "מה כל ביטוח מכסה, כמה הוא עולה בערך, מה קורה בליסינג, ואיך משלמים פחות."
+          : "What each policy covers, roughly what it costs, how it works in a lease, and how to pay less."
+      }
+    >
+      {isHe ? (
+        <>
+          <p>
+            ביטוח הוא אחת ההוצאות הקבועות הגדולות על רכב, ורוב האנשים מחדשים אותו כל שנה בלי לבדוק. מי שמבין
+            מה הוא קונה יכול לחסוך מאות ולפעמים אלפי שקלים בשנה, בלי לוותר על כיסוי.
+          </p>
+          <p>
+            המדריך מסביר אילו ביטוחים יש, מה כל אחד מכסה, ומה משנה את המחיר. בסוף יש הסבר איך להכניס את
+            הביטוח להשוואה בין קנייה לליסינג.
+          </p>
 
-      <GuideHero illustration="insurance" />
+          <CalcLink>קיבלתם הצעות לביטוח? הזינו אותן במחשבון</CalcLink>
 
-      <div className="prose prose-zinc dark:prose-invert prose-sm max-w-none space-y-4 text-zinc-600 dark:text-zinc-400">
-        {isHe ? (
-          <>
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              סוגי ביטוח רכב בישראל
-            </h2>
+          <Terms
+            title="המושגים, בשפה פשוטה"
+            items={[
+              [
+                "ביטוח חובה",
+                "ביטוח שהחוק מחייב כל רכב. הוא מכסה נזקי גוף בלבד: פציעה או מוות של הנהג, של הנוסעים ושל הולכי רגל. הוא לא מכסה שום נזק לרכב, לא שלכם ולא של אחרים.",
+              ],
+              [
+                "ביטוח צד ג׳",
+                "מכסה נזק שגרמתם לרכוש של אחרים, למשל לרכב שפגעתם בו. הוא לא מכסה את הרכב שלכם.",
+              ],
+              [
+                "ביטוח מקיף",
+                "מכסה גם את הרכב שלכם (תאונה, גניבה, שריפה, נזקי טבע) וגם נזק לרכוש של אחרים. הוא כולל בתוכו את צד ג׳.",
+              ],
+              ["פרמיה", "המחיר שמשלמים על הביטוח, בדרך כלל לשנה."],
+              [
+                "השתתפות עצמית",
+                "הסכום שאתם משלמים מהכיס בכל תביעה. אם הנזק 8,000 ₪ וההשתתפות העצמית 2,000 ₪, הביטוח משלם 6,000 ₪.",
+              ],
+              [
+                "נהג צעיר ונהג חדש",
+                "נהג מתחת לגיל מסוים (בדרך כלל 24) או עם ותק נהיגה קצר. הוספה שלו לפוליסה מייקרת אותה, ולפעמים גם מגדילה את ההשתתפות העצמית.",
+              ],
+              [
+                "כל נהג או נהג נקוב",
+                "פוליסה ל״כל נהג״ מכסה כל מי שנוהג ברכב ברשותכם. פוליסה ל״נהג נקוב״ מכסה רק את מי ששמו רשום בה, והיא זולה יותר.",
+              ],
+              ["היעדר תביעות", "אישור שלא תבעתם את הביטוח בשנים האחרונות. הוא מוריד את המחיר."],
+              [
+                "ירידת ערך",
+                "הפגיעה בשווי הרכב אחרי תאונה, גם אם תוקן. לא כל פוליסה מכסה אותה, וכדאי לבדוק.",
+              ],
+              ["כתבי שירות", "תוספות לפוליסה: גרירה, רכב חלופי, שמשות. כל אחת מהן עולה כסף ואפשר לוותר עליה."],
+            ]}
+          />
+
+          <H2>שלושת הביטוחים, אחד ליד השני</H2>
+          <Table
+            head={["", "ביטוח חובה", "צד ג׳", "מקיף"]}
+            rows={[
+              ["חובה לפי חוק?", "כן", "לא", "לא"],
+              ["נזקי גוף", "מכסה", "לא", "לא"],
+              ["נזק לרכב של אחרים", "לא", "מכסה", "מכסה"],
+              ["נזק לרכב שלכם", "לא", "לא", "מכסה"],
+              ["גניבה", "לא", "לא", "מכסה"],
+              ["מחיר שנתי בערך", "1,000 עד 2,500 ₪", "1,000 עד 2,000 ₪", "2,500 עד 8,000 ₪"],
+            ]}
+          />
+          <p>
+            ביטוח חובה צריך תמיד. בנוסף אליו בוחרים בין צד ג׳ למקיף. נהיגה בלי ביטוח חובה היא עבירה פלילית,
+            ובתאונה היא עלולה להשאיר אתכם לשלם לבד סכומי עתק.
+          </p>
+          <p>
+            טווחי המחירים רחבים כי המחיר אישי מאוד. נהג בן 22 עם רכב חדש ישלם פי כמה מנהג בן 45 עם אותו רכב.
+          </p>
+
+          <H2>מה קובע את המחיר</H2>
+          <Bullets>
+            <li>
+              <strong>מי נוהג.</strong> גיל, ותק נהיגה, ומספר הנהגים בפוליסה. נהג צעיר או חדש הוא הגורם שמייקר
+              הכי הרבה.
+            </li>
+            <li>
+              <strong>העבר שלכם.</strong> תביעות, תאונות ושלילות בשלוש השנים האחרונות.
+            </li>
+            <li>
+              <strong>הרכב.</strong> שווי, דגם, נפח מנוע, וכמה הדגם נגנב. במקיף, רכב יקר יותר עולה יותר לבטח.
+            </li>
+            <li>
+              <strong>מערכות בטיחות.</strong> בביטוח חובה יש הנחה לרכבים עם מערכות בטיחות מתקדמות.
+            </li>
+            <li>
+              <strong>מיגון.</strong> חברות הביטוח דורשות מיגון מסוים לפי הדגם, ובלעדיו הכיסוי לגניבה לא תקף.
+            </li>
+            <li>
+              <strong>ההשתתפות העצמית.</strong> ככל שהיא גבוהה יותר, הפרמיה נמוכה יותר.
+            </li>
+          </Bullets>
+
+          <H2>השתתפות עצמית: המספר שלא מסתכלים עליו</H2>
+          <p>
+            שתי הצעות למקיף יכולות להיראות דומות במחיר ולהיות שונות מאוד ביום של תאונה. הצעה ב-4,000 ₪ עם
+            השתתפות עצמית של 1,500 ₪ שונה מהצעה ב-3,600 ₪ עם השתתפות עצמית של 3,500 ₪. בתאונה אחת ההצעה
+            ה״זולה״ עולה לכם 1,600 ₪ יותר.
+          </p>
+          <p>
+            כשמשווים הצעות, בדקו גם את ההשתתפות העצמית לנהג צעיר ואת ההשתתפות במוסך שאינו מוסך הסדר. הן
+            לפעמים כפולות.
+          </p>
+
+          <H2>מקיף או צד ג׳ בלבד?</H2>
+          <p>
+            השאלה היא כמה כסף תפסידו אם הרכב ייגנב או ייהרס מחר. ברכב ששווה 120,000 ₪ התשובה ברורה, ומקיף
+            כמעט תמיד מוצדק. ברכב ששווה 15,000 ₪, מקיף ב-3,000 ₪ בשנה אומר שאתם משלמים חמישית משווי הרכב כל
+            שנה כדי לבטח אותו.
+          </p>
+          <p>
+            כלל אצבע: כשהפרמיה של המקיף מתקרבת ל-10% משווי הרכב, שווה לבדוק צד ג׳ בלבד. ואם לקחתם הלוואה
+            והרכב משועבד, המלווה ידרוש בדרך כלל ביטוח מקיף עד סוף ההלוואה.
+          </p>
+
+          <H2>ביטוח בליסינג</H2>
+          <p>
+            בליסינג תפעולי הביטוח בדרך כלל כלול בתשלום החודשי. זה נוח, אבל יש שלושה דברים לבדוק בחוזה:
+          </p>
+          <Bullets>
+            <li>
+              <strong>מה בדיוק כלול.</strong> ברוב העסקאות גם חובה וגם מקיף, אבל לא בכולן.
+            </li>
+            <li>
+              <strong>ההשתתפות העצמית.</strong> בליסינג היא נקבעת על ידי החברה, ואי אפשר לבחור. לפעמים היא
+              גבוהה ממה שהייתם בוחרים לבד.
+            </li>
+            <li>
+              <strong>נהגים צעירים.</strong> האם מותר להם לנהוג, ובכמה זה מייקר.
+            </li>
+          </Bullets>
+          <p>
+            כשמשווים ליסינג לקנייה, הביטוח הוא אחד ההבדלים הגדולים. בקנייה צריך להוסיף אותו לחשבון, ובליסינג
+            הוא כבר בפנים. מי ששוכח את זה חושב שקנייה זולה ממה שהיא באמת. ההשוואה המלאה נמצאת ב
+            <Ref to="buy-vs-lease">מדריך קנייה מול ליסינג</Ref>.
+          </p>
+
+          <H2>איך משלמים פחות</H2>
+          <Bullets>
+            <li>
+              <strong>משווים כל שנה.</strong> ההבדלים בין חברות על אותו נהג ואותו רכב מגיעים למאות ואלפי
+              שקלים. חידוש אוטומטי הוא כמעט תמיד היקר ביותר.
+            </li>
+            <li>
+              <strong>בודקים חובה בנפרד.</strong> לרשות שוק ההון יש מחשבון ממשלתי שמשווה מחירי ביטוח חובה
+              בין כל החברות. לא חייבים לקנות חובה ומקיף באותה חברה.
+            </li>
+            <li>
+              <strong>מצמצמים נהגים.</strong> פוליסה לנהגים נקובים זולה מ״כל נהג״.
+            </li>
+            <li>
+              <strong>מעלים את ההשתתפות העצמית,</strong> אם יש לכם כסף בצד למקרה של תאונה.
+            </li>
+            <li>
+              <strong>מוותרים על תוספות מיותרות.</strong> שירותי גרירה או שמשות אולי כבר יש לכם ממקום אחר.
+            </li>
+            <li>
+              <strong>מתמקחים.</strong> הצעה מחברה אחת היא סיבה טובה לחברה אחרת להוריד מחיר.
+            </li>
+          </Bullets>
+
+          <H2>דוגמה: כמה הביטוח מוסיף לעלות הרכב</H2>
+          <Example title="רכב בשווי 150,000 ₪, נהג ותיק">
             <p>
-              בישראל קיימים שני סוגי ביטוח רכב עיקריים שכל בעל רכב צריך להכיר:
-              ביטוח חובה וביטוח מקיף. ביטוח חובה, כשמו כן הוא — חובה על פי חוק,
-              והוא מכסה נזקי גוף לכל מי שנפגע בתאונת דרכים, בין אם מדובר בנהג,
-              נוסעים או הולכי רגל. ביטוח מקיף, לעומת זאת, הוא ביטוח רשות שמכסה
-              נזקים לרכב שלכם — כולל גניבה, שריפה, הצפה, ונדליזם — וכן נזקי רכוש
-              לצד שלישי (צד ג&apos;). שני סוגי הביטוח האלה משלימים זה את זה
-              ויחד מעניקים כיסוי מלא שמגן עליכם מבחינה כלכלית בכל תרחיש אפשרי
-              על הכביש. חשוב להבין את ההבדלים ביניהם כדי לקבל החלטה מושכלת
-              בנוגע לכיסוי הביטוחי שלכם.
+              ביטוח חובה 1,500 ₪ וביטוח מקיף 4,500 ₪ הם 6,000 ₪ בשנה, או <strong>18,000 ₪ בשלוש שנים</strong>.
+              זה 500 ₪ בחודש שלא מופיעים במחיר הרכב ולא בהחזר ההלוואה.
             </p>
+          </Example>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              ביטוח חובה
-            </h2>
-            <p>
-              ביטוח חובה נדרש על פי חוק הפיצויים לנפגעי תאונות דרכים, ובלעדיו
-              אסור לנהוג על הכביש. הביטוח מכסה הוצאות רפואיות, אשפוז, שיקום
-              ופיצויים עבור כל מי שנפגע בתאונת דרכים — ללא קשר לשאלת האשמה.
-              העלות השנתית הממוצעת של ביטוח חובה נעה בין 1,200 ל-2,500 ש&quot;ח,
-              בהתאם לגיל הנהג, ניסיון הנהיגה, היסטוריית התביעות ומספר הנהגים
-              הרשומים על הפוליסה. נהגים צעירים או נהגים חדשים ישלמו בדרך כלל
-              פרמיה גבוהה יותר. חשוב לדעת שנהיגה ללא ביטוח חובה בתוקף היא
-              עבירה פלילית שעלולה לגרור קנסות כבדים, שלילת רישיון ואף מאסר.
-              בנוסף, אם תהיו מעורבים בתאונה ללא ביטוח, תיאלצו לשאת בכל
-              ההוצאות הרפואיות מכיסכם הפרטי.
-            </p>
+          <H2>הביטוח במחשבון</H2>
+          <p>
+            ב<Calc>מחשבון</Calc> מזינים את ההצעות שקיבלתם לביטוח חובה ולמקיף בשלב הקנייה. בשלב הליסינג מסמנים
+            אילו ביטוחים כלולים בתשלום החודשי. אם אחד מהם לא כלול, המחשבון מוסיף אותו לעלות הליסינג, כך
+            שההשוואה הוגנת.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              ביטוח מקיף
-            </h2>
-            <p>
-              ביטוח מקיף הוא ביטוח רשות, אך הוא מומלץ מאוד, בייחוד לבעלי רכבים
-              חדשים או יקרים. הביטוח מכסה מגוון רחב של מקרים: גניבה מלאה או
-              חלקית של הרכב, נזק לרכב שלכם כתוצאה מתאונה (גם אם אתם האשמים),
-              שריפה, הצפה מגשם או שטפון, נדליזם ונזק זדוני, וכן נזקי רכוש לצד
-              שלישי (צד ג&apos;). העלות השנתית של ביטוח מקיף נעה בדרך כלל בין
-              3,000 ל-8,000 ש&quot;ח, בהתאם לשווי הרכב, גיל הנהג, ניסיון
-              הנהיגה, היסטוריית תביעות, ורמת ההשתתפות העצמית שבחרתם. ככל שהרכב
-              חדש ויקר יותר, כך הפרמיה תהיה גבוהה יותר, אך גם הכיסוי חשוב יותר
-              — כי עלות תיקון או החלפה של רכב יקר עלולה להיות הרסנית מבחינה
-              כלכלית. לרכבים ישנים יותר, חלק מהנהגים בוחרים רק בביטוח צד ג&apos;
-              ללא מקיף, כדי לחסוך בעלויות.
-            </p>
+          <Note>
+            המחירים במדריך הם טווחים כלליים להתמצאות. המחיר שלכם תלוי בנתונים האישיים, ורק הצעת מחיר אמיתית
+            קובעת.
+          </Note>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              ביטוח בליסינג vs קנייה
-            </h2>
-            <p>
-              כאשר לוקחים רכב בליסינג, הביטוח לרוב כלול בתשלום החודשי — אך חשוב
-              מאוד לבדוק בדיוק מה כלול! חלק מעסקאות הליסינג כוללות גם ביטוח
-              חובה וגם ביטוח מקיף, בעוד שאחרות כוללות רק ביטוח חובה. כאשר
-              הביטוח כלול בליסינג, אתם לא משלמים עליו בנפרד — העלות כבר מגולמת
-              בתשלום החודשי. לעומת זאת, כאשר קונים רכב, אתם חייבים לסדר את שני
-              סוגי הביטוח בעצמכם ולשלם עליהם בנפרד, מה שיכול להוסיף אלפי שקלים
-              לעלות השנתית של הרכב. במחשבון CarCalc תוכלו לסמן אילו ביטוחים
-              כלולים בליסינג, והמחשבון יוסיף את העלות של מה שלא כלול. כך תוכלו
-              לבצע השוואה אמיתית ומדויקת בין עלות הליסינג לעלות הרכישה.
-            </p>
+          <CalcCta
+            title="כמה הביטוח משנה את התמונה?"
+            text="הזינו את הצעות הביטוח שלכם, וראו את העלות המלאה של קנייה מול ליסינג, כולל הביטוח."
+            button="למחשבון"
+          />
+        </>
+      ) : (
+        <>
+          <p>
+            Insurance is one of the biggest fixed costs of a car, and most people renew it every year without
+            checking. If you understand what you are buying you can save hundreds and sometimes thousands of
+            shekels a year without giving up cover.
+          </p>
+          <p>
+            This guide explains which policies exist, what each one covers, and what moves the price. At the
+            end it shows how to bring insurance into a buy-versus-lease comparison.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              איך לחסוך בביטוח
-            </h2>
-            <p>
-              יש מספר דרכים מוכחות לחסוך בעלויות הביטוח. ראשית, השוו הצעות מחיר
-              בין חברות ביטוח שונות — ההבדלים יכולים להגיע לאלפי שקלים בשנה.
-              שנית, שקלו לרכוש ביטוח חובה ומקיף מאותה חברה (חבילה משולבת) כדי
-              לקבל הנחה. שלישית, העלו את סכום ההשתתפות העצמית — ככל שתסכימו לשלם
-              יותר מכיסכם במקרה של תביעה, כך הפרמיה החודשית תהיה נמוכה יותר.
-              רביעית, התקינו אמצעי מיגון מאושרים (אימובילייזר, מערכת איתור GPS)
-              — חברות ביטוח מעניקות הנחות משמעותיות לרכבים ממוגנים. חמישית, שמרו
-              על היסטוריית נהיגה נקייה ללא תביעות — נהגים עם היסטוריה נקייה
-              זוכים לבונוס (הנחה מצטברת). לבסוף, שאלו על הנחות לבעלי מספר רכבים
-              — חלק מהחברות מציעות הנחה כשמבטחים יותר מרכב אחד באותה פוליסה.
-            </p>
+          <CalcLink>Got insurance quotes? Enter them in the calculator</CalcLink>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              דוגמה מספרית
-            </h2>
-            <p>
-              בואו נסתכל על דוגמה מספרית כדי להמחיש את המשמעות הכלכלית של ביטוח
-              הרכב. נניח שעלות ביטוח החובה השנתית היא 1,500 ש&quot;ח, ועלות
-              הביטוח המקיף השנתית היא 5,000 ש&quot;ח. סה&quot;כ עלות ביטוח שנתית:
-              6,500 ש&quot;ח. על פני 3 שנים, מדובר ב-19,500 ש&quot;ח — סכום
-              משמעותי שרבים שוכחים להביא בחשבון כשמשווים בין קנייה לליסינג. אם
-              בליסינג הביטוח כלול, זה אומר שהעלות הזו כבר מגולמת בתשלום החודשי,
-              ואילו בקנייה תצטרכו להוסיף אותה מעל מחיר הרכב, ההלוואה והטסט. לכן,
-              כשאתם משווים בין האפשרויות, ודאו שאתם כוללים את כל עלויות הביטוח
-              בחישוב — אחרת ההשוואה לא תהיה מדויקת.
-            </p>
-          </>
-        ) : (
-          <>
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              Types of Car Insurance in Israel
-            </h2>
-            <p>
-              There are two main types of car insurance in Israel that every car
-              owner needs to understand: mandatory insurance (Bituach Hova) and
-              comprehensive insurance (Bituach Makif). Mandatory insurance, as
-              the name implies, is required by law and covers bodily injury to
-              anyone involved in a traffic accident — whether they are the
-              driver, passengers, or pedestrians. Comprehensive insurance, on
-              the other hand, is optional and covers damage to your own vehicle,
-              including theft, fire, flooding, and vandalism, as well as
-              third-party property damage. These two types of insurance
-              complement each other and together provide full coverage that
-              protects you financially in any scenario on the road. Understanding
-              the differences between them is essential for making an informed
-              decision about your insurance coverage.
-            </p>
+          <Terms
+            title="The terms, in plain language"
+            items={[
+              [
+                "Mandatory insurance (ביטוח חובה)",
+                "Required by law for every car. It covers bodily injury only: injury or death of the driver, passengers and pedestrians. It covers no damage to any car, yours or anyone else’s.",
+              ],
+              ["Third-party insurance (צד ג׳)", "Covers damage you cause to other people’s property, such as the car you hit. It does not cover your own car."],
+              [
+                "Comprehensive insurance (מקיף)",
+                "Covers your own car (accident, theft, fire, natural damage) and damage to other people’s property. It includes third-party cover.",
+              ],
+              ["Premium", "The price you pay for the insurance, usually per year."],
+              [
+                "Deductible (השתתפות עצמית)",
+                "The amount you pay out of pocket on each claim. If the damage is 8,000 ILS and the deductible 2,000, the insurer pays 6,000.",
+              ],
+              [
+                "Young driver and new driver",
+                "A driver under a certain age (usually 24) or with a short driving record. Adding one raises the price, and sometimes the deductible too.",
+              ],
+              [
+                "Any driver or named driver",
+                "An “any driver” policy covers anyone driving with your permission. A “named driver” policy covers only the people listed in it, and is cheaper.",
+              ],
+              ["No-claims record", "Confirmation that you made no claims in recent years. It lowers the price."],
+              ["Loss of value", "The damage to the car’s value after an accident, even once repaired. Not every policy covers it, so check."],
+              ["Service add-ons", "Extras on the policy: towing, replacement car, windscreen. Each costs money and can be dropped."],
+            ]}
+          />
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              Mandatory Insurance (Bituach Hova)
-            </h2>
-            <p>
-              Mandatory insurance is required under Israeli traffic accident
-              compensation law, and without it, you are not permitted to drive
-              on the road. This insurance covers medical expenses, hospitalization,
-              rehabilitation, and compensation for anyone injured in a traffic
-              accident — regardless of who was at fault. The average annual cost
-              of mandatory insurance ranges from 1,200 to 2,500 ILS, depending
-              on the driver&apos;s age, driving experience, claims history, and
-              the number of drivers listed on the policy. Young or new drivers
-              typically pay a higher premium. It is important to know that
-              driving without valid mandatory insurance is a criminal offense
-              that can result in heavy fines, license suspension, and even
-              imprisonment. Additionally, if you are involved in an accident
-              without insurance, you will have to bear all medical expenses out
-              of your own pocket, which can be financially devastating.
-            </p>
+          <H2>The three policies side by side</H2>
+          <Table
+            head={["", "Mandatory", "Third-party", "Comprehensive"]}
+            rows={[
+              ["Required by law?", "Yes", "No", "No"],
+              ["Bodily injury", "Covered", "No", "No"],
+              ["Damage to others’ cars", "No", "Covered", "Covered"],
+              ["Damage to your car", "No", "No", "Covered"],
+              ["Theft", "No", "No", "Covered"],
+              ["Rough yearly price (ILS)", "1,000 to 2,500", "1,000 to 2,000", "2,500 to 8,000"],
+            ]}
+          />
+          <p>
+            You always need mandatory insurance. On top of it you choose between third-party and comprehensive.
+            Driving without mandatory insurance is a criminal offence, and after an accident it can leave you
+            paying enormous sums alone.
+          </p>
+          <p>
+            The price ranges are wide because the price is very personal. A 22-year-old with a new car pays
+            several times what a 45-year-old pays for the same car.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              Comprehensive Insurance (Bituach Makif)
-            </h2>
-            <p>
-              Comprehensive insurance is optional, but it is highly recommended,
-              especially for owners of new or expensive vehicles. This insurance
-              covers a wide range of scenarios: full or partial theft of the
-              vehicle, damage to your car resulting from an accident (even if you
-              are at fault), fire, flooding from rain or storms, vandalism and
-              malicious damage, and third-party property damage. The annual cost
-              of comprehensive insurance typically ranges from 3,000 to 8,000
-              ILS, depending on the car&apos;s value, the driver&apos;s age,
-              driving experience, claims history, and the deductible level you
-              choose. The newer and more expensive the car, the higher the
-              premium — but the coverage is also more critical, since the cost
-              of repairing or replacing an expensive vehicle can be financially
-              devastating. For older vehicles, some drivers choose to carry only
-              third-party property insurance without comprehensive coverage in
-              order to save on costs.
-            </p>
+          <H2>What sets the price</H2>
+          <Bullets>
+            <li>
+              <strong>Who drives.</strong> Age, driving experience and the number of drivers on the policy. A
+              young or new driver raises the price most.
+            </li>
+            <li>
+              <strong>Your record.</strong> Claims, accidents and licence suspensions in the last three years.
+            </li>
+            <li>
+              <strong>The car.</strong> Value, model, engine size and how often the model is stolen. For
+              comprehensive cover, a more expensive car costs more to insure.
+            </li>
+            <li>
+              <strong>Safety systems.</strong> Mandatory insurance is discounted for cars with advanced safety systems.
+            </li>
+            <li>
+              <strong>Anti-theft protection.</strong> Insurers require certain protection by model, and without
+              it theft cover is void.
+            </li>
+            <li>
+              <strong>The deductible.</strong> The higher it is, the lower the premium.
+            </li>
+          </Bullets>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              Insurance in Leasing vs Buying
-            </h2>
-            <p>
-              When you lease a car, insurance is often included in the monthly
-              payment — but it is very important to check exactly what is
-              included! Some leasing deals include both mandatory and
-              comprehensive insurance, while others include only mandatory
-              insurance. When insurance is included in the lease, you do not pay
-              for it separately — the cost is already factored into your monthly
-              payment. In contrast, when you buy a car, you must arrange both
-              types of insurance yourself and pay for them separately, which can
-              add thousands of shekels to the annual cost of car ownership. In
-              the CarCalc calculator, you can mark which insurance types are
-              included in the lease, and the calculator will add the cost of
-              whatever is not included. This way, you can make a truly accurate
-              comparison between the cost of leasing and the cost of buying.
-            </p>
+          <H2>The deductible: the number nobody looks at</H2>
+          <p>
+            Two comprehensive quotes can look similar in price and be very different on the day of an accident.
+            A 4,000 ILS quote with a 1,500 deductible is not the same as a 3,600 quote with a 3,500 deductible.
+            After one accident the “cheap” quote has cost you 1,600 ILS more.
+          </p>
+          <p>
+            When comparing quotes, also check the deductible for a young driver and for a garage outside the
+            insurer’s network. They are sometimes double.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              How to Save on Insurance
-            </h2>
-            <p>
-              There are several proven ways to save on insurance costs. First,
-              compare quotes from different insurance companies — the
-              differences can amount to thousands of shekels per year. Second,
-              consider purchasing mandatory and comprehensive insurance from the
-              same company (a bundled package) to receive a discount. Third,
-              increase your deductible amount — the more you agree to pay out
-              of pocket in the event of a claim, the lower your monthly premium
-              will be. Fourth, install approved anti-theft devices (immobilizer,
-              GPS tracking system) — insurance companies offer significant
-              discounts for vehicles with security features. Fifth, maintain a
-              clean driving record with no claims — drivers with a clean history
-              receive a cumulative bonus discount that grows over the years.
-              Finally, ask about multi-car discounts — some companies offer
-              reduced rates when you insure more than one vehicle on the same
-              policy.
-            </p>
+          <H2>Comprehensive or third-party only?</H2>
+          <p>
+            The question is how much you would lose if the car were stolen or written off tomorrow. For a car
+            worth 120,000 ILS the answer is clear and comprehensive is almost always justified. For a car worth
+            15,000, comprehensive at 3,000 a year means paying a fifth of the car’s value every year to insure it.
+          </p>
+          <p>
+            A rule of thumb: when the comprehensive premium approaches 10% of the car’s value, look at
+            third-party only. And if you took a loan and the car has a lien, the lender will usually require
+            comprehensive cover until the loan ends.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              A Numerical Example
-            </h2>
-            <p>
-              Let&apos;s look at a numerical example to illustrate the financial
-              significance of car insurance. Suppose the annual mandatory
-              insurance cost is 1,500 ILS, and the annual comprehensive
-              insurance cost is 5,000 ILS. Total annual insurance cost: 6,500
-              ILS. Over 3 years, that amounts to 19,500 ILS — a significant sum
-              that many people forget to factor in when comparing buying versus
-              leasing. If insurance is included in the lease, this cost is
-              already built into the monthly payment, whereas when buying you
-              need to add it on top of the car price, the loan, and the annual
-              inspection. So when you compare your options, make sure you include
-              all insurance costs in the calculation — otherwise the comparison
-              will not be accurate.
-            </p>
-          </>
-        )}
-      </div>
+          <H2>Insurance in a lease</H2>
+          <p>In an operating lease, insurance is usually included in the monthly payment. That is convenient, but check three things in the contract:</p>
+          <Bullets>
+            <li>
+              <strong>Exactly what is included.</strong> Most deals include both mandatory and comprehensive, but not all.
+            </li>
+            <li>
+              <strong>The deductible.</strong> In a lease the company sets it and you cannot choose. It is
+              sometimes higher than you would pick yourself.
+            </li>
+            <li>
+              <strong>Young drivers.</strong> Whether they may drive and what it adds.
+            </li>
+          </Bullets>
+          <p>
+            When comparing leasing with buying, insurance is one of the big differences. When buying you must
+            add it to the sum; in a lease it is already inside. Forget that and buying looks cheaper than it
+            is. The full comparison is in the <Ref to="buy-vs-lease">buying vs. leasing guide</Ref>.
+          </p>
 
-      <div className="mt-8 rounded-xl border border-brand-200 bg-brand-50 p-6 dark:border-brand-900 dark:bg-brand-950/30">
-        <p className="font-semibold text-brand-800 dark:text-brand-300">
-          {isHe
-            ? "רוצים לראות איך הביטוח משפיע על העלות הכוללת?"
-            : "Want to see how insurance affects the total cost?"}
-        </p>
-        <p className="mt-1 text-brand-700 dark:text-brand-400">
-          <a href="/" className="underline hover:no-underline">
-            {isHe
-              ? "הזינו את הצעות הביטוח שלכם במחשבון ותראו את ההשפעה"
-              : "Enter your insurance quotes in the calculator to see the impact"}
-          </a>
-        </p>
-      </div>
-    </main>
+          <H2>How to pay less</H2>
+          <Bullets>
+            <li>
+              <strong>Compare every year.</strong> Prices for the same driver and car differ between insurers
+              by hundreds or thousands of shekels. Automatic renewal is almost always the most expensive.
+            </li>
+            <li>
+              <strong>Check mandatory insurance separately.</strong> The Capital Market Authority runs a
+              government calculator comparing mandatory insurance prices across all insurers. You do not have
+              to buy mandatory and comprehensive from the same company.
+            </li>
+            <li>
+              <strong>Limit the drivers.</strong> A named-driver policy is cheaper than “any driver”.
+            </li>
+            <li>
+              <strong>Raise the deductible,</strong> if you have money set aside for an accident.
+            </li>
+            <li>
+              <strong>Drop extras you do not need.</strong> You may already have towing or windscreen cover from elsewhere.
+            </li>
+            <li>
+              <strong>Negotiate.</strong> One insurer’s quote is a good reason for another to lower its price.
+            </li>
+          </Bullets>
+
+          <H2>Example: what insurance adds to the cost of the car</H2>
+          <Example title="A car worth 150,000 ILS, experienced driver">
+            <p>
+              Mandatory insurance at 1,500 ILS and comprehensive at 4,500 make 6,000 a year, or{" "}
+              <strong>18,000 ILS over three years</strong>. That is 500 ILS a month that appears neither in the
+              price of the car nor in the loan repayment.
+            </p>
+          </Example>
+
+          <H2>Insurance in the calculator</H2>
+          <p>
+            In <Calc>the calculator</Calc> you enter your mandatory and comprehensive quotes at the buying step.
+            At the leasing step you tick which policies the monthly payment includes. If one is not included,
+            the calculator adds it to the lease cost so the comparison is fair.
+          </p>
+
+          <Note>
+            The prices here are broad ranges for orientation. Your price depends on your own details, and only
+            a real quote counts.
+          </Note>
+
+          <CalcCta
+            title="How much does insurance change the picture?"
+            text="Enter your insurance quotes and see the full cost of buying against leasing, insurance included."
+            button="Open the calculator"
+          />
+        </>
+      )}
+    </GuideShell>
   );
 }

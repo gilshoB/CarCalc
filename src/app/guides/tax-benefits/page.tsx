@@ -2,10 +2,14 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { defaultLocale } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
-import GuideHero from "@/components/GuideHero";
-import ArticleJsonLd from "@/components/ArticleJsonLd";
+import { GuideShell, H2, Calc, CalcLink, CalcCta, Terms, Example, Bullets, Table, Note, Ref } from "@/components/guide";
 
-export const metadata: Metadata = { alternates: { canonical: "/guides/tax-benefits" } };
+export const metadata: Metadata = {
+  title: "רכב לעצמאים ולשכירים: הוצאה מוכרת, מע״מ ושווי שימוש | CarCalc",
+  description:
+    "כמה מהוצאות הרכב מוכרות לעוסק מורשה ולעוסק פטור, מה מקזזים במע״מ, מה ההבדל בין קנייה לליסינג לעצמאי, ואיך מחשבים שווי שימוש ברכב צמוד.",
+  alternates: { canonical: "/guides/tax-benefits" },
+};
 
 export default async function TaxBenefitsGuidePage() {
   const cookieStore = await cookies();
@@ -13,280 +17,349 @@ export default async function TaxBenefitsGuidePage() {
   const isHe = locale === "he";
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12">
-      <ArticleJsonLd
-        locale={locale}
-        path="/guides/tax-benefits"
-        headline={isHe ? "הטבות מס לעצמאים ברכב" : "Tax Benefits for Self-Employed — Car Expenses in Israel"}
-        description={isHe ? "הטבות מס לעצמאים על הוצאות רכב — הכרה במס הכנסה וקיזוז מע\"מ." : "Tax benefits for the self-employed on car expenses in Israel."}
-      />
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-6">
-        {isHe
-          ? "הטבות מס לעצמאים ברכב"
-          : "Tax Benefits for Self-Employed — Car Expenses in Israel"}
-      </h1>
+    <GuideShell
+      locale={locale}
+      path="/guides/tax-benefits"
+      illustration="tax-benefits"
+      title={isHe ? "רכב ומס: מה מוכר לעצמאי, ומה זה שווי שימוש" : "Cars and tax: what the self-employed can deduct, and what usage value means"}
+      description={
+        isHe
+          ? "הוצאות רכב מוכרות, קיזוז מע״מ, קנייה מול ליסינג לעצמאי, ושווי שימוש ברכב צמוד."
+          : "Deductible car expenses, VAT, buying vs. leasing for the self-employed, and the usage value of a company car."
+      }
+    >
+      {isHe ? (
+        <>
+          <p>
+            לעצמאי, רכב עולה פחות ממה שכתוב בחשבונית, כי חלק מההוצאה חוזר דרך המס. לשכיר עם רכב צמוד, הרכב
+            ״בחינם״ עולה יותר ממה שנדמה, כי משלמים עליו מס בתלוש. בשני המקרים, מי שלא מכניס את המס לחשבון
+            משווה מספרים לא נכונים.
+          </p>
+          <p>
+            המדריך מסביר את הכללים העיקריים בשפה פשוטה. הוא לא מחליף רואה חשבון, אבל אחריו תדעו מה לשאול.
+          </p>
 
-      <GuideHero illustration="tax-benefits" />
+          <CalcLink>עוסק מורשה? המחשבון מחשב את הטבת המס בשבילכם</CalcLink>
 
-      <div className="prose prose-zinc dark:prose-invert prose-sm max-w-none space-y-4 text-zinc-600 dark:text-zinc-400">
-        {isHe ? (
-          <>
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              מי זכאי להטבות מס על רכב?
-            </h2>
+          <Terms
+            title="המושגים, בשפה פשוטה"
+            items={[
+              [
+                "עוסק מורשה",
+                "עצמאי שגובה מע״מ מהלקוחות ומעביר אותו למדינה. הוא יכול לקזז חלק מהמע״מ ששילם על הוצאות העסק.",
+              ],
+              [
+                "עוסק פטור",
+                "עצמאי עם מחזור קטן שלא גובה מע״מ. הוא לא מקזז מע״מ, אבל כן יכול להכיר בהוצאות לצורך מס הכנסה.",
+              ],
+              [
+                "הוצאה מוכרת",
+                "הוצאה שמותר להפחית מההכנסה לפני שמחשבים עליה מס. הוצאה מוכרת של 1,000 ₪ לא מחזירה 1,000 ₪. היא חוסכת את המס על 1,000 ₪.",
+              ],
+              [
+                "מס שולי",
+                "אחוז המס על השקל האחרון שהרווחתם. מדרגות מס ההכנסה בישראל הן 10%, 14%, 20%, 31%, 35% ו-47%, ומעל הכנסה גבוהה מאוד נוסף מס יסף.",
+              ],
+              ["מע״מ תשומות", "המע״מ שעוסק מורשה שילם על קניות והוצאות של העסק, ואותו הוא מקזז מהמע״מ שגבה."],
+              [
+                "רכב צמוד",
+                "רכב שהמעסיק נותן לעובד לשימוש מלא, גם פרטי. המעסיק משלם על הרכב, והעובד משלם מס על ההטבה.",
+              ],
+              [
+                "שווי שימוש",
+                "הסכום שמתווסף לשכר ברוטו של עובד עם רכב צמוד, לצורך חישוב המס. זה לא סכום שמשלמים. משלמים את המס עליו.",
+              ],
+              [
+                "פחת לצורכי מס",
+                "כשעסק קונה רכב, הוא לא מכיר בכל המחיר בשנה אחת. הוא מכיר בחלק קבוע ממנו בכל שנה, בדרך כלל 15%.",
+              ],
+            ]}
+          />
+
+          <H2>עצמאים: כמה מהוצאות הרכב מוכרות</H2>
+          <p>
+            רכב פרטי של עצמאי משמש גם לעבודה וגם לחיים הפרטיים. במקום לבדוק כל נסיעה, התקנות קובעות כלל קבוע.
+            ההוצאה המוכרת היא הגבוה מבין השניים:
+          </p>
+          <Bullets>
+            <li>45% מכל הוצאות הרכב.</li>
+            <li>כל הוצאות הרכב, פחות שווי השימוש של אותו רכב.</li>
+          </Bullets>
+          <p>ברוב הרכבים הפרטיים יוצא שהאפשרות הראשונה גבוהה יותר, ולכן מדברים בדרך כלל על ״45%״.</p>
+          <p>
+            <strong>אילו הוצאות נכנסות?</strong> דלק או חשמל, ביטוחים, אגרת רישוי, טיפולים ותיקונים, ריבית על
+            הלוואה לרכב, דמי ליסינג, והפחת השנתי על רכב שקניתם.
+          </p>
+          <Example title="דוגמה: כמה זה שווה בכסף">
             <p>
-              בעלי עסקים עצמאיים בישראל הרשומים כעוסק מורשה זכאים להכיר בחלק
-              מהוצאות הרכב שלהם כהוצאה עסקית מוכרת לצורכי מס. בהתאם לתקנות מס
-              הכנסה, ניתן לנכות 45% מהוצאות הרכב מההכנסה החייבת במס. הטבה זו
-              חלה הן על רכב שנרכש והן על רכב בליסינג, ומהווה חיסכון משמעותי
-              שיכול להגיע לעשרות אלפי שקלים לאורך חיי הרכב. חשוב לדעת שההטבה
-              חלה על כל סוגי הרכבים — פרטיים ומסחריים — כל עוד הרכב משמש לצורכי
-              העסק, גם אם רק באופן חלקי. עוסק פטור, לעומת זאת, אינו זכאי
-              להטבה זו באותו אופן, ולכן חשוב לוודא את הסטטוס העסקי שלכם לפני
-              שמתחילים לתכנן.
+              הוצאות הרכב שלכם הן 60,000 ₪ בשנה, והמס השולי שלכם 35%. ההוצאה המוכרת היא 45% מ-60,000 ₪, כלומר
+              27,000 ₪. החיסכון במס הוא 35% מ-27,000 ₪, כלומר <strong>9,450 ₪ בשנה</strong>.
             </p>
+            <p>במס שולי של 47% אותו רכב חוסך 12,690 ₪ בשנה. ככל שהמס השולי גבוה יותר, ההטבה גדולה יותר.</p>
+          </Example>
+          <p>
+            הוצאה מוכרת מקטינה גם את דמי הביטוח הלאומי, כך שהחיסכון האמיתי קצת גבוה יותר. המחשבון שלנו מחשב
+            את מס ההכנסה והמע״מ בלבד.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              מה ניתן להכיר כהוצאה?
-            </h2>
+          <H2>מע״מ: מה מקזזים ומה לא</H2>
+          <p>הכללים לרכב פרטי של עוסק מורשה:</p>
+          <Table
+            head={["ההוצאה", "קיזוז מע״מ"]}
+            rows={[
+              ["דלק, טיפולים ותיקונים", "שני שלישים מהמע״מ אם עיקר השימוש לעסק, רבע אם עיקרו פרטי"],
+              ["קניית הרכב", "אין קיזוז"],
+              ["דמי ליסינג או שכירות של רכב פרטי", "אין קיזוז"],
+              ["ביטוח ואגרת רישוי", "אין בהם מע״מ"],
+            ]}
+          />
+          <Example title="דוגמה">
             <p>
-              רשימת ההוצאות שניתן להכיר בהן כהוצאה עסקית על הרכב כוללת מגוון
-              רחב של עלויות שוטפות. ראשית, תשלומי ליסינג חודשיים — עבור מי
-              שבוחר בליסינג תפעולי, כל התשלום החודשי נכלל בבסיס החישוב. כמו כן,
-              הוצאות דלק מוכרות כהוצאה, וכך גם הוצאות תחזוקה ושירות — טיפולים
-              תקופתיים, תיקונים, החלפת צמיגים וכדומה. ביטוח חובה וביטוח מקיף
-              נכללים אף הם ברשימת ההוצאות המוכרות, לצד אגרת רישוי שנתית
-              ותשלומי חניה. עבור מי שרכש רכב באמצעות הלוואה, גם הריבית על
-              ההלוואה מוכרת כהוצאה. שיעור ההכרה של 45% חל על כל ההוצאות הללו
-              באופן אחיד. כלומר, אם סך ההוצאות השנתיות שלכם על הרכב הוא 60,000
-              שקלים, תוכלו להכיר ב-27,000 שקלים כהוצאה עסקית מוכרת.
+              הוצאתם 12,000 ₪ בשנה על דלק וטיפולים, כולל מע״מ. המע״מ שבתוך הסכום הוא כ-1,830 ₪. שני שלישים
+              ממנו הם <strong>כ-1,220 ₪</strong> שחוזרים אליכם.
             </p>
+          </Example>
+          <p>עוסק פטור לא מקזז מע״מ בכלל, אבל מכיר בהוצאה המלאה, כולל המע״מ, לצורך מס הכנסה.</p>
+          <p>הכללים שונים לרכב מסחרי, למונית ולרכב עבודה, ושם ההכרה בדרך כלל רחבה יותר.</p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              איך מחשבים את ההטבה?
-            </h2>
-            <p>
-              חישוב הטבת המס מבוסס על נוסחה פשוטה: סך ההוצאות המוכרות כפול שיעור
-              ההכרה (45%) כפול שיעור המס השולי שלכם. התוצאה היא החיסכון בפועל
-              במס שתשלמו. לדוגמה, נניח שהוצאות הרכב השנתיות שלכם מסתכמות
-              ב-60,000 שקלים, ושיעור המס השולי שלכם עומד על 47%. החישוב ייראה
-              כך: 60,000 &times; 0.45 &times; 0.47 = 12,690 שקלים חיסכון במס
-              בשנה! על פני תקופה של 3 שנים, מדובר בחיסכון מצטבר של 38,070
-              שקלים. זהו סכום משמעותי שיכול להטות את הכף בהחלטה בין קנייה לליסינג,
-              ולכן חשוב מאוד להכניס אותו לחישוב הכולל. ככל ששיעור המס השולי
-              שלכם גבוה יותר, כך הטבת המס גדולה יותר, מה שהופך את התכנון המיסויי
-              לחלק בלתי נפרד מההחלטה הפיננסית.
-            </p>
+          <H2>קנייה או ליסינג לעצמאי</H2>
+          <p>
+            נהוג לומר שלעצמאי תמיד עדיף ליסינג ״כי הכול מוכר״. זה נכון רק בחלקו. גם בקנייה מחיר הרכב מוכר,
+            רק לא בבת אחת.
+          </p>
+          <Bullets>
+            <li>
+              <strong>בליסינג</strong> התשלום החודשי הוא הוצאה שוטפת, והוא נכנס כולו לחישוב ה-45%.
+            </li>
+            <li>
+              <strong>בקנייה</strong> מכירים בפחת השנתי על הרכב (בדרך כלל 15% ממחירו בכל שנה), ובנוסף בריבית,
+              בביטוחים, בטיפולים ובדלק. גם הם נכנסים לחישוב ה-45%.
+            </li>
+          </Bullets>
+          <p>
+            לכן הפער במס בין שתי האפשרויות קטן ממה שמקובל לחשוב, והוא לא מחליף את ההשוואה הרגילה: כמה כל
+            אפשרות עולה בסך הכול. מה שמשתנה לעצמאי הוא שכל העלויות ״מוזלות״ בשיעור דומה. את ההשוואה עצמה
+            הסברנו ב<Ref to="buy-vs-lease">מדריך קנייה מול ליסינג</Ref>.
+          </p>
+          <p>
+            הכללים האלה חלים על עצמאי. בחברה בע״מ החשבון שונה: החברה מכירה בהוצאות הרכב, ולעובד או לבעל
+            השליטה נזקף שווי שימוש.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              מדרגות מס שולי בישראל
-            </h2>
+          <H2>שכירים: רכב צמוד ושווי שימוש</H2>
+          <p>
+            רכב צמוד נראה כמו הטבה בחינם: המעסיק משלם על הרכב, על הביטוח ולרוב גם על הדלק. אבל המדינה רואה בו
+            חלק מהשכר, ומחייבת אותו במס.
+          </p>
+          <p>
+            <strong>איך מחשבים?</strong> שווי השימוש החודשי הוא בערך 2.5% ממחיר המחירון של הרכב כשהיה חדש.
+            הסכום הזה מתווסף לברוטו, ועליו משלמים מס הכנסה, ביטוח לאומי ומס בריאות. לרכב היברידי, פלאג-אין
+            וחשמלי יש הפחתה קבועה משווי השימוש.
+          </p>
+          <Example title="דוגמה: רכב צמוד עם מחיר מחירון של 150,000 ₪">
             <p>
-              שיטת המס בישראל בנויה על מדרגות מס פרוגרסיביות, כלומר ככל שההכנסה
-              שלכם גבוהה יותר, כך שיעור המס על החלק העליון של ההכנסה גבוה יותר.
-              מדרגות המס נעות בטווח של כ-10% עד 50% בקירוב. שיעור המס השולי הוא
-              אחוז המס שחל על השקל האחרון שהרווחתם — כלומר, המדרגה הגבוהה ביותר
-              שאליה הגעתם. לדוגמה, עצמאי עם הכנסה שנתית חייבת של 400,000 שקלים
-              ייכנס למדרגת מס של 47%, בעוד שעצמאי עם הכנסה של 200,000 שקלים
-              ייכנס למדרגה נמוכה יותר. המשמעות היא שבעלי הכנסות גבוהות נהנים
-              מהטבת מס גדולה יותר על הוצאות הרכב, מכיוון שכל שקל של הוצאה מוכרת
-              חוסך להם יותר מס. לכן, ככל שההכנסה שלכם גבוהה יותר, כך הטבת המס
-              על רכב משמעותית יותר.
+              שווי השימוש הוא כ-3,700 ₪ בחודש. במס שולי של 35%, המס עליו הוא{" "}
+              <strong>כ-1,300 ₪ בחודש</strong> מהנטו, ועוד ביטוח לאומי.
             </p>
+          </Example>
+          <p>שלושה דברים שכדאי לדעת:</p>
+          <Bullets>
+            <li>שווי השימוש נקבע לפי מחיר המחירון, לא לפי מה שהרכב שווה היום. רכב בן חמש עולה לכם כמו חדש.</li>
+            <li>הוא לא תלוי בכמה אתם נוסעים. מי שנוסע מעט משלם אותו דבר.</li>
+            <li>
+              כשמציעים לכם לבחור בין רכב צמוד לתוספת שכר, השוו את המס על שווי השימוש למה שיעלה לכם להחזיק רכב
+              בעצמכם. את העלות הזו אפשר לחשב במחשבון.
+            </li>
+          </Bullets>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              ליסינג vs קנייה — מה יותר משתלם לעצמאי?
-            </h2>
-            <p>
-              עבור בעלי עסקים, ליסינג תפעולי מציע לעיתים קרובות יתרון מיסויי
-              משמעותי לעומת קנייה. הסיבה המרכזית היא שבליסינג, כל התשלום החודשי
-              נחשב כהוצאה שוטפת המוכרת לצורכי מס. לעומת זאת, כשרוכשים רכב, רק
-              ההוצאות השוטפות (דלק, ביטוח, תחזוקה, ריבית על הלוואה) מוכרות
-              כהוצאה — עלות הרכב עצמו אינה ניתנת לניכוי כהוצאה שוטפת. בליסינג,
-              התשלום החודשי כבר כולל את &quot;עלות הרכב&quot; בתוכו, ולכן בסיס
-              ההוצאה המוכרת גדול יותר. עבור עצמאים במדרגות מס גבוהות, ההפרש יכול
-              להיות דרמטי — אלפי שקלים בשנה. זו הסיבה שליסינג הפך לאופציה
-              הפופולרית בקרב עצמאים ובעלי חברות בישראל. עם זאת, חשוב לזכור
-              שהשיקול המיסויי הוא רק חלק מהתמונה — יש להביא בחשבון גם את עלות
-              הליסינג הכוללת, תנאי ההחזרה, הגבלת קילומטראז&apos; ועוד.
-            </p>
+          <H2>המס במחשבון</H2>
+          <p>
+            ב<Calc>מחשבון</Calc>, בשלב האחרון, מסמנים שאתם עוסק מורשה ומזינים את המס השולי. המחשבון מכיר ב-45%
+            מהוצאות הרכב בכל אחת מהאפשרויות, מוסיף את קיזוז המע״מ על דלק וטיפולים, ומראה את העלות אחרי מס
+            לקנייה ולליסינג. כך רואים אם ההטבה משנה את התשובה.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              במחשבון CarCalc
-            </h2>
-            <p>
-              סמנו &quot;עוסק מורשה&quot; בשלב הפרטים האישיים והזינו את שיעור
-              המס השולי שלכם. המחשבון יחשב אוטומטית את הטבת המס עבור שתי
-              האפשרויות — קנייה וליסינג — ותראו כמה אתם חוסכים. החישוב לוקח
-              בחשבון את כל ההוצאות הרלוונטיות, מחיל את שיעור ההכרה של 45%, ומציג
-              לכם את החיסכון האמיתי במס לצד העלות הכוללת של כל אפשרות. כך תוכלו
-              לקבל החלטה מושכלת שמתחשבת בכל המרכיבים הפיננסיים — כולל הטבות
-              המס.
-            </p>
+          <Note>
+            המדריך נותן מידע כללי ואינו ייעוץ מס. כללי המס והסכומים מתעדכנים מדי שנה ותלויים בסוג העסק ובסוג
+            הרכב. לפני החלטה, בדקו את המצב שלכם עם רואה חשבון או יועץ מס.
+          </Note>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              חשוב לדעת
-            </h2>
-            <p>
-              חוקי המס בישראל משתנים מעת לעת, ולכן מומלץ בחום להתייעץ עם רואה
-              חשבון או יועץ מס מוסמך לפני קבלת החלטות פיננסיות משמעותיות. שיעור
-              ההכרה של 45% הוא שיעור ההכרה הסטנדרטי הנוכחי לרכבים המשמשים באופן
-              מעורב (עסקי ופרטי). כללים שונים עשויים לחול על סוגי רכב מסוימים,
-              כגון רכבים מסחריים שמשמשים אך ורק לצורכי העסק (שם שיעור ההכרה
-              עשוי להיות גבוה יותר), או על מבני עסקים ספציפיים כמו חברות בע&quot;מ
-              שבהן ההתייחסות המיסויית שונה. המידע במדריך זה הוא כללי ואינו מהווה
-              ייעוץ מס. תמיד בדקו עם איש מקצוע את המצב הספציפי שלכם.
-            </p>
-          </>
-        ) : (
-          <>
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              Who Is Eligible for Car Tax Benefits?
-            </h2>
-            <p>
-              Self-employed business owners in Israel who are registered as a
-              licensed business (Osek Murshe) are entitled to deduct a portion of
-              their car-related expenses as a recognized business expense for tax
-              purposes. According to Israeli income tax regulations, 45% of car
-              expenses can be deducted from taxable income. This benefit applies
-              to both purchased and leased vehicles, and it represents a
-              significant saving that can amount to tens of thousands of shekels
-              over the life of the vehicle. It is important to note that the
-              benefit applies to all types of vehicles — private and commercial —
-              as long as the vehicle is used for business purposes, even if only
-              partially. A small-scale business (Osek Patur), on the other hand,
-              is not eligible for this benefit in the same way, so it is
-              essential to verify your business status before planning.
-            </p>
+          <CalcCta
+            title="כמה הרכב עולה לכם אחרי מס?"
+            text="סמנו ״עוסק מורשה״, הזינו את המס השולי, וראו את העלות האמיתית של קנייה מול ליסינג."
+            button="למחשבון"
+          />
+        </>
+      ) : (
+        <>
+          <p>
+            For the self-employed, a car costs less than the invoice says, because part of the expense comes
+            back through tax. For an employee with a company car, the “free” car costs more than it seems,
+            because tax is paid on it through the payslip. In both cases, leaving tax out means comparing the
+            wrong numbers.
+          </p>
+          <p>
+            This guide explains the main rules in plain language. It does not replace an accountant, but
+            afterwards you will know what to ask.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              What Expenses Can Be Deducted?
-            </h2>
-            <p>
-              The list of expenses that can be recognized as deductible business
-              car expenses covers a wide range of ongoing costs. First, monthly
-              lease payments — for those who choose an operating lease, the
-              entire monthly payment is included in the calculation base.
-              Additionally, fuel expenses are recognized as deductible, as are
-              maintenance and service costs — periodic treatments, repairs, tire
-              replacements, and similar expenses. Mandatory insurance (third-party
-              liability) and comprehensive insurance are also included in the
-              list of recognized expenses, alongside annual registration fees and
-              parking payments. For those who purchased a vehicle with a loan,
-              the loan interest is also a deductible expense. The 45% recognition
-              rate applies uniformly to all of these expenses. This means that if
-              your total annual car expenses amount to 60,000 ILS, you can
-              recognize 27,000 ILS as a deductible business expense.
-            </p>
+          <CalcLink>Registered business? The calculator works out the tax saving for you</CalcLink>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              How Is the Tax Benefit Calculated?
-            </h2>
-            <p>
-              The tax benefit calculation is based on a straightforward formula:
-              Total deductible expenses &times; 45% recognition rate &times; your
-              marginal tax rate = tax savings. The result is the actual reduction
-              in tax you will pay. For example, suppose your annual car expenses
-              total 60,000 ILS and your marginal tax rate is 47%. The
-              calculation would be: 60,000 &times; 0.45 &times; 0.47 = 12,690
-              ILS in tax savings per year! Over a period of 3 years, that is a
-              cumulative saving of 38,070 ILS. This is a substantial amount that
-              can tip the scales in the decision between buying and leasing, which
-              is why it is so important to factor it into the overall
-              calculation. The higher your marginal tax rate, the greater your
-              tax benefit, making tax planning an integral part of the financial
-              decision.
-            </p>
+          <Terms
+            title="The terms, in plain language"
+            items={[
+              [
+                "Osek murshe (עוסק מורשה)",
+                "A self-employed person who charges customers VAT and passes it to the state. They can reclaim part of the VAT paid on business expenses.",
+              ],
+              [
+                "Osek patur (עוסק פטור)",
+                "A self-employed person with a small turnover who does not charge VAT. They reclaim no VAT, but can still deduct expenses for income tax.",
+              ],
+              [
+                "Deductible expense",
+                "An expense you may subtract from income before tax is calculated. A 1,000 ILS deductible expense does not return 1,000 ILS. It saves the tax on 1,000 ILS.",
+              ],
+              [
+                "Marginal tax rate",
+                "The tax rate on the last shekel you earned. Israel’s income tax brackets are 10%, 14%, 20%, 31%, 35% and 47%, with a surtax on very high incomes.",
+              ],
+              ["Input VAT", "The VAT a registered business paid on its purchases and expenses, which it sets off against the VAT it collected."],
+              [
+                "Company car (רכב צמוד)",
+                "A car an employer gives an employee for full use, private use included. The employer pays for the car and the employee pays tax on the benefit.",
+              ],
+              [
+                "Usage value (שווי שימוש)",
+                "The amount added to the gross salary of an employee with a company car, for tax purposes. You do not pay this amount. You pay the tax on it.",
+              ],
+              [
+                "Tax depreciation",
+                "When a business buys a car it does not deduct the whole price in one year. It deducts a fixed share each year, usually 15%.",
+              ],
+            ]}
+          />
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              Marginal Tax Brackets in Israel
-            </h2>
+          <H2>Self-employed: how much of the car expense is deductible</H2>
+          <p>
+            A self-employed person’s private car is used for both work and private life. Instead of checking
+            every trip, the regulations set a fixed rule. The deductible amount is the higher of:
+          </p>
+          <Bullets>
+            <li>45% of all car expenses.</li>
+            <li>All car expenses, minus the usage value of that car.</li>
+          </Bullets>
+          <p>For most private cars the first option is higher, which is why people usually just say “45%”.</p>
+          <p>
+            <strong>Which expenses count?</strong> Fuel or electricity, insurance, the registration fee,
+            servicing and repairs, interest on a car loan, lease payments, and yearly depreciation on a car you
+            bought.
+          </p>
+          <Example title="Example: what it is worth in money">
             <p>
-              The Israeli tax system is built on progressive tax brackets,
-              meaning the higher your income, the higher the tax rate on the
-              upper portion of your earnings. Tax brackets range from
-              approximately 10% to 50%. The marginal tax rate is the percentage
-              of tax applied to your last shekel earned — that is, the highest
-              bracket you have reached. For example, a self-employed individual
-              with annual taxable income of 400,000 ILS would fall into the 47%
-              tax bracket, while someone with an income of 200,000 ILS would be
-              in a lower bracket. This means that high-income earners enjoy a
-              larger tax benefit on car expenses, since every shekel of
-              recognized expense saves them more in tax. Therefore, the higher
-              your income, the more significant the car tax benefit becomes for
-              you.
+              Your car expenses are 60,000 ILS a year and your marginal tax rate is 35%. The deductible amount
+              is 45% of 60,000, that is 27,000. The tax saving is 35% of 27,000, that is{" "}
+              <strong>9,450 ILS a year</strong>.
             </p>
+            <p>At a 47% marginal rate the same car saves 12,690 ILS a year. The higher the marginal rate, the bigger the benefit.</p>
+          </Example>
+          <p>
+            A deductible expense also reduces National Insurance contributions, so the real saving is slightly
+            higher. Our calculator covers income tax and VAT only.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              Leasing vs. Buying — Which Is Better for the Self-Employed?
-            </h2>
+          <H2>VAT: what you reclaim and what you do not</H2>
+          <p>The rules for a registered business’s private car:</p>
+          <Table
+            head={["Expense", "VAT reclaim"]}
+            rows={[
+              ["Fuel, servicing and repairs", "Two thirds of the VAT if the car is mainly for business, a quarter if mainly private"],
+              ["Buying the car", "None"],
+              ["Lease or rental payments on a private car", "None"],
+              ["Insurance and registration fee", "No VAT on these"],
+            ]}
+          />
+          <Example title="Example">
             <p>
-              For business owners, an operating lease often offers a significant
-              tax advantage over purchasing. The main reason is that with
-              leasing, the entire monthly payment is considered an ongoing
-              expense that is recognized for tax purposes. In contrast, when you
-              buy a car, only the ongoing costs (fuel, insurance, maintenance,
-              loan interest) are deductible — the cost of the car itself cannot
-              be deducted as an ongoing expense. With a lease, the monthly
-              payment already includes the &quot;cost of the vehicle&quot; within
-              it, so the base of recognized expenses is larger. For
-              self-employed individuals in high tax brackets, the difference can
-              be dramatic — thousands of shekels per year. This is why leasing
-              has become the popular option among freelancers and company owners
-              in Israel. However, it is important to remember that the tax
-              consideration is only part of the picture — you should also
-              account for the total cost of the lease, return conditions,
-              mileage limits, and more.
+              You spent 12,000 ILS in a year on fuel and servicing, VAT included. The VAT inside that is about
+              1,830 ILS. Two thirds of it, <strong>about 1,220 ILS</strong>, comes back to you.
             </p>
+          </Example>
+          <p>An osek patur reclaims no VAT at all, but deducts the full expense, VAT included, for income tax.</p>
+          <p>The rules differ for commercial vehicles, taxis and work vehicles, where recognition is usually broader.</p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              In the CarCalc Calculator
-            </h2>
+          <H2>Buying or leasing when self-employed</H2>
+          <p>
+            People say leasing is always better for the self-employed “because everything is deductible”. That
+            is only partly true. When you buy, the price of the car is deductible too, just not all at once.
+          </p>
+          <Bullets>
+            <li>
+              <strong>Leasing:</strong> the monthly payment is a running expense and all of it goes into the 45% calculation.
+            </li>
+            <li>
+              <strong>Buying:</strong> you deduct the yearly depreciation on the car (usually 15% of its price
+              each year), plus interest, insurance, servicing and fuel. These go into the 45% calculation too.
+            </li>
+          </Bullets>
+          <p>
+            So the tax gap between the two is smaller than commonly thought, and it does not replace the
+            ordinary comparison: what each option costs in total. What changes for the self-employed is that
+            all the costs are “discounted” at a similar rate. The comparison itself is explained in the{" "}
+            <Ref to="buy-vs-lease">buying vs. leasing guide</Ref>.
+          </p>
+          <p>
+            These rules apply to the self-employed. In a limited company the sum is different: the company
+            deducts the car expenses and a usage value is attributed to the employee or controlling shareholder.
+          </p>
+
+          <H2>Employees: company cars and usage value</H2>
+          <p>
+            A company car looks like a free benefit: the employer pays for the car, the insurance and usually
+            the fuel. But the state treats it as part of your salary and taxes it.
+          </p>
+          <p>
+            <strong>How is it calculated?</strong> The monthly usage value is roughly 2.5% of the car’s list
+            price when new. That amount is added to your gross salary, and you pay income tax, National
+            Insurance and health tax on it. Hybrid, plug-in and electric cars get a fixed reduction.
+          </p>
+          <Example title="Example: a company car with a 150,000 ILS list price">
             <p>
-              Mark &quot;Licensed Business&quot; in the personal details step and
-              enter your marginal tax rate. The calculator will automatically
-              compute the tax benefit for both options — buying and leasing — so
-              you can see exactly how much you save. The calculation takes into
-              account all relevant expenses, applies the 45% recognition rate,
-              and presents you with the real tax savings alongside the total cost
-              of each option. This way you can make an informed decision that
-              considers all financial components — including tax benefits.
+              The usage value is about 3,700 ILS a month. At a 35% marginal rate, the tax on it is{" "}
+              <strong>about 1,300 ILS a month</strong> off your net pay, plus National Insurance.
             </p>
+          </Example>
+          <p>Three things worth knowing:</p>
+          <Bullets>
+            <li>Usage value is based on the list price, not on what the car is worth today. A five-year-old car costs you the same as a new one.</li>
+            <li>It does not depend on how much you drive. Low-mileage drivers pay the same.</li>
+            <li>
+              When offered a choice between a company car and extra salary, compare the tax on the usage value
+              with what running your own car would cost. You can work out that cost in the calculator.
+            </li>
+          </Bullets>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              Important to Know
-            </h2>
-            <p>
-              Tax laws in Israel change from time to time, so it is strongly
-              recommended to consult with a certified accountant or tax advisor
-              before making significant financial decisions. The 45% recognition
-              rate is the current standard rate for vehicles used for mixed
-              purposes (both business and personal). Different rules may apply
-              to certain vehicle types, such as commercial vehicles used
-              exclusively for business purposes (where the recognition rate may
-              be higher), or to specific business structures such as limited
-              companies (Ltd.) where the tax treatment differs. The information
-              in this guide is general and does not constitute tax advice. Always
-              check with a professional about your specific situation.
-            </p>
-          </>
-        )}
-      </div>
+          <H2>Tax in the calculator</H2>
+          <p>
+            In <Calc>the calculator</Calc>, at the last step, you mark that you are a registered business and
+            enter your marginal tax rate. The calculator recognises 45% of the car expenses in each option,
+            adds the VAT reclaim on fuel and servicing, and shows the after-tax cost of buying and of leasing.
+            That way you can see whether the benefit changes the answer.
+          </p>
 
-      <div className="mt-8 rounded-xl border border-brand-200 bg-brand-50 p-6 dark:border-brand-900 dark:bg-brand-950/30">
-        <p className="font-semibold text-brand-800 dark:text-brand-300">
-          {isHe
-            ? "רוצים לדעת כמה תחסכו במס?"
-            : "Want to know how much you'll save in taxes?"}
-        </p>
-        <p className="mt-1 text-brand-700 dark:text-brand-400">
-          <a href="/" className="underline hover:no-underline">
-            {isHe
-              ? "סמנו 'עוסק מורשה' במחשבון וקבלו חישוב מדויק של הטבת המס"
-              : "Mark 'Licensed Business' in the calculator for an exact tax benefit calculation"}
-          </a>
-        </p>
-      </div>
-    </main>
+          <Note>
+            This guide is general information, not tax advice. Tax rules and amounts are updated every year and
+            depend on the type of business and vehicle. Before deciding, check your situation with an
+            accountant or tax adviser.
+          </Note>
+
+          <CalcCta
+            title="What does the car cost you after tax?"
+            text="Mark “registered business”, enter your marginal tax rate, and see the real cost of buying against leasing."
+            button="Open the calculator"
+          />
+        </>
+      )}
+    </GuideShell>
   );
 }

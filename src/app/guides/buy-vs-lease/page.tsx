@@ -2,10 +2,14 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { defaultLocale } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
-import GuideHero from "@/components/GuideHero";
-import ArticleJsonLd from "@/components/ArticleJsonLd";
+import { GuideShell, H2, Calc, CalcLink, CalcCta, Terms, Example, Bullets, Steps, Table, Note } from "@/components/guide";
 
-export const metadata: Metadata = { alternates: { canonical: "/guides/buy-vs-lease" } };
+export const metadata: Metadata = {
+  title: "קנייה או ליסינג: מה משתלם יותר? מדריך למתחילים | CarCalc",
+  description:
+    "מה ההבדל בין ליסינג תפעולי, ליסינג מימוני ומימון, מה באמת עולה כסף ברכב, ודוגמה מלאה במספרים. מדריך בשפה פשוטה.",
+  alternates: { canonical: "/guides/buy-vs-lease" },
+};
 
 export default async function BuyVsLeasePage() {
   const cookieStore = await cookies();
@@ -13,382 +17,430 @@ export default async function BuyVsLeasePage() {
   const isHe = locale === "he";
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12">
-      <ArticleJsonLd
-        locale={locale}
-        path="/guides/buy-vs-lease"
-        headline={isHe ? "קנייה מול ליסינג — מה באמת משתלם?" : "Buying vs Leasing — What Really Saves You More?"}
-        description={isHe ? "השוואה בין קניית רכב לבין ליסינג תפעולי בישראל — יתרונות, חסרונות ואיך מחליטים." : "Buying a car vs. operational leasing in Israel — pros, cons and how to decide."}
-      />
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-6">
-        {isHe
-          ? "קנייה מול ליסינג — מה באמת משתלם?"
-          : "Buying vs Leasing — What Really Saves You More?"}
-      </h1>
+    <GuideShell
+      locale={locale}
+      path="/guides/buy-vs-lease"
+      illustration="buy-vs-lease"
+      title={isHe ? "קנייה או ליסינג: מה ההבדל, ומה משתלם יותר?" : "Buying or leasing: what’s the difference, and which costs less?"}
+      description={
+        isHe
+          ? "ההבדל בין ליסינג תפעולי, ליסינג מימוני ומימון, מה באמת עולה כסף ברכב, ודוגמה מלאה במספרים."
+          : "Operating lease, finance lease and car loans explained, what a car really costs, and a full worked example."
+      }
+    >
+      {isHe ? (
+        <>
+          <p>
+            רוב האנשים משווים בין קנייה לליסינג לפי התשלום החודשי. זו ההשוואה הלא נכונה. תשלום חודשי נמוך
+            יכול להסתיר עסקה יקרה, ותשלום גבוה יכול לכלול דברים שבקנייה הייתם משלמים עליהם בנפרד.
+          </p>
+          <p>
+            מה שצריך להשוות הוא כמה כסף יצא לכם מהכיס בסוף התקופה, אחרי שמחשבים את הכול: מה שילמתם, ומה נשאר
+            לכם ביד. המדריך הזה מסביר את המושגים, מראה מה נכנס לחשבון, ועובר על דוגמה אחת מההתחלה ועד הסוף.
+          </p>
 
-      <GuideHero illustration="buy-vs-lease" />
+          <CalcLink>כבר יש לכם הצעות מחיר? דלגו ישר למחשבון</CalcLink>
 
-      <div className="prose prose-zinc dark:prose-invert prose-sm max-w-none space-y-4 text-zinc-600 dark:text-zinc-400">
-        {isHe ? (
-          <>
-            {/* --- Section 1 --- */}
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              מה ההבדל בין קנייה לליסינג?
-            </h2>
-            <p>
-              כשאתם רוכשים רכב, הוא שלכם לכל דבר ועניין. אתם משלמים את מלוא
-              המחיר — בין אם במזומן, בהעברה בנקאית או באמצעות הלוואה — ומקבלים
-              בעלות מלאה על הרכב. מרגע הרכישה, הרכב מאבד מערכו (פחת), אך הוא
-              נשאר אצלכם עד שתחליטו למכור אותו. אתם אחראים על הביטוח, הטיפולים,
-              הטסט, ההרשמה וכל ההוצאות הנלוות. היתרון הגדול: אחרי שהרכב נפרע,
-              אין יותר תשלומים חודשיים, והרכב ממשיך לשרת אתכם.
-            </p>
-            <p>
-              בליסינג, לעומת זאת, אתם לא הבעלים של הרכב. אתם משלמים תשלום חודשי
-              קבוע לחברת הליסינג, ובתמורה מקבלים רכב לשימוש לתקופה מוגדרת —
-              בדרך כלל 3 עד 4 שנים. בתום התקופה, אתם מחזירים את הרכב ויכולים
-              לקחת רכב חדש. בליסינג תפעולי, התשלום החודשי כולל בדרך כלל ביטוח
-              מקיף וצד ג׳, טיפולים שוטפים, רכב חלופי במקרה של תקלה, וטסט שנתי.
-              מבחינת תזרים מזומנים, אין צורך בהון עצמי גבוה — אלא רק בתשלום
-              חודשי קבוע וידוע מראש.
-            </p>
+          <Terms
+            title="המושגים, בשפה פשוטה"
+            items={[
+              ["קנייה במזומן", "משלמים את כל מחיר הרכב מהכסף שלכם. הרכב שלכם, ואין תשלומים חודשיים."],
+              [
+                "מימון (הלוואה לרכב)",
+                "קונים את הרכב, אבל חלק מהמחיר מגיע מהלוואה: מהבנק, מחברת מימון או דרך הסוכנות. הרכב שלכם, ואתם מחזירים את ההלוואה בתשלומים חודשיים עם ריבית. לרוב הרכב משועבד למלווה עד שמסיימים לשלם.",
+              ],
+              [
+                "ליסינג תפעולי",
+                "שכירות של רכב לתקופה ארוכה, בדרך כלל שנתיים עד ארבע שנים. הרכב רשום על שם חברת הליסינג. משלמים סכום חודשי קבוע, שכולל בדרך כלל טיפולים, ביטוחים ואגרת רישוי. בסוף התקופה מחזירים את הרכב, ולא נשאר לכם ממנו כלום.",
+              ],
+              ["ליסינג פרטי", "ליסינג תפעולי שאדם פרטי לוקח בעצמו, ולא דרך מקום העבודה. אותו רעיון בדיוק."],
+              [
+                "ליסינג מימוני",
+                "למרות השם, זו בעצם דרך לממן קנייה. חברת הליסינג קונה את הרכב, ואתם משלמים לה תשלומים חודשיים. בסוף התקופה הרכב עובר לבעלותכם, לפעמים אחרי תשלום אחרון גדול. הטיפולים, הביטוח וירידת הערך עליכם, כמו בקנייה רגילה.",
+              ],
+              [
+                "רכב צמוד מהעבודה",
+                "רכב שהמעסיק מעמיד לרשותכם, בדרך כלל בליסינג תפעולי שהוא משלם. אתם משלמים על זה מס דרך התלוש, מה שנקרא שווי שימוש.",
+              ],
+              [
+                "פחת",
+                "הסכום שהרכב מאבד מערכו עם הזמן. קניתם ב-150,000 ₪ ומכרתם אחרי שלוש שנים ב-100,000 ₪? הפחת עלה לכם 50,000 ₪.",
+              ],
+              ["ערך שארית", "כמה הרכב שווה בסוף התקופה. זה הכסף שחוזר אליכם כשמוכרים."],
+              ["מקדמה", "תשלום חד-פעמי בתחילת עסקת ליסינג. היא חלק מהמחיר, ולא מקבלים אותה בחזרה."],
+              [
+                "מגבלת קילומטרים",
+                "כמה מותר לנסוע בשנה לפי חוזה הליסינג, למשל 15,000 או 20,000 ק״מ. על כל קילומטר מעבר לזה משלמים תוספת.",
+              ],
+              ["השתתפות עצמית", "הסכום שאתם משלמים מהכיס בכל תביעת ביטוח, גם כשיש ביטוח מקיף."],
+              [
+                "עלות ההזדמנות",
+                "מה שהכסף שלכם היה מרוויח אילו לא היה תקוע ברכב. מי ששם 150,000 ₪ על רכב מוותר על הרווח שהיה מקבל מהשקעה של אותו סכום.",
+              ],
+            ]}
+          />
 
-            {/* --- Section 2 --- */}
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              מתי קנייה משתלמת יותר?
-            </h2>
-            <p>
-              קנייה תהיה לרוב הבחירה הנכונה כשמתקיימים כמה תנאים: ראשית, כשמחיר
-              הרכב נמוך יחסית — למשל, רכב שעולה עד 150,000 ₪. ככל שהרכב זול
-              יותר, כך הפער בין עלות הקנייה הכוללת לעלות הליסינג הכוללת גדל
-              לטובת הקנייה. שנית, כשיש לכם הון עצמי מספיק ואתם לא צריכים לקחת
-              הלוואה — או לפחות הלוואה קטנה. ריבית על הלוואת רכב יכולה להוסיף
-              עשרות אלפי שקלים לעלות הכוללת.
-            </p>
-            <p>
-              שלישית, כשאתם מתכננים לשמור את הרכב לטווח ארוך — 5 שנים ומעלה.
-              הפחת הגדול ביותר מתרחש בשנתיים-שלוש הראשונות, ואחרי שהרכב כבר
-              איבד את עיקר ערכו, כל שנה נוספת שאתם נוהגים בו &quot;מפחיתה&quot;
-              את העלות השנתית הממוצעת. רביעית, כשהרכב שומר על ערך שארית (residual
-              value) גבוה — מותגים כמו טויוטה, מאזדה או סובארו ידועים בשמירת ערך
-              טובה.
-            </p>
-            <p>
-              <strong>דוגמה:</strong> רכב בשווי 80,000 ₪ עם הון עצמי — הקנייה
-              תהיה זולה בעשרות אלפי שקלים מליסינג. אם תשמרו עליו 6 שנים ותמכרו
-              ב-25,000 ₪, העלות הכוללת נטו תהיה כ-55,000 ₪ בתוספת ביטוח
-              וטיפולים. בליסינג, גם על רכב צנוע, תשלמו לפחות 2,000 ₪ לחודש —
-              כלומר 144,000 ₪ על 6 שנים.
-            </p>
+          <H2>ליסינג תפעולי, ליסינג מימוני ומימון: מי הבעלים ומי משלם על מה</H2>
+          <p>
+            שלוש האפשרויות נשמעות דומות, אבל הן שונות בשאלה אחת: של מי הרכב בסוף. מזה נגזר כל השאר.
+          </p>
+          <Table
+            head={["", "קנייה (במזומן או בהלוואה)", "ליסינג מימוני", "ליסינג תפעולי"]}
+            rows={[
+              ["של מי הרכב", "שלכם", "של חברת הליסינג עד סוף התשלומים, ואז שלכם", "של חברת הליסינג"],
+              ["מה משלמים", "את מחיר הרכב, או החזר הלוואה", "תשלום חודשי, ולפעמים תשלום גדול בסוף", "תשלום חודשי קבוע"],
+              ["טיפולים וביטוח", "עליכם", "עליכם", "בדרך כלל כלולים"],
+              ["מי סופג את ירידת הערך", "אתם", "אתם", "חברת הליסינג"],
+              ["מה קורה בסוף", "הרכב נשאר אצלכם, או שמוכרים אותו", "הרכב נשאר אצלכם", "מחזירים את הרכב"],
+            ]}
+          />
+          <p>
+            מבחינת הכסף, ליסינג מימוני דומה מאוד לקנייה בהלוואה. לכן ההתלבטות האמיתית היא בין שתי אפשרויות:
+            רכב שהוא שלכם (במזומן, בהלוואה או בליסינג מימוני), מול רכב ששוכרים (ליסינג תפעולי).
+          </p>
 
-            {/* --- Section 3 --- */}
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              מתי ליסינג משתלם יותר?
-            </h2>
-            <p>
-              ליסינג הופך למשתלם יותר במספר מצבים ספציפיים. ראשית, כשמדובר ברכב
-              יקר — 300,000 ₪ ומעלה. רכבים יקרים מאבדים סכומי עתק בפחת, ובמקרה
-              כזה ה&quot;סיכון&quot; של ירידת הערך עובר לחברת הליסינג במקום
-              אליכם. שנית, כשאתם אוהבים להחליף רכב כל 3 שנים — ליסינג מאפשר לכם
-              לעבור לרכב חדש בתום כל תקופה בלי להתעסק עם מכירת הרכב הישן.
-            </p>
-            <p>
-              שלישית, ואולי הסיבה המשמעותית ביותר — לבעלי עסקים ועצמאים. בישראל,
-              ניתן לנכות עד 45% מהוצאות הליסינג כהוצאה מוכרת לצורכי מס. עבור
-              עצמאי עם מס שולי גבוה, החיסכון הוא עצום. עצמאי עם מס שולי 47%
-              יכול לחסוך עד 45% מהוצאות הליסינג כהוצאה מוכרת — מה שיכול להגיע
-              לאלפי שקלים בחודש בחיסכון מס בלבד.
-            </p>
-            <p>
-              רביעית, כשאתם מעדיפים עלות חודשית קבועה וידועה מראש, ללא הפתעות.
-              בליסינג תפעולי, כמעט הכל כלול: ביטוח, טיפולים, רכב חלופי. אם משהו
-              מתקלקל — זו הבעיה של חברת הליסינג, לא שלכם. השקט הנפשי הזה שווה
-              כסף, במיוחד למי שלא רוצה להתעסק עם ניהול הרכב.
-            </p>
+          <H2>מה באמת עולה כסף ברכב</H2>
+          <p>כשקונים רכב, מחיר הרכב הוא לא העלות. העלות היא סכום של כמה דברים:</p>
+          <Bullets>
+            <li>
+              <strong>פחת.</strong> ההפרש בין המחיר שקניתם לבין המחיר שתמכרו. ברוב המקרים זו ההוצאה הכי גדולה,
+              והיא לא מופיעה באף חשבונית.
+            </li>
+            <li>
+              <strong>ריבית.</strong> אם לקחתם הלוואה, הריבית והעמלות הן תוספת למחיר הרכב.
+            </li>
+            <li>
+              <strong>ביטוח.</strong> ביטוח חובה וביטוח מקיף, כל שנה מחדש.
+            </li>
+            <li>
+              <strong>אגרת רישוי וטסט.</strong> האגרה השנתית נקבעת לפי מחיר המחירון של הרכב ושנת הייצור שלו.
+            </li>
+            <li>
+              <strong>טיפולים ותיקונים.</strong> טיפול תקופתי, צמיגים, בלמים, ומה שמתקלקל.
+            </li>
+            <li>
+              <strong>דלק או חשמל.</strong> משלמים אותם גם בקנייה וגם בליסינג.
+            </li>
+            <li>
+              <strong>הכסף שתקוע ברכב.</strong> סכום ששמתם על הרכב לא מושקע במקום אחר. זו עלות ההזדמנות.
+            </li>
+          </Bullets>
+          <p>
+            בליסינג תפעולי רוב הסעיפים האלה כבר בתוך התשלום החודשי. לכן אי אפשר להשוות את התשלום החודשי של
+            ליסינג להחזר החודשי של הלוואה. הם לא כוללים את אותם דברים.
+          </p>
 
-            {/* --- Section 4 --- */}
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              עלויות נסתרות שכדאי להכיר
-            </h2>
+          <H2>דוגמה: רכב של 150,000 ₪ לשלוש שנים</H2>
+          <p>
+            ניקח רכב בנזין חדש שעולה 150,000 ₪, 15,000 ק״מ בשנה, ושלוש שנים. את הדלק לא נחשב, כי הוא זהה בשתי
+            האפשרויות.
+          </p>
+          <Example title="אפשרות א׳: קנייה במזומן">
+            <Table
+              head={["סעיף", "עלות לשלוש שנים"]}
+              rows={[
+                ["פחת (הרכב שווה כ-101,000 ₪ בסוף)", "49,000 ₪"],
+                ["ביטוח חובה ומקיף (6,000 ₪ בשנה)", "18,000 ₪"],
+                ["אגרת רישוי", "5,800 ₪"],
+                ["טיפולים", "6,750 ₪"],
+                [<strong key="t">סך הכול</strong>, <strong key="v">כ-79,600 ₪, שהם כ-2,200 ₪ לחודש</strong>],
+              ]}
+            />
+          </Example>
+          <Example title="אפשרות ב׳: ליסינג תפעולי">
             <p>
-              בין אם אתם קונים או לוקחים ליסינג, יש עלויות שרבים מתעלמים מהן
-              ושיכולות להטות את הכף בצורה משמעותית. העלות הנסתרת הגדולה ביותר
-              בקנייה היא <strong>הפחת</strong> — ירידת ערך הרכב לאורך זמן. רכב
-              חדש מאבד בממוצע 20%-30% מערכו בשנה הראשונה בלבד, ועד 50%-60% תוך 4
-              שנים. רכב שקניתם ב-200,000 ₪ עלול להיות שווה רק 80,000 ₪ אחרי 4
-              שנים — הפרש של 120,000 ₪ שהלכו לאיבוד.
+              הצעה של 2,900 ₪ לחודש, שכוללת ביטוחים, טיפולים ואגרת רישוי. 2,900 כפול 36 חודשים הם{" "}
+              <strong>104,400 ₪</strong>.
             </p>
-            <p>
-              עלות נוספת היא <strong>ריבית על הלוואה</strong>. אם אתם ממנים את
-              הרכישה באמצעות הלוואה, הריבית יכולה להוסיף 10%-20% לעלות הכוללת,
-              תלוי בתנאים. <strong>ביטוח</strong> הוא עלות שקונים שוכחים לחשב —
-              ביטוח מקיף לרכב חדש יכול לעלות 5,000-10,000 ₪ בשנה, סכום שבליסינג
-              כבר כלול בתשלום החודשי. <strong>אגרת רישוי</strong> שנתית, טסט
-              (חובה מגיל 3 שנים), ו<strong>טיפולים שוטפים</strong> שהולכים
-              ומתייקרים ככל שהרכב מזדקן — החלפת צמיגים, בלמים, רצועת תזמון,
-              ועוד.
-            </p>
-            <p>
-              בליסינג, העלויות הנסתרות שונות: עמלת יציאה מוקדמת אם אתם רוצים
-              להפסיק לפני הזמן, חיוב על קילומטרז׳ עודף מעבר למכסה שנקבעה
-              בחוזה, ותשלום על שחיקה חריגה של הרכב בהחזרה.
-            </p>
+          </Example>
+          <p>
+            לפי החשבון הזה הקנייה זולה בכ-25,000 ₪. אבל חסר בו דבר אחד: מי שקנה שם 150,000 ₪ על הרכב. מי שלקח
+            ליסינג השאיר את הכסף אצלו. אם הכסף הזה מושקע ומרוויח 6% בשנה, אחרי שלוש שנים ומס על הרווח נוספו לו
+            כ-21,500 ₪. עכשיו הפער הוא כ-3,000 ₪ בלבד.
+          </p>
+          <p>
+            ומה אם הרכב יימכר ב-95,000 ₪ במקום 101,000 ₪? או אם הקנייה ממומנת בהלוואה בריבית של 7%? הליסינג כבר
+            יוצא זול יותר. זו הנקודה: התשובה תלויה במספרים שלכם, ושינוי קטן באחד מהם הופך את התוצאה. בשביל זה
+            בנינו את <Calc>המחשבון</Calc>.
+          </p>
 
-            {/* --- Section 5 --- */}
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              דוגמה מעשית
-            </h2>
-            <p>
-              בואו נבחן דוגמה קונקרטית: רכב במחיר מחירון 170,000 ₪. נשווה בין
-              קנייה לליסינג תפעולי לתקופה של 3 שנים.
-            </p>
-            <p>
-              <strong>ליסינג:</strong> תשלום חודשי של 3,500 ₪ למשך 36 חודשים,
-              הכולל ביטוח, טיפולים, רכב חלופי וטסט. העלות הכוללת: 3,500 × 36 =
-              126,000 ₪, בתוספת דלק (שאינו כלול). בתום התקופה, מחזירים את הרכב
-              ויוצאים נקיים.
-            </p>
-            <p>
-              <strong>קנייה:</strong> מחיר רכישה 170,000 ₪. ביטוח מקיף לשלוש
-              שנים — כ-18,000 ₪. טיפולים ואחזקה — כ-6,000 ₪. אגרות ורישוי —
-              כ-3,000 ₪. ערך שארית אחרי 3 שנים — כ-100,000 ₪. סה&quot;כ עלות
-              נטו: 170,000 + 18,000 + 6,000 + 3,000 - 100,000 = 97,000 ₪
-              בתוספת דלק. אם לקחתם הלוואה, הוסיפו ריבית של 10,000-20,000 ₪.
-            </p>
-            <p>
-              במקרה הזה, הקנייה זולה יותר — אבל רק אם יש לכם הון עצמי ואתם
-              מוכנים לקחת את הסיכון שערך השארית יהיה נמוך מהצפוי. במחשבון CarCalc
-              תוכלו להזין את הנתונים שלכם ולקבל תוצאה מדויקת, מותאמת אישית
-              למצב שלכם.
-            </p>
+          <H2>מתי קנייה בדרך כלל זולה יותר</H2>
+          <Bullets>
+            <li>כשמחזיקים את הרכב הרבה שנים. רוב ירידת הערך קורית בשנים הראשונות, וכל שנה נוספת זולה יותר.</li>
+            <li>כשקונים רכב בן שנתיים או שלוש. מישהו אחר כבר שילם על הפחת הכבד של ההתחלה.</li>
+            <li>כשיש לכם את הכסף, או שאתם מקבלים הלוואה בריבית נמוכה.</li>
+            <li>כשהדגם שומר על ערכו ונמכר בקלות.</li>
+            <li>כשאתם נוסעים הרבה, ומגבלת הקילומטרים בליסינג הייתה עולה לכם ביוקר.</li>
+          </Bullets>
 
-            {/* --- Section 6 --- */}
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              טיפ חשוב
-            </h2>
-            <p>
-              אל תשוו רק את התשלום החודשי! זו טעות נפוצה שגורמת לאנשים לקבל
-              החלטות שגויות. מה שחשוב הוא <strong>העלות הכוללת על פני כל התקופה</strong>
-              {" "} — כולל כל ההוצאות, מהראשונה ועד האחרונה.
-            </p>
-            <p>
-              בנוסף, אל תשכחו את <strong>עלות ההזדמנות</strong> (opportunity
-              cost). כסף שקשור ברכב — בין אם שילמתם 170,000 ₪ במזומן ובין אם
-              אתם מחזירים הלוואה — הוא כסף שהיה יכול לעבוד בשבילכם. השקעה של
-              170,000 ₪ בתשואה שנתית ממוצעת של 7% תניב כ-38,000 ₪ תוך 3 שנים.
-              זה סכום שצריך לקחת בחשבון כשמשווים בין קנייה לליסינג.
-            </p>
-            <p>
-              לכן, ההחלטה בין קנייה לליסינג היא אישית ותלויה במצב הכלכלי שלכם,
-              בסוג הרכב, בתקופת השימוש המתוכננת, ובשאלה אם אתם עצמאים או
-              שכירים. אין תשובה אחת נכונה — אבל יש חישוב שיכול לתת לכם תשובה
-              מדויקת.
-            </p>
-          </>
-        ) : (
-          <>
-            {/* --- Section 1 --- */}
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              What Is the Difference Between Buying and Leasing?
-            </h2>
-            <p>
-              When you buy a car, it becomes your property outright. You pay the
-              full price — whether in cash, via bank transfer, or through an auto
-              loan — and receive complete ownership. From the moment you drive it
-              off the lot, the car begins to depreciate, but it stays with you
-              until you decide to sell. You are responsible for insurance,
-              maintenance, annual inspections, registration, and every other
-              associated expense. The major upside: once the car is fully paid
-              off, there are no more monthly payments, and the vehicle continues
-              to serve you for as long as you keep it.
-            </p>
-            <p>
-              With leasing, on the other hand, you never own the car. You make a
-              fixed monthly payment to the leasing company and, in return, get to
-              use a vehicle for a defined period — typically 3 to 4 years. At the
-              end of the term, you return the car and can pick up a new one. In
-              an operating lease, the monthly payment usually covers
-              comprehensive and third-party insurance, routine maintenance, a
-              replacement car in case of breakdowns, and annual inspections. From
-              a cash-flow perspective, there is no need for a large down
-              payment — just a predictable, fixed monthly cost.
-            </p>
+          <H2>מתי ליסינג שווה את הכסף</H2>
+          <Bullets>
+            <li>כשאתם מחליפים רכב כל שלוש שנים בכל מקרה. אז אתם משלמים את הפחת הכבד שוב ושוב גם בקנייה.</li>
+            <li>כשאין לכם הון עצמי, והחלופה היא הלוואה יקרה.</li>
+            <li>כשהכסף שלכם מושקע ומרוויח יותר ממה שהליסינג עולה לכם.</li>
+            <li>כשאתם לא רוצים סיכון: לא הפתעות במוסך, ולא שאלה בכמה הרכב יימכר.</li>
+            <li>
+              כשאתם עוסק מורשה. לעצמאים יש שיקולי מס שמשנים את החשבון, ועליהם יש{" "}
+              <a href="/guides/tax-benefits" className="font-bold text-ink underline underline-offset-4">מדריך נפרד</a>.
+            </li>
+          </Bullets>
 
-            {/* --- Section 2 --- */}
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              When Does Buying Save You More?
-            </h2>
-            <p>
-              Buying is usually the smarter choice when several conditions are
-              met. First, when the car is relatively affordable — say, under
-              150,000 ILS (roughly $40,000). The cheaper the car, the larger the
-              gap between total buying cost and total leasing cost in favor of
-              buying. Second, when you have enough cash on hand and do not need a
-              loan — or at least only a small one. Interest on a car loan can add
-              tens of thousands of shekels to the total cost over the life of the
-              loan.
-            </p>
-            <p>
-              Third, when you plan to keep the car long-term — 5 years or more.
-              The steepest depreciation happens in the first two to three years.
-              Once the car has already lost the bulk of its value, every
-              additional year you drive it effectively lowers your average annual
-              cost. Fourth, when the car holds a high residual value — brands
-              like Toyota, Mazda, and Subaru are known for strong resale value
-              retention.
-            </p>
-            <p>
-              <strong>Example:</strong> A car worth 80,000 ILS purchased with
-              cash will cost tens of thousands of shekels less than leasing the
-              same vehicle. If you keep it for 6 years and sell it for 25,000
-              ILS, the net total cost is roughly 55,000 ILS plus insurance and
-              maintenance. Under a lease, even a modest car costs at least 2,000
-              ILS per month — that is 144,000 ILS over 6 years.
-            </p>
+          <H2>מה לבדוק בחוזה ליסינג לפני שחותמים</H2>
+          <Bullets>
+            <li>
+              <strong>מה כלול בתשלום.</strong> ביטוח חובה? ביטוח מקיף? טיפולים? צמיגים? רכב חלופי? מה שלא כלול,
+              תשלמו בנפרד.
+            </li>
+            <li>
+              <strong>מגבלת הקילומטרים.</strong> כמה מותר לנסוע בשנה, וכמה עולה כל קילומטר נוסף.
+            </li>
+            <li>
+              <strong>ההשתתפות העצמית.</strong> כמה תשלמו על כל תאונה או נזק. בליסינג היא לפעמים גבוהה.
+            </li>
+            <li>
+              <strong>יציאה מוקדמת.</strong> מה הקנס אם תרצו להחזיר את הרכב לפני סוף החוזה.
+            </li>
+            <li>
+              <strong>נהג צעיר או חדש.</strong> האם מותר לו לנהוג, וכמה זה מוסיף.
+            </li>
+            <li>
+              <strong>החזרת הרכב.</strong> על אילו שריטות ונזקים תחויבו בסוף.
+            </li>
+            <li>
+              <strong>הצמדה למדד.</strong> האם התשלום החודשי קבוע, או שהוא עולה עם המדד.
+            </li>
+          </Bullets>
 
-            {/* --- Section 3 --- */}
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              When Does Leasing Save You More?
-            </h2>
-            <p>
-              Leasing becomes the better deal in several specific situations.
-              First, when the car is expensive — 300,000 ILS and above.
-              Expensive cars shed enormous sums in depreciation, and with a
-              lease, the risk of value loss shifts to the leasing company instead
-              of you. Second, when you like switching cars every 3 years —
-              leasing lets you move to a brand-new vehicle at the end of each
-              term without the hassle of selling the old one.
-            </p>
-            <p>
-              Third, and perhaps most significantly — for business owners and
-              self-employed professionals. In Israel, up to 45% of leasing
-              expenses can be deducted as a recognized business expense for tax
-              purposes. For a self-employed individual in a high marginal tax
-              bracket, the savings are enormous. A freelancer with a 47% marginal
-              tax rate can save up to 45% of leasing costs as a deductible
-              expense — which can amount to thousands of shekels per month in tax
-              savings alone.
-            </p>
-            <p>
-              Fourth, when you prefer a predictable, fixed monthly cost with no
-              surprises. In an operating lease, almost everything is
-              included: insurance, maintenance, a loaner car. If something
-              breaks — it is the leasing company&apos;s problem, not yours. That
-              peace of mind is worth real money, especially for those who do not
-              want to deal with vehicle management.
-            </p>
+          <H2>איך משווים נכון, בארבעה צעדים</H2>
+          <Steps>
+            <li>בקשו הצעת מחיר לליסינג והצעת מחיר לקנייה, עדיף לאותו רכב בדיוק.</li>
+            <li>בדקו מה הליסינג כולל, ובקשו הצעות לביטוח חובה ומקיף למקרה של קנייה.</li>
+            <li>השוו לאותה תקופה: אורך חוזה הליסינג.</li>
+            <li>
+              הזינו את הכול ב<Calc>מחשבון</Calc>. הוא מחשב את הפחת, האגרות, הריבית ועלות ההזדמנות, ומראה כמה כל
+              אפשרות עולה בסך הכול ולחודש.
+            </li>
+          </Steps>
 
-            {/* --- Section 4 --- */}
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              Hidden Costs You Should Know About
-            </h2>
-            <p>
-              Whether you buy or lease, there are costs many people overlook that
-              can tip the scales significantly. The biggest hidden cost of buying
-              is <strong>depreciation</strong> — the car&apos;s loss of value over
-              time. A new car loses an average of 20%-30% of its value in the
-              first year alone, and up to 50%-60% within 4 years. A car you
-              bought for 200,000 ILS could be worth only 80,000 ILS after 4
-              years — a 120,000 ILS difference that has simply evaporated.
-            </p>
-            <p>
-              Another cost is <strong>loan interest</strong>. If you finance the
-              purchase through a loan, the interest can add 10%-20% to the total
-              cost, depending on the terms. <strong>Insurance</strong> is a cost
-              buyers often forget to factor in — comprehensive insurance for a
-              new car can run 5,000-10,000 ILS per year, an amount that is
-              already bundled into the monthly lease payment.{" "}
-              <strong>Annual registration fees</strong>, safety inspections
-              (mandatory from age 3), and{" "}
-              <strong>routine maintenance</strong> that gets progressively more
-              expensive as the car ages — tires, brakes, timing belts, and
-              more — all add up.
-            </p>
-            <p>
-              On the leasing side, hidden costs take a different form: early
-              termination fees if you want to exit the contract before it ends,
-              excess mileage charges beyond the allowance set in the agreement,
-              and charges for abnormal wear and tear when you return the car.
-            </p>
+          <Note>
+            המספרים בדוגמה הם הערכות לצורך המחשה. מחירי ביטוח, ליסינג וריבית משתנים מאדם לאדם ומחודש לחודש.
+          </Note>
 
-            {/* --- Section 5 --- */}
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              A Practical Example
-            </h2>
-            <p>
-              Let us look at a concrete example: a car with a list price of
-              170,000 ILS. We will compare buying versus an operating lease over
-              a 3-year period.
-            </p>
-            <p>
-              <strong>Leasing:</strong> A monthly payment of 3,500 ILS for 36
-              months, covering insurance, maintenance, a loaner car, and
-              inspections. Total cost: 3,500 &times; 36 = 126,000 ILS, plus fuel
-              (which is not included). At the end of the term, you return the car
-              and walk away clean.
-            </p>
-            <p>
-              <strong>Buying:</strong> Purchase price of 170,000 ILS.
-              Comprehensive insurance over three years — roughly 18,000 ILS.
-              Maintenance and upkeep — roughly 6,000 ILS. Fees and
-              registration — roughly 3,000 ILS. Residual value after 3
-              years — approximately 100,000 ILS. Net total cost: 170,000 +
-              18,000 + 6,000 + 3,000 - 100,000 = 97,000 ILS, plus fuel. If you
-              took out a loan, add 10,000-20,000 ILS in interest.
-            </p>
-            <p>
-              In this case, buying is cheaper — but only if you have the cash up
-              front and are willing to accept the risk that the residual value
-              may be lower than expected. In the CarCalc calculator, you can
-              enter your own numbers and get a precise result tailored to your
-              personal situation.
-            </p>
+          <CalcCta
+            title="מה משתלם יותר במקרה שלכם?"
+            text="הזינו את הצעות המחיר שקיבלתם, והמחשבון יראה כמה תעלה כל אפשרות בסך הכול ולחודש."
+            button="למחשבון"
+          />
+        </>
+      ) : (
+        <>
+          <p>
+            Most people compare buying and leasing by the monthly payment. That is the wrong comparison. A low
+            monthly payment can hide an expensive deal, and a high one can include things you would pay for
+            separately if you bought.
+          </p>
+          <p>
+            What you should compare is how much money has left your pocket by the end of the period, counting
+            what you paid and what you still hold. This guide explains the terms, shows what goes into the
+            sum, and walks through one example from start to finish.
+          </p>
 
-            {/* --- Section 6 --- */}
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              An Important Tip
-            </h2>
-            <p>
-              Do not just compare the monthly payment! This is a common mistake
-              that leads people to make poor decisions. What truly matters is the{" "}
-              <strong>total cost over the entire period</strong> — including
-              every expense from start to finish.
-            </p>
-            <p>
-              In addition, do not forget about{" "}
-              <strong>opportunity cost</strong>. Money tied up in a car — whether
-              you paid 170,000 ILS in cash or are repaying a loan — is money
-              that could be working for you elsewhere. An investment of 170,000
-              ILS at an average annual return of 7% would yield roughly 38,000
-              ILS over 3 years. That is a sum you need to account for when
-              comparing buying versus leasing.
-            </p>
-            <p>
-              Ultimately, the decision between buying and leasing is personal. It
-              depends on your financial situation, the type of car, your planned
-              ownership period, and whether you are self-employed or salaried.
-              There is no single right answer — but there is a calculation that
-              can give you a precise one.
-            </p>
-          </>
-        )}
-      </div>
+          <CalcLink>Already have quotes? Go straight to the calculator</CalcLink>
 
-      {/* --- Callout Box --- */}
-      <div className="mt-8 rounded-xl border border-brand-200 bg-brand-50 p-6 dark:border-brand-900 dark:bg-brand-950/30">
-        <p className="font-semibold text-brand-800 dark:text-brand-300">
-          {isHe
-            ? "רוצים לבדוק מה משתלם יותר במקרה שלכם?"
-            : "Want to check what saves more in your case?"}
-        </p>
-        <p className="mt-1 text-brand-700 dark:text-brand-400">
-          <a href="/" className="underline hover:no-underline">
-            {isHe
-              ? "הזינו את הנתונים שלכם במחשבון CarCalc וגלו תוך דקות"
-              : "Enter your details in CarCalc and find out in minutes"}
-          </a>
-        </p>
-      </div>
-    </main>
+          <Terms
+            title="The terms, in plain language"
+            items={[
+              ["Buying with cash", "You pay the full price from your own money. The car is yours and there are no monthly payments."],
+              [
+                "Financing (a car loan)",
+                "You buy the car, but part of the price comes from a loan: a bank, a finance company or the dealership. The car is yours and you repay the loan monthly, with interest. The lender usually holds a lien on the car until you finish paying.",
+              ],
+              [
+                "Operating lease (ליסינג תפעולי)",
+                "A long-term rental, usually two to four years. The car is registered to the leasing company. You pay a fixed monthly amount that normally covers servicing, insurance and the registration fee. At the end you hand the car back and keep nothing.",
+              ],
+              ["Private lease", "An operating lease taken by an individual rather than through an employer. Same idea."],
+              [
+                "Finance lease (ליסינג מימוני)",
+                "Despite the name, this is a way to finance a purchase. The leasing company buys the car and you pay it monthly. At the end the car becomes yours, sometimes after a large final payment. Servicing, insurance and the loss in value are yours, as with any purchase.",
+              ],
+              [
+                "Company car",
+                "A car your employer provides, usually on an operating lease it pays for. You pay tax on it through your payslip, known as the usage value (שווי שימוש).",
+              ],
+              [
+                "Depreciation",
+                "The value the car loses over time. Bought for 150,000 ILS and sold three years later for 100,000 ILS? Depreciation cost you 50,000 ILS.",
+              ],
+              ["Residual value", "What the car is worth at the end of the period. This is the money you get back when you sell."],
+              ["Down payment", "A one-off payment at the start of a lease. It is part of the price and you do not get it back."],
+              [
+                "Mileage limit",
+                "How far the lease lets you drive each year, for example 15,000 or 20,000 km. Every kilometre beyond that costs extra.",
+              ],
+              ["Deductible", "The amount you pay out of pocket on each insurance claim, even with comprehensive cover."],
+              [
+                "Opportunity cost",
+                "What your money would have earned had it not been tied up in the car. Put 150,000 ILS into a car and you give up the return on investing that sum.",
+              ],
+            ]}
+          />
+
+          <H2>Operating lease, finance lease and a loan: who owns the car and who pays for what</H2>
+          <p>The three sound alike, but they differ on one question: whose car is it at the end. Everything else follows.</p>
+          <Table
+            head={["", "Buying (cash or loan)", "Finance lease", "Operating lease"]}
+            rows={[
+              ["Who owns the car", "You", "The leasing company until you finish paying, then you", "The leasing company"],
+              ["What you pay", "The price, or loan repayments", "A monthly payment, sometimes a large final one", "A fixed monthly payment"],
+              ["Servicing and insurance", "Yours", "Yours", "Usually included"],
+              ["Who absorbs the loss in value", "You", "You", "The leasing company"],
+              ["What happens at the end", "You keep the car or sell it", "You keep the car", "You return the car"],
+            ]}
+          />
+          <p>
+            Financially, a finance lease is very close to buying with a loan. So the real choice is between two
+            options: a car that is yours (cash, loan or finance lease) and a car you rent (operating lease).
+          </p>
+
+          <H2>What a car really costs</H2>
+          <p>When you buy, the price of the car is not the cost. The cost is the sum of several things:</p>
+          <Bullets>
+            <li>
+              <strong>Depreciation.</strong> The gap between what you paid and what you sell for. Usually the
+              biggest expense, and it appears on no invoice.
+            </li>
+            <li>
+              <strong>Interest.</strong> If you took a loan, the interest and fees come on top of the price.
+            </li>
+            <li>
+              <strong>Insurance.</strong> Mandatory and comprehensive, renewed every year.
+            </li>
+            <li>
+              <strong>Registration fee and annual test.</strong> The yearly fee depends on the car’s list price
+              and year of manufacture.
+            </li>
+            <li>
+              <strong>Servicing and repairs.</strong> Routine services, tyres, brakes and whatever breaks.
+            </li>
+            <li>
+              <strong>Fuel or electricity.</strong> You pay these whether you buy or lease.
+            </li>
+            <li>
+              <strong>The money tied up in the car.</strong> Money spent on the car is not invested elsewhere.
+              That is the opportunity cost.
+            </li>
+          </Bullets>
+          <p>
+            In an operating lease most of these are already inside the monthly payment. That is why you cannot
+            compare a lease payment with a loan repayment. They do not cover the same things.
+          </p>
+
+          <H2>Example: a 150,000 ILS car over three years</H2>
+          <p>
+            Take a new petrol car at 150,000 ILS, 15,000 km a year, three years. Fuel is left out because it is
+            the same either way.
+          </p>
+          <Example title="Option A: buying with cash">
+            <Table
+              head={["Item", "Cost over three years"]}
+              rows={[
+                ["Depreciation (car worth about 101,000 ILS at the end)", "49,000 ILS"],
+                ["Mandatory and comprehensive insurance (6,000 a year)", "18,000 ILS"],
+                ["Registration fee", "5,800 ILS"],
+                ["Servicing", "6,750 ILS"],
+                [<strong key="t">Total</strong>, <strong key="v">about 79,600 ILS, roughly 2,200 a month</strong>],
+              ]}
+            />
+          </Example>
+          <Example title="Option B: operating lease">
+            <p>
+              A quote of 2,900 ILS a month, including insurance, servicing and registration. 2,900 times 36
+              months is <strong>104,400 ILS</strong>.
+            </p>
+          </Example>
+          <p>
+            On these numbers buying is about 25,000 ILS cheaper. But one thing is missing: the buyer put 150,000
+            ILS into the car. The lessee kept that money. Invested at 6% a year, after three years and tax on
+            the gain it has grown by about 21,500 ILS. Now the gap is only about 3,000 ILS.
+          </p>
+          <p>
+            What if the car sells for 95,000 ILS instead of 101,000? Or the purchase is financed at 7%
+            interest? Leasing is now cheaper. That is the point: the answer depends on your numbers, and a small
+            change in one of them flips the result. That is what <Calc>the calculator</Calc> is for.
+          </p>
+
+          <H2>When buying is usually cheaper</H2>
+          <Bullets>
+            <li>When you keep the car for many years. Most of the value is lost early, so each extra year is cheaper.</li>
+            <li>When you buy a two- or three-year-old car. Someone else already paid for the steep early depreciation.</li>
+            <li>When you have the cash, or can borrow at a low rate.</li>
+            <li>When the model holds its value and sells easily.</li>
+            <li>When you drive a lot and a lease mileage limit would cost you dearly.</li>
+          </Bullets>
+
+          <H2>When leasing is worth the money</H2>
+          <Bullets>
+            <li>When you change cars every three years anyway. Then you pay the steep early depreciation again and again even when buying.</li>
+            <li>When you have no savings and the alternative is an expensive loan.</li>
+            <li>When your money is invested and earns more than the lease costs you.</li>
+            <li>When you want no risk: no garage surprises and no question about the resale price.</li>
+            <li>
+              When you are a registered business. The self-employed have tax considerations that change the sum;
+              see the{" "}
+              <a href="/guides/tax-benefits" className="font-bold text-ink underline underline-offset-4">separate guide</a>.
+            </li>
+          </Bullets>
+
+          <H2>What to check in a lease contract before signing</H2>
+          <Bullets>
+            <li>
+              <strong>What the payment includes.</strong> Mandatory insurance? Comprehensive? Servicing? Tyres?
+              A replacement car? Whatever is not included, you pay separately.
+            </li>
+            <li>
+              <strong>The mileage limit.</strong> How far you may drive each year, and the price of each extra kilometre.
+            </li>
+            <li>
+              <strong>The deductible.</strong> What you pay on each accident or damage claim. In leases it can be high.
+            </li>
+            <li>
+              <strong>Early exit.</strong> The penalty for returning the car before the contract ends.
+            </li>
+            <li>
+              <strong>Young or new drivers.</strong> Whether they may drive, and what it adds.
+            </li>
+            <li>
+              <strong>Returning the car.</strong> Which scratches and damage you will be charged for.
+            </li>
+            <li>
+              <strong>Index linkage.</strong> Whether the payment is fixed or rises with the consumer price index.
+            </li>
+          </Bullets>
+
+          <H2>How to compare properly, in four steps</H2>
+          <Steps>
+            <li>Get a lease quote and a purchase quote, ideally for exactly the same car.</li>
+            <li>Check what the lease includes, and get mandatory and comprehensive insurance quotes for the purchase.</li>
+            <li>Compare over the same period: the length of the lease contract.</li>
+            <li>
+              Enter everything in <Calc>the calculator</Calc>. It works out depreciation, fees, interest and
+              opportunity cost, and shows what each option costs in total and per month.
+            </li>
+          </Steps>
+
+          <Note>
+            The numbers in the example are estimates for illustration. Insurance, lease and interest prices vary
+            from person to person and month to month.
+          </Note>
+
+          <CalcCta
+            title="Which is cheaper in your case?"
+            text="Enter the quotes you received and the calculator shows what each option costs in total and per month."
+            button="Open the calculator"
+          />
+        </>
+      )}
+    </GuideShell>
   );
 }

@@ -2,10 +2,14 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { defaultLocale } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
-import GuideHero from "@/components/GuideHero";
-import ArticleJsonLd from "@/components/ArticleJsonLd";
+import { GuideShell, H2, Calc, CalcLink, CalcCta, Terms, Example, Bullets, Table, Note, Ref } from "@/components/guide";
 
-export const metadata: Metadata = { alternates: { canonical: "/guides/depreciation" } };
+export const metadata: Metadata = {
+  title: "פחת וירידת ערך רכב: טבלה לפי שנים וסוג הנעה | CarCalc",
+  description:
+    "כמה רכב מאבד מערכו כל שנה? טבלת ירידת ערך לבנזין, היברידי וחשמלי, דוגמה בשקלים, ומה ההבדל בין פחת לירידת ערך אחרי תאונה.",
+  alternates: { canonical: "/guides/depreciation" },
+};
 
 export default async function DepreciationGuidePage() {
   const cookieStore = await cookies();
@@ -13,389 +17,351 @@ export default async function DepreciationGuidePage() {
   const isHe = locale === "he";
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12">
-      <ArticleJsonLd
-        locale={locale}
-        path="/guides/depreciation"
-        headline={isHe ? "איך מחשבים פחת רכב בישראל" : "How Car Depreciation Works in Israel"}
-        description={isHe ? "איך מחושב פחת רכב ומה משפיע על שווי המכירה — קילומטראז', ידיים וליסינג." : "How car depreciation is calculated and what affects resale value in Israel."}
-      />
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-6">
-        {isHe
-          ? "איך מחשבים פחת רכב בישראל"
-          : "How Car Depreciation Works in Israel"}
-      </h1>
+    <GuideShell
+      locale={locale}
+      path="/guides/depreciation"
+      illustration="depreciation"
+      title={isHe ? "פחת רכב: כמה הרכב מאבד מערכו כל שנה" : "Car depreciation: how much value a car loses each year"}
+      description={
+        isHe
+          ? "טבלת ירידת ערך לפי שנים וסוג הנעה, דוגמה בשקלים, ומה משפיע על שווי הרכב."
+          : "A year-by-year depreciation table by powertrain, a worked example, and what affects a car’s value."
+      }
+    >
+      {isHe ? (
+        <>
+          <p>
+            פחת הוא ההוצאה הכי גדולה ברכב, והיחידה שלא רואים. על דלק משלמים בתחנה, על ביטוח פעם בשנה. על הפחת
+            משלמים רק ביום שמוכרים את הרכב ומגלים כמה הוא שווה.
+          </p>
+          <p>
+            המדריך הזה מסביר מה זה פחת, כמה רכב מאבד מערכו בכל שנה, ומה גורם לרכב אחד לשמור על ערכו ולאחר
+            לאבד אותו מהר.
+          </p>
 
-      <GuideHero illustration="depreciation" />
+          <CalcLink>רוצים לדעת כמה הרכב שלכם יהיה שווה בעוד כמה שנים? למחשבון</CalcLink>
 
-      <div className="prose prose-zinc dark:prose-invert prose-sm max-w-none space-y-4 text-zinc-600 dark:text-zinc-400">
-        {isHe ? (
-          <>
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              מה זה פחת רכב?
-            </h2>
-            <p>
-              פחת רכב מתאר את הירידה בשווי הרכב לאורך זמן. ברגע שאתם נוסעים
-              ברכב חדש מהסוכנות, ערכו יורד באופן מיידי — ולעיתים קרובות מדובר
-              בירידה של אלפי שקלים כבר ביום הראשון. פחת הוא העלות הגדולה ביותר
-              בבעלות על רכב, ובמקרים רבים הוא עולה על עלויות הדלק והביטוח
-              ביחד. רוב הנהגים לא מודעים לכך, כי מדובר בעלות &quot;שקטה&quot;
-              — אתם לא משלמים אותה מדי חודש, אבל היא מצטברת לסכומים
-              משמעותיים כשאתם מוכרים את הרכב.
-            </p>
-            <p>
-              הבנת הפחת חשובה במיוחד כשאתם משווים בין קנייה ללקיחת ליסינג,
-              או כשאתם מתלבטים בין רכב חדש לרכב יד שנייה. ככל שתבינו טוב יותר
-              כמה הרכב שלכם צפוי לאבד מערכו, כך תוכלו לקבל החלטות
-              כלכליות חכמות יותר.
-            </p>
+          <Terms
+            title="המושגים, בשפה פשוטה"
+            items={[
+              [
+                "פחת",
+                "הירידה בשווי הרכב עם הזמן והשימוש. מחשבים אותו כך: המחיר שקניתם, פחות המחיר שתמכרו.",
+              ],
+              [
+                "ירידת ערך",
+                "בשפה היומיומית זה אותו דבר כמו פחת. בעולם הביטוח זה מונח אחר: הפגיעה בשווי של רכב אחרי תאונה, גם אם תוקן. שמאי קובע אותה באחוזים, והיא נרשמת בהיסטוריה של הרכב.",
+              ],
+              [
+                "מחיר מחירון",
+                "המחיר הרשמי של רכב חדש אצל היבואן. לפיו נקבעות אגרת הרישוי ושווי השימוש, גם שנים אחרי שהרכב נמכר.",
+              ],
+              [
+                "מחירון רכב משומש",
+                "הערכה מקובלת של שווי רכב משומש לפי דגם, שנה, קילומטראז׳ והיסטוריה. המוכר ביותר בישראל הוא מחירון לוי יצחק. זו נקודת פתיחה למשא ומתן, לא מחיר מחייב.",
+              ],
+              ["יד", "מספר הבעלים שהיו לרכב. יד ראשונה היא הבעלים הראשון. ככל שהיד גבוהה יותר, השווי יורד."],
+              ["ערך שארית", "כמה הרכב שווה בסוף התקופה שאתם בודקים. מחיר הקנייה פחות ערך השארית הוא הפחת."],
+              [
+                "פחת לצורכי מס",
+                "מונח חשבונאי של עסקים: החלק ממחיר הרכב שמותר להכיר בו כהוצאה בכל שנה. זה לא קשור לשווי האמיתי של הרכב בשוק.",
+              ],
+            ]}
+          />
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              שיעורי פחת לפי סוג דלק
-            </h2>
-            <p>
-              בישראל נהוגים שיעורי פחת סטנדרטיים שמשתנים בהתאם לסוג המנוע
-              ולגיל הרכב. ההבדל בין סוגי הדלק משמעותי ויכול להגיע לעשרות
-              אלפי שקלים לאורך כמה שנים:
-            </p>
-            <p>
-              <strong>רכב בנזין, דיזל או היברידי:</strong>
-            </p>
-            <ul>
-              <li>שנה ראשונה: 15% פחת</li>
-              <li>שנה שנייה: 12% פחת</li>
-              <li>שנה שלישית ואילך: 10% פחת בכל שנה</li>
-            </ul>
-            <p>
-              <strong>רכב חשמלי:</strong>
-            </p>
-            <ul>
-              <li>שנה ראשונה: 25% פחת</li>
-              <li>שנה שנייה: 20% פחת</li>
-              <li>שנה שלישית ואילך: 15% פחת בכל שנה</li>
-            </ul>
-            <p>
-              למה רכבים חשמליים מאבדים ערך מהר יותר? הסיבות העיקריות הן
-              חוסר ודאות לגבי אורך חיי הסוללה, טכנולוגיה שמתפתחת במהירות
-              (דגמים חדשים עם טווח נסיעה ארוך יותר יוצאים כל שנה), וירידה
-              בערך הסוללה עם הזמן. קונים פוטנציאליים של רכב חשמלי יד שנייה
-              חוששים מעלויות החלפת סוללה, שעלולות להגיע לעשרות אלפי שקלים,
-              ולכן הם מוכנים לשלם פחות.
-            </p>
+          <H2>טבלת ירידת ערך לפי שנים</H2>
+          <p>
+            הטבלה מראה כמה אחוזים ממחיר הקנייה הרכב עדיין שווה בסוף כל שנה. אלה ממוצעים שהמחשבון שלנו משתמש
+            בהם. רכב מסוים יכול להיות מעל או מתחת, לפי הדגם והמצב שלו.
+          </p>
+          <Table
+            head={["סוג הנעה", "אחרי שנה", "אחרי שנתיים", "אחרי 3 שנים", "אחרי 4 שנים", "אחרי 5 שנים"]}
+            rows={[
+              ["בנזין או דיזל", "85%", "75%", "67%", "61%", "55%"],
+              ["היברידי", "87%", "77%", "70%", "64%", "58%"],
+              ["פלאג-אין", "82%", "71%", "62%", "55%", "48%"],
+              ["חשמלי", "78%", "64%", "56%", "48%", "42%"],
+            ]}
+          />
+          <p>
+            שני דברים בולטים בטבלה. הראשון: השנה הראשונה היא היקרה ביותר, ואחריה הקצב נרגע. השני: רכב חשמלי
+            מאבד ערך מהר יותר מרכב בנזין, ורכב היברידי רגיל שומר על ערכו הכי טוב.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              דוגמה מספרית
-            </h2>
-            <p>
-              נניח שקניתם רכב חדש במחיר 200,000 ש&quot;ח. הנה איך הפחת
-              עובד בפועל:
-            </p>
-            <p>
-              <strong>רכב בנזין (200,000 ש&quot;ח):</strong>
-            </p>
-            <ul>
-              <li>אחרי שנה 1: 200,000 × (1 − 0.15) = 170,000 ש&quot;ח</li>
-              <li>אחרי שנה 2: 170,000 × (1 − 0.12) = 149,600 ש&quot;ח</li>
-              <li>אחרי שנה 3: 149,600 × (1 − 0.10) = 134,640 ש&quot;ח</li>
-            </ul>
-            <p>
-              סה&quot;כ ירידת ערך: 65,360 ש&quot;ח — כלומר 33% מהמחיר
-              המקורי נעלמו תוך שלוש שנים בלבד!
-            </p>
-            <p>
-              <strong>רכב חשמלי (200,000 ש&quot;ח):</strong>
-            </p>
-            <ul>
-              <li>אחרי שנה 1: 200,000 × (1 − 0.25) = 150,000 ש&quot;ח</li>
-              <li>אחרי שנה 2: 150,000 × (1 − 0.20) = 120,000 ש&quot;ח</li>
-              <li>אחרי שנה 3: 120,000 × (1 − 0.15) = 102,000 ש&quot;ח</li>
-            </ul>
-            <p>
-              סה&quot;כ ירידת ערך: 98,000 ש&quot;ח — כמעט 49% מהמחיר
-              המקורי! ההפרש בין רכב בנזין לחשמלי עומד על כ-32,640
-              ש&quot;ח לאורך שלוש שנים, מה שיכול להטות את הכדאיות הכלכלית
-              בצורה משמעותית.
-            </p>
+          <H2>דוגמה בשקלים: רכב של 150,000 ₪</H2>
+          <Table
+            head={["", "ביום הקנייה", "אחרי שנה", "אחרי 3 שנים", "אחרי 5 שנים"]}
+            rows={[
+              ["בנזין", "150,000 ₪", "127,500 ₪", "101,000 ₪", "81,800 ₪"],
+              ["היברידי", "150,000 ₪", "130,500 ₪", "105,700 ₪", "87,500 ₪"],
+              ["חשמלי", "150,000 ₪", "117,000 ₪", "83,500 ₪", "63,200 ₪"],
+            ]}
+          />
+          <p>
+            רכב הבנזין איבד 49,000 ₪ בשלוש שנים. זה כ-1,360 ₪ בכל חודש, יותר ממה שרוב האנשים מוציאים על דלק.
+            הרכב החשמלי איבד 66,500 ₪ באותו זמן, שהם כ-1,850 ₪ לחודש.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              פחת ברכב יד שנייה
-            </h2>
-            <p>
-              אחד היתרונות הגדולים של קניית רכב יד שנייה הוא ששיעור הפחת
-              איטי יותר. הירידה הכי חדה בערך קורה בשנים הראשונות — אחרי שהיא
-              כבר קרתה, הרכב ממשיך לרדת בערכו בקצב מתון יותר. למשל, רכב
-              בנזין בן 3 שנים יפחת בשיעור של כ-10% בשנה (השיעור של שנה
-              שלישית ואילך), לעומת 15% בשנה הראשונה של רכב חדש.
-            </p>
-            <p>
-              מבחינה כלכלית, קניית רכב בן 2-3 שנים עם קילומטראז&#39; סביר היא
-              לרוב ההחלטה החכמה ביותר: אתם נהנים מרכב שעדיין צעיר ובמצב
-              טוב, אבל מישהו אחר כבר &quot;שילם&quot; את הפחת הכבד של השנים
-              הראשונות. בנוסף, רכב יד שנייה בן מספר שנים כבר הוכיח את
-              עצמו מבחינת אמינות, כך שאתם יודעים טוב יותר למה לצפות.
-            </p>
+          <H2>למה רכב חשמלי מאבד ערך מהר יותר</H2>
+          <Bullets>
+            <li>הטכנולוגיה מתקדמת מהר. דגם בן שלוש שנים מתחרה בדגמים חדשים עם טווח ארוך יותר וטעינה מהירה יותר.</li>
+            <li>מחירי הרכבים החדשים יורדים, וזה מושך למטה גם את מחירי המשומשים.</li>
+            <li>קונים של יד שנייה חוששים ממצב הסוללה, כי החלפה שלה יקרה.</li>
+            <li>הטבות המס על רכב חשמלי משתנות משנה לשנה, וכל שינוי מזיז את המחירים בשוק.</li>
+          </Bullets>
+          <p>
+            מצד שני, רכב חשמלי חוסך הרבה על אנרגיה. את החשבון המלא עשינו ב
+            <Ref to="electric-vs-gasoline">מדריך חשמלי מול בנזין</Ref>.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              איך להשתמש בפחת במחשבון CarCalc
-            </h2>
-            <p>
-              במחשבון CarCalc, שיעורי הפחת מוגדרים כברירת מחדל לפי סוג
-              הדלק, אבל אתם יכולים לשנות אותם בהתאם לרכב הספציפי שלכם.
-              אם אתם יודעים שדגם מסוים שומר על ערכו טוב יותר מהממוצע (למשל
-              טויוטה קורולה או מאזדה 3), הורידו את אחוזי הפחת. אם מדובר
-              בדגם שידוע כמאבד ערך מהר (למשל דגמים יוקרתיים מסוימים),
-              העלו את האחוזים בהתאם.
-            </p>
-            <p>
-              במחשבון CarCalc ניתן לשנות את שיעורי הפחת בעמוד התוצאות —
-              לחצו על &quot;התאמת פחת&quot; ושנו את האחוזים לפי הניסיון
-              שלכם. התאמה זו מאפשרת לכם לקבל תמונה מדויקת יותר של העלות
-              האמיתית של הרכב לאורך זמן, ולהשוות בצורה הוגנת יותר בין
-              אפשרויות שונות.
-            </p>
+          <H2>מה מוריד את שווי הרכב, מעבר לגיל</H2>
+          <Bullets>
+            <li>
+              <strong>קילומטראז׳.</strong> הממוצע בישראל הוא בערך 15,000 ק״מ בשנה. רכב שנסע הרבה יותר שווה
+              פחות, ורכב שנסע פחות שווה יותר.
+            </li>
+            <li>
+              <strong>מספר הידיים.</strong> כל בעלים נוסף מוריד את המחיר.
+            </li>
+            <li>
+              <strong>עבר בליסינג או בהשכרה.</strong> רכב שהיה בבעלות חברת ליסינג או השכרה נמכר בפחות מרכב
+              זהה בבעלות פרטית.
+            </li>
+            <li>
+              <strong>תאונות.</strong> רכב שעבר תאונה שווה פחות גם אחרי תיקון מושלם. פגיעה בשלדה מורידה הרבה
+              יותר מפגיעה בפח.
+            </li>
+            <li>
+              <strong>הדגם.</strong> דגמים מבוקשים ואמינים נמכרים מהר ובמחיר טוב. דגמים נדירים, יוקרתיים או
+              כאלה שהיבואן שלהם עזב את הארץ מאבדים יותר.
+            </li>
+            <li>
+              <strong>טיפולים.</strong> היסטוריית טיפולים מלאה ומתועדת שווה כסף ביום המכירה.
+            </li>
+          </Bullets>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              טיפים לשמירה על ערך הרכב
-            </h2>
+          <H2>חדש או יד שנייה: איפה הפחת פחות כואב</H2>
+          <p>
+            מי שקונה רכב חדש משלם את השנים היקרות ביותר. מי שקונה רכב בן שלוש נכנס אחרי שהירידה החדה כבר
+            קרתה.
+          </p>
+          <Example title="אותו רכב, שני קונים">
             <p>
-              אמנם לא ניתן למנוע פחת לחלוטין, אבל יש כמה דברים שתוכלו
-              לעשות כדי למזער אותו ולשמור על ערך הרכב גבוה ככל האפשר:
+              <strong>קונה א׳</strong> קונה רכב בנזין חדש ב-150,000 ₪ ומוכר אחרי שלוש שנים ב-101,000 ₪. הפחת
+              עלה לו 49,000 ₪.
             </p>
-            <ul>
-              <li>
-                <strong>תחזוקה שוטפת:</strong> הקפידו על טיפולים במועד לפי
-                הוראות היצרן. רכב מטופל שווה יותר.
-              </li>
-              <li>
-                <strong>קילומטראז&#39; נמוך:</strong> ככל שנוסעים פחות, הרכב
-                שומר על ערכו טוב יותר. הממוצע בישראל הוא כ-15,000 ק&quot;מ
-                בשנה — אם אתם מתחת לזה, יש לכם יתרון.
-              </li>
-              <li>
-                <strong>שמרו על פנקס טיפולים:</strong> תיעוד מלא של כל
-                הטיפולים מעלה את הביטחון של הקונה ואת שווי הרכב.
-              </li>
-              <li>
-                <strong>הימנעו מתאונות:</strong> רכב שעבר תאונה, גם אם
-                תוקן, מאבד ערך משמעותי. נהיגה זהירה משתלמת גם כלכלית.
-              </li>
-              <li>
-                <strong>בחרו צבע פופולרי:</strong> צבעים כמו לבן, שחור
-                ואפור נמכרים מהר יותר ושומרים על ערכם טוב יותר מצבעים
-                חריגים.
-              </li>
-            </ul>
+            <p>
+              <strong>קונה ב׳</strong> קונה ממנו את הרכב ב-101,000 ₪ ומחזיק בו שלוש שנים נוספות. בסופן הרכב
+              שווה כ-73,600 ₪. הפחת עלה לו 27,400 ₪, קצת יותר מחצי.
+            </p>
+          </Example>
+          <p>
+            המחיר של יד שנייה הוא יותר טיפולים ותיקונים, פחות אחריות יצרן, וצורך לבדוק את הרכב היטב לפני
+            הקנייה. אבל בחשבון של פחת בלבד, יד שנייה מנצחת כמעט תמיד.
+          </p>
 
-            <div className="mt-8 rounded-xl border border-brand-200 bg-brand-50 p-6 dark:border-brand-900 dark:bg-brand-950/30">
-              <p className="font-semibold text-brand-800 dark:text-brand-300">
-                רוצים לדעת כמה הרכב שלכם יאבד מערכו?
-              </p>
-              <p className="mt-1 text-brand-700 dark:text-brand-400">
-                <a href="/" className="underline hover:no-underline">
-                  נסו את המחשבון — ניתן גם לשנות את שיעורי הפחת בהתאמה
-                  אישית
-                </a>
-              </p>
-            </div>
-          </>
-        ) : (
-          <>
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              What Is Car Depreciation?
-            </h2>
-            <p>
-              Car depreciation describes how much a vehicle loses in value over
-              time. The moment you drive a new car off the dealership lot, its
-              value drops immediately — often by thousands of shekels on the
-              very first day. Depreciation is the single biggest cost of car
-              ownership, and in many cases it exceeds the combined costs of fuel
-              and insurance. Most drivers are not aware of this because it is a
-              &quot;silent&quot; cost — you do not pay it every month, but it
-              accumulates to significant amounts when you eventually sell the
-              car.
-            </p>
-            <p>
-              Understanding depreciation is especially important when you are
-              comparing buying versus leasing, or deciding between a new car
-              and a used one. The better you understand how much your car is
-              expected to lose in value, the smarter your financial decisions
-              will be.
-            </p>
+          <H2>ומה עם פחת בליסינג?</H2>
+          <p>
+            בליסינג תפעולי הרכב לא שלכם, ולכן הפחת הוא לא הבעיה שלכם. חברת הליסינג סופגת אותו, אבל היא גם
+            מתמחרת אותו מראש בתוך התשלום החודשי. במילים אחרות, אתם משלמים על הפחת בכל מקרה. ההבדל הוא שבליסינג
+            הסכום ידוע מראש, ובקנייה הוא מתברר רק כשמוכרים. על ההבדלים בין האפשרויות אפשר לקרוא ב
+            <Ref to="buy-vs-lease">מדריך קנייה מול ליסינג</Ref>.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              Depreciation Rates by Fuel Type
-            </h2>
-            <p>
-              In Israel, standard depreciation rates vary based on the engine
-              type and the age of the vehicle. The difference between fuel types
-              is substantial and can amount to tens of thousands of shekels
-              over just a few years:
-            </p>
-            <p>
-              <strong>Gasoline, Diesel, or Hybrid vehicles:</strong>
-            </p>
-            <ul>
-              <li>Year 1: 15% depreciation</li>
-              <li>Year 2: 12% depreciation</li>
-              <li>Year 3 and beyond: 10% depreciation per year</li>
-            </ul>
-            <p>
-              <strong>Electric vehicles:</strong>
-            </p>
-            <ul>
-              <li>Year 1: 25% depreciation</li>
-              <li>Year 2: 20% depreciation</li>
-              <li>Year 3 and beyond: 15% depreciation per year</li>
-            </ul>
-            <p>
-              Why do electric cars depreciate faster? The main reasons are
-              uncertainty about battery lifespan, rapidly evolving technology
-              (newer models with longer range come out every year), and
-              declining battery capacity over time. Potential buyers of a used
-              electric car worry about battery replacement costs, which can
-              reach tens of thousands of shekels, so they are willing to pay
-              less.
-            </p>
+          <H2>איך לשמור על ערך הרכב</H2>
+          <Bullets>
+            <li>עשו טיפולים בזמן, ושמרו את החשבוניות.</li>
+            <li>תקנו שריטות ומכות קטנות לפני המכירה. הן מורידות מהמחיר יותר ממה שעולה לתקן אותן.</li>
+            <li>בחרו דגם וצבע מבוקשים. לבן, אפור ושחור נמכרים הכי מהר.</li>
+            <li>שמרו על פנים הרכב נקי ולא מעושן.</li>
+          </Bullets>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              A Numerical Example
-            </h2>
-            <p>
-              Let&apos;s say you bought a new car for 200,000 ILS. Here is how
-              depreciation plays out in practice:
-            </p>
-            <p>
-              <strong>Gasoline car (200,000 ILS):</strong>
-            </p>
-            <ul>
-              <li>
-                After year 1: 200,000 &times; (1 &minus; 0.15) = 170,000 ILS
-              </li>
-              <li>
-                After year 2: 170,000 &times; (1 &minus; 0.12) = 149,600 ILS
-              </li>
-              <li>
-                After year 3: 149,600 &times; (1 &minus; 0.10) = 134,640 ILS
-              </li>
-            </ul>
-            <p>
-              Total depreciation: 65,360 ILS — that is 33% of the original
-              price gone in just three years!
-            </p>
-            <p>
-              <strong>Electric car (200,000 ILS):</strong>
-            </p>
-            <ul>
-              <li>
-                After year 1: 200,000 &times; (1 &minus; 0.25) = 150,000 ILS
-              </li>
-              <li>
-                After year 2: 150,000 &times; (1 &minus; 0.20) = 120,000 ILS
-              </li>
-              <li>
-                After year 3: 120,000 &times; (1 &minus; 0.15) = 102,000 ILS
-              </li>
-            </ul>
-            <p>
-              Total depreciation: 98,000 ILS — nearly 49% of the original
-              price! The gap between a gasoline and electric car comes to about
-              32,640 ILS over three years, which can significantly tip the
-              financial equation.
-            </p>
+          <H2>איך המחשבון מחשב פחת</H2>
+          <p>
+            <Calc>המחשבון</Calc> בוחר את קצב הפחת לפי סוג ההנעה, כמו בטבלה למעלה. ברכב יד שנייה הוא מתחשב גם
+            בגיל הרכב, בקילומטראז׳, במספר הידיים ובשאלה אם הרכב היה בליסינג. אם אתם מכירים את השוק של הדגם
+            שלכם, אפשר לשנות את האחוזים בעצמכם בעמוד התוצאות, תחת ״התאמת פחת״.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              Depreciation on Used Cars
-            </h2>
-            <p>
-              One of the biggest advantages of buying a used car is that the
-              depreciation rate is slower. The sharpest drop in value happens
-              in the first few years — once that has already occurred, the car
-              continues to lose value at a more moderate pace. For example, a
-              3-year-old gasoline car depreciates at about 10% per year (the
-              year-3-and-beyond rate), compared to 15% in the first year of a
-              new car.
-            </p>
-            <p>
-              From a financial perspective, buying a car that is 2 to 3 years
-              old with reasonable mileage is often the smartest decision: you
-              enjoy a car that is still young and in good condition, but
-              someone else has already &quot;paid&quot; the heavy depreciation
-              of the early years. Additionally, a used car that is a few years
-              old has already proven itself in terms of reliability, so you
-              have a better idea of what to expect.
-            </p>
+          <Note>
+            האחוזים במדריך הם ממוצעים כלליים ולא תחזית לרכב מסוים. לפני קנייה או מכירה כדאי לבדוק מחירון
+            עדכני ומודעות של רכבים דומים.
+          </Note>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              How to Use Depreciation in the CarCalc Calculator
-            </h2>
-            <p>
-              In the CarCalc calculator, depreciation rates are set by default
-              based on fuel type, but you can adjust them to match your
-              specific car. If you know that a particular model holds its value
-              better than average (for example, Toyota Corolla or Mazda 3),
-              lower the depreciation percentages. If the model is known to lose
-              value quickly (for instance, certain luxury brands), increase
-              the percentages accordingly.
-            </p>
-            <p>
-              In CarCalc you can change the depreciation rates on the results
-              page — click on &quot;Adjust Depreciation&quot; and modify the
-              percentages based on your experience. This customization lets you
-              get a more accurate picture of the true cost of the car over
-              time, and compare different options more fairly.
-            </p>
+          <CalcCta
+            title="כמה הפחת יעלה לכם?"
+            text="בחרו רכב במחשבון, וראו כמה הוא צפוי להיות שווה בסוף התקופה ומה העלות הכוללת מול ליסינג."
+            button="למחשבון"
+          />
+        </>
+      ) : (
+        <>
+          <p>
+            Depreciation is the biggest cost of a car, and the only one you do not see. You pay for fuel at the
+            pump and for insurance once a year. You pay for depreciation only on the day you sell and find out
+            what the car is worth.
+          </p>
+          <p>
+            This guide explains what depreciation is, how much value a car loses each year, and why one car
+            holds its value while another loses it fast.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              Tips for Preserving Your Car&apos;s Value
-            </h2>
-            <p>
-              While you cannot prevent depreciation entirely, there are several
-              things you can do to minimize it and keep your car&apos;s value
-              as high as possible:
-            </p>
-            <ul>
-              <li>
-                <strong>Regular maintenance:</strong> Follow the
-                manufacturer&apos;s service schedule. A well-maintained car is
-                worth more.
-              </li>
-              <li>
-                <strong>Low mileage:</strong> The less you drive, the better
-                the car retains its value. The average in Israel is about
-                15,000 km per year — if you are below that, you have an
-                advantage.
-              </li>
-              <li>
-                <strong>Keep service records:</strong> Complete documentation
-                of all maintenance boosts buyer confidence and increases the
-                car&apos;s worth.
-              </li>
-              <li>
-                <strong>Avoid accidents:</strong> A car that has been in an
-                accident, even if repaired, loses significant value. Careful
-                driving pays off financially too.
-              </li>
-              <li>
-                <strong>Choose a popular color:</strong> Colors like white,
-                black, and gray sell faster and hold their value better than
-                unusual colors.
-              </li>
-            </ul>
+          <CalcLink>Want to know what your car will be worth in a few years? Open the calculator</CalcLink>
 
-            <div className="mt-8 rounded-xl border border-brand-200 bg-brand-50 p-6 dark:border-brand-900 dark:bg-brand-950/30">
-              <p className="font-semibold text-brand-800 dark:text-brand-300">
-                Want to know how much your car will lose in value?
-              </p>
-              <p className="mt-1 text-brand-700 dark:text-brand-400">
-                <a href="/" className="underline hover:no-underline">
-                  Try the calculator — you can also customize depreciation
-                  rates
-                </a>
-              </p>
-            </div>
-          </>
-        )}
-      </div>
-    </main>
+          <Terms
+            title="The terms, in plain language"
+            items={[
+              ["Depreciation (פחת)", "The fall in a car’s value with time and use. It is the price you paid minus the price you sell for."],
+              [
+                "Loss of value after an accident (ירידת ערך)",
+                "In everyday Hebrew this means the same as depreciation. In insurance it is a separate term: the damage to a car’s value after an accident, even once repaired. An assessor sets it as a percentage and it stays in the car’s history.",
+              ],
+              [
+                "List price",
+                "The importer’s official price for the car when new. The registration fee and the company-car usage value are based on it, even years later.",
+              ],
+              [
+                "Used-car price guide",
+                "A standard estimate of a used car’s value by model, year, mileage and history. The best known in Israel is the Levi Yitzhak guide. It is a starting point for negotiation, not a binding price.",
+              ],
+              ["Hand (יד)", "The number of owners the car has had. First hand is the first owner. The more owners, the lower the value."],
+              ["Residual value", "What the car is worth at the end of the period you are looking at. Purchase price minus residual value is the depreciation."],
+              [
+                "Tax depreciation",
+                "A business accounting term: the share of the car’s price a business may claim as an expense each year. It has nothing to do with the car’s real market value.",
+              ],
+            ]}
+          />
+
+          <H2>Depreciation table by year</H2>
+          <p>
+            The table shows what percentage of the purchase price a car is still worth at the end of each year.
+            These are the averages our calculator uses. A particular car can be above or below them depending
+            on model and condition.
+          </p>
+          <Table
+            head={["Powertrain", "After 1 year", "After 2", "After 3", "After 4", "After 5"]}
+            rows={[
+              ["Petrol or diesel", "85%", "75%", "67%", "61%", "55%"],
+              ["Hybrid", "87%", "77%", "70%", "64%", "58%"],
+              ["Plug-in hybrid", "82%", "71%", "62%", "55%", "48%"],
+              ["Electric", "78%", "64%", "56%", "48%", "42%"],
+            ]}
+          />
+          <p>
+            Two things stand out. First, year one is the most expensive and the pace eases after that. Second,
+            an electric car loses value faster than a petrol car, and a regular hybrid holds its value best.
+          </p>
+
+          <H2>In shekels: a 150,000 ILS car</H2>
+          <Table
+            head={["", "Day of purchase", "After 1 year", "After 3 years", "After 5 years"]}
+            rows={[
+              ["Petrol", "150,000", "127,500", "101,000", "81,800"],
+              ["Hybrid", "150,000", "130,500", "105,700", "87,500"],
+              ["Electric", "150,000", "117,000", "83,500", "63,200"],
+            ]}
+          />
+          <p>
+            The petrol car lost 49,000 ILS in three years. That is about 1,360 ILS every month, more than most
+            people spend on fuel. The electric car lost 66,500 ILS in the same time, about 1,850 a month.
+          </p>
+
+          <H2>Why electric cars lose value faster</H2>
+          <Bullets>
+            <li>The technology moves quickly. A three-year-old model competes with new ones that go further and charge faster.</li>
+            <li>New-car prices are falling, which pulls used prices down too.</li>
+            <li>Second-hand buyers worry about battery condition, because replacing it is expensive.</li>
+            <li>Tax breaks on electric cars change from year to year, and each change moves market prices.</li>
+          </Bullets>
+          <p>
+            On the other hand an electric car saves a lot on energy. The full sum is in the{" "}
+            <Ref to="electric-vs-gasoline">electric vs. petrol guide</Ref>.
+          </p>
+
+          <H2>What lowers a car’s value, besides age</H2>
+          <Bullets>
+            <li>
+              <strong>Mileage.</strong> The Israeli average is roughly 15,000 km a year. A car that has done far
+              more is worth less, and one that has done less is worth more.
+            </li>
+            <li>
+              <strong>Number of owners.</strong> Each extra owner lowers the price.
+            </li>
+            <li>
+              <strong>Lease or rental history.</strong> A car that belonged to a leasing or rental company sells
+              for less than an identical privately owned one.
+            </li>
+            <li>
+              <strong>Accidents.</strong> A car that has been in an accident is worth less even after a perfect
+              repair. Chassis damage costs far more than bodywork damage.
+            </li>
+            <li>
+              <strong>The model.</strong> Popular, reliable models sell fast and well. Rare or luxury models, or
+              ones whose importer has left the country, lose more.
+            </li>
+            <li>
+              <strong>Servicing.</strong> A full, documented service history is worth money on the day you sell.
+            </li>
+          </Bullets>
+
+          <H2>New or used: where depreciation hurts less</H2>
+          <p>
+            Whoever buys new pays for the most expensive years. Whoever buys a three-year-old car comes in after
+            the steep drop has already happened.
+          </p>
+          <Example title="Same car, two buyers">
+            <p>
+              <strong>Buyer A</strong> buys a new petrol car for 150,000 ILS and sells it three years later for
+              101,000. Depreciation cost them 49,000 ILS.
+            </p>
+            <p>
+              <strong>Buyer B</strong> buys that car for 101,000 ILS and keeps it another three years, after
+              which it is worth about 73,600. Depreciation cost them 27,400 ILS, a little over half.
+            </p>
+          </Example>
+          <p>
+            The price of buying used is more servicing and repairs, less manufacturer warranty, and the need to
+            inspect the car carefully first. But on depreciation alone, used almost always wins.
+          </p>
+
+          <H2>What about depreciation when leasing?</H2>
+          <p>
+            In an operating lease the car is not yours, so depreciation is not your problem. The leasing company
+            absorbs it, but it also prices it into the monthly payment in advance. In other words you pay for
+            depreciation either way. The difference is that in a lease the amount is known up front, and when
+            buying you find out only when you sell. More on the options in the{" "}
+            <Ref to="buy-vs-lease">buying vs. leasing guide</Ref>.
+          </p>
+
+          <H2>How to protect your car’s value</H2>
+          <Bullets>
+            <li>Service it on time and keep the invoices.</li>
+            <li>Fix small scratches and dents before selling. They take more off the price than they cost to repair.</li>
+            <li>Choose a popular model and colour. White, grey and black sell fastest.</li>
+            <li>Keep the interior clean and smoke-free.</li>
+          </Bullets>
+
+          <H2>How the calculator handles depreciation</H2>
+          <p>
+            <Calc>The calculator</Calc> picks the depreciation pace by powertrain, as in the table above. For a
+            used car it also accounts for age, mileage, number of owners and whether the car was leased. If you
+            know the market for your model, you can change the percentages yourself on the results page, under
+            “Depreciation Adjustment”.
+          </p>
+
+          <Note>
+            The percentages here are general averages, not a forecast for a specific car. Before buying or
+            selling, check a current price guide and listings for similar cars.
+          </Note>
+
+          <CalcCta
+            title="What will depreciation cost you?"
+            text="Pick a car in the calculator and see what it should be worth at the end of the period, and the total cost against leasing."
+            button="Open the calculator"
+          />
+        </>
+      )}
+    </GuideShell>
   );
 }

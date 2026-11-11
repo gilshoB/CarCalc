@@ -2,10 +2,14 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { defaultLocale } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
-import GuideHero from "@/components/GuideHero";
-import ArticleJsonLd from "@/components/ArticleJsonLd";
+import { GuideShell, H2, H3, Calc, CalcLink, CalcCta, Terms, Example, Bullets, Steps, Table, Note, Ref } from "@/components/guide";
 
-export const metadata: Metadata = { alternates: { canonical: "/guides/car-loans" } };
+export const metadata: Metadata = {
+  title: "הלוואה לרכב: איפה כדאי לקחת וכמה זה עולה | CarCalc",
+  description:
+    "איפה כדאי לקחת הלוואה לרכב: בנק, קרן השתלמות, סוכנות או חברת מימון. כמה ריבית משלמים בפועל, מה זה בלון ושעבוד, ומה לשאול לפני שחותמים.",
+  alternates: { canonical: "/guides/car-loans" },
+};
 
 export default async function CarLoansGuidePage() {
   const cookieStore = await cookies();
@@ -13,365 +17,409 @@ export default async function CarLoansGuidePage() {
   const isHe = locale === "he";
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12">
-      <ArticleJsonLd
-        locale={locale}
-        path="/guides/car-loans"
-        headline={isHe ? "מדריך הלוואת רכב בישראל" : "Car Loan Guide for Israel"}
-        description={isHe ? "מדריך להלוואות רכב בישראל — ריבית, תקופה והעלות האמיתית של המימון." : "A guide to car loans in Israel — interest, term and the true cost of financing."}
-      />
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-6">
-        {isHe ? "מדריך הלוואת רכב בישראל" : "Car Loan Guide for Israel"}
-      </h1>
+    <GuideShell
+      locale={locale}
+      path="/guides/car-loans"
+      illustration="car-loans"
+      title={isHe ? "הלוואה לרכב: איפה כדאי לקחת, וכמה זה באמת עולה" : "Car loans: where to borrow, and what it really costs"}
+      description={
+        isHe
+          ? "איפה כדאי לקחת הלוואה לרכב, כמה ריבית משלמים בפועל, ומה לשאול לפני שחותמים."
+          : "Where to get a car loan in Israel, how much interest you actually pay, and what to ask before signing."
+      }
+    >
+      {isHe ? (
+        <>
+          <p>
+            הלוואה לרכב היא מוצר שקל מאוד לקבל וקל מאוד לשלם עליו יותר מדי. בסוכנות יציעו לכם מימון תוך כמה
+            דקות, והשאלה היחידה שישאלו היא ״כמה נוח לכם לשלם בחודש״. זו בדיוק השאלה שמייקרת הלוואות.
+          </p>
+          <p>
+            המדריך הזה מסביר מאיפה אפשר לקחת הלוואה, איך יודעים כמה היא עולה, ואילו שאלות חוסכות אלפי שקלים.
+          </p>
 
-      <GuideHero illustration="car-loans" />
+          <CalcLink>רוצים לראות כמה ההלוואה מוסיפה לעלות הרכב? למחשבון</CalcLink>
 
-      <div className="prose prose-zinc dark:prose-invert prose-sm max-w-none space-y-4 text-zinc-600 dark:text-zinc-400">
-        {isHe ? (
-          <>
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              מתי צריכים הלוואה לרכב?
-            </h2>
-            <p>
-              רכישת רכב היא אחת ההוצאות הגדולות ביותר שמשפחה ישראלית מתמודדת
-              איתה. לא תמיד יש מספיק הון עצמי לכסות את מלוא מחיר הרכב, ובמקרים
-              כאלה הלוואה היא הפתרון הנפוץ. ההלוואה נדרשת כאשר מחיר הרכב עולה על
-              ההון הזמין שלכם — כלומר, הסכום שיש לכם במזומן בתוספת שווי הרכב הישן
-              שלכם (אם אתם מוכרים או מחליפים אותו).
-            </p>
-            <p>
-              לדוגמה: נניח שמחיר הרכב החדש שאתם רוצים הוא 200,000 ש&quot;ח. יש
-              לכם 50,000 ש&quot;ח במזומן, ואת הרכב הישן שלכם אתם יכולים למכור
-              ב-60,000 ש&quot;ח. סה&quot;כ יש לכם 110,000 ש&quot;ח. המשמעות היא
-              שתצטרכו הלוואה בגובה 90,000 ש&quot;ח כדי להשלים את הפער. גובה
-              ההלוואה הזה הוא הבסיס לכל חישובי הריבית והתשלומים שנסקור בהמשך
-              המדריך.
-            </p>
-            <p>
-              חשוב להבין: ככל שההלוואה גדולה יותר, כך סך הריבית שתשלמו תהיה
-              גבוהה יותר. לכן, מומלץ לבחון כמה הון עצמי אתם יכולים לגייס לפני
-              שניגשים ללקיחת הלוואה.
-            </p>
+          <Terms
+            title="המושגים, בשפה פשוטה"
+            items={[
+              ["מימון", "מילה אחרת להלוואה לקניית רכב. כשבסוכנות אומרים ״מימון״, מתכוונים להלוואה."],
+              ["קרן", "הסכום שלוויתם. אם לקחתם 90,000 ₪, זו הקרן."],
+              ["ריבית", "המחיר של ההלוואה. משלמים אותה בנוסף לקרן, והיא נקובה באחוזים לשנה."],
+              [
+                "ריבית הפריים",
+                "ריבית הבסיס של הבנקים: ריבית בנק ישראל ועוד 1.5%. הלוואות רבות מתומחרות כ״פריים ועוד משהו״, למשל פריים + 2%.",
+              ],
+              [
+                "ריבית קבועה וריבית משתנה",
+                "ריבית קבועה לא משתנה לאורך ההלוואה. ריבית משתנה צמודה לפריים: אם בנק ישראל מעלה את הריבית, ההחזר החודשי שלכם עולה.",
+              ],
+              [
+                "לוח שפיצר",
+                "שיטת ההחזר הנפוצה: משלמים אותו סכום בכל חודש. בהתחלה רוב התשלום הוא ריבית, ובהמשך רובו קרן.",
+              ],
+              [
+                "הלוואת בלון",
+                "הלוואה שבה חלק גדול מהקרן לא מוחזר בתשלומים החודשיים, אלא בתשלום אחד גדול בסוף. ההחזר החודשי נמוך, אבל משלמים יותר ריבית.",
+              ],
+              [
+                "שעבוד",
+                "רישום שאומר שהרכב משמש בטוחה להלוואה. אי אפשר למכור רכב משועבד בלי לסלק את ההלוואה, ואם לא משלמים, המלווה יכול לקחת את הרכב.",
+              ],
+              ["עמלת פתיחת תיק", "תשלום חד-פעמי על העמדת ההלוואה. היא חלק מהעלות, גם אם היא לא נקראת ריבית."],
+              ["פירעון מוקדם", "סגירת ההלוואה לפני הזמן. בחלק מההלוואות זה כרוך בעמלה."],
+              ["טרייד-אין", "מסירת הרכב הישן לסוכנות כחלק מהתשלום על הרכב החדש."],
+            ]}
+          />
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              סוגי הלוואות לרכב
-            </h2>
+          <H2>כמה הלוואה צריך בכלל</H2>
+          <p>החשבון פשוט: מחיר הרכב, פחות הכסף שיש לכם, פחות מה שתקבלו על הרכב הישן.</p>
+          <Example title="דוגמה">
             <p>
-              בישראל קיימים מספר מקורות מימון לרכישת רכב, ולכל אחד מהם יתרונות
-              וחסרונות. חשוב להכיר את האפשרויות כדי לבחור את ההלוואה המשתלמת
-              ביותר עבורכם.
+              הרכב עולה 150,000 ₪. יש לכם 40,000 ₪ בחיסכון, ואת הרכב הישן תמכרו ב-20,000 ₪. ההלוואה שאתם
+              צריכים היא <strong>90,000 ₪</strong>.
             </p>
-            <p>
-              <strong>הלוואה בנקאית:</strong> ההלוואה הנפוצה ביותר. הבנקים
-              בישראל מציעים הלוואות לרכב בריבית שנעה בדרך כלל בין 4% ל-6%. הריבית
-              המדויקת תלויה בפרופיל הלקוח, היסטוריית האשראי, ומשך ההלוואה.
-              היתרון הוא שקיפות יחסית ואפשרות להשוואה בין בנקים. החיסרון הוא
-              שלעיתים הריבית גבוהה מהחלופות.
-            </p>
-            <p>
-              <strong>מימון יצרן:</strong> חלק מיבואני הרכב בישראל מציעים מימון
-              ישירות דרך חברת הליסינג או המימון שלהם. לעיתים ניתן למצוא מבצעי
-              מימון ב-0% ריבית, במיוחד בדגמים שהיצרן רוצה לקדם. שימו לב שלפעמים
-              ריבית 0% מגיעה עם מחיר רכב גבוה יותר, כך שכדאי לבדוק את העלות
-              הכוללת.
-            </p>
-            <p>
-              <strong>מימון פרטי:</strong> הלוואות מגופים חוץ-בנקאיים כמו חברות
-              אשראי או גופים פיננסיים פרטיים. הריבית עשויה להיות גבוהה יותר, אך
-              לפעמים תנאי ההלוואה גמישים יותר. בישראל, תקופת ההלוואה הנפוצה לרכב
-              נעה בין 3 ל-7 שנים, כאשר 5 שנים הוא המשך הנפוץ ביותר.
-            </p>
+          </Example>
+          <p>
+            כל שקל שאתם מביאים מהבית הוא שקל שלא משלמים עליו ריבית. מצד שני, לא כדאי לרוקן את כל החיסכון
+            ולהישאר בלי כרית ביטחון.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              איך מחשבים ריבית על הלוואה
-            </h2>
-            <p>
-              חישוב ההחזר החודשי מתבצע לפי נוסחת לוח סילוקין סטנדרטית (שיטת
-              שפיצר). הנוסחה היא:
-            </p>
-            <p className="font-mono text-sm bg-zinc-100 dark:bg-zinc-800 p-3 rounded-lg text-center" dir="ltr">
-              תשלום חודשי = P × r(1+r)<sup>n</sup> / ((1+r)<sup>n</sup> - 1)
-            </p>
-            <p>
-              כאשר P הוא סכום ההלוואה, r היא הריבית החודשית (ריבית שנתית חלקי
-              12), ו-n הוא מספר התשלומים.
-            </p>
-            <p>
-              דוגמה מפורטת: הלוואה של 90,000 ש&quot;ח בריבית שנתית של 4.5%
-              לתקופה של 5 שנים (60 תשלומים). הריבית החודשית היא 4.5% / 12 =
-              0.375%. לפי הנוסחה, התשלום החודשי יוצא כ-1,679 ש&quot;ח. על פני 60
-              חודשים תשלמו סה&quot;כ כ-100,740 ש&quot;ח, כלומר סך הריבית שתשלמו
-              היא כ-10,740 ש&quot;ח. העלות הכוללת של הרכב תהיה 200,000 + 10,740 =
-              210,740 ש&quot;ח.
-            </p>
-            <p>
-              שימו לב שגם שינוי קטן בריבית יכול להשפיע משמעותית על סך העלות.
-              לדוגמה, הפרש של 1% בריבית על הלוואה של 90,000 ש&quot;ח לחמש שנים
-              יכול לחסוך או לעלות לכם כמה אלפי שקלים.
-            </p>
+          <H2>איפה כדאי לקחת הלוואה לרכב</H2>
+          <p>
+            אין מקום אחד שהוא תמיד הזול ביותר. הריבית תלויה בכם: בהכנסה, בהיסטוריית האשראי, ובשאלה אם יש
+            בטוחה. לכן כדאי לבקש הצעות מכמה מקורות. אלה האפשרויות:
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              עמלת פתיחת תיק
-            </h2>
-            <p>
-              בנוסף לריבית, רוב הגופים המלווים גובים עמלת פתיחת תיק — תשלום
-              חד-פעמי שנגבה בתחילת ההלוואה. עמלה זו נעה בדרך כלל בין 0.5% ל-1%
-              מסכום ההלוואה. בדוגמה שלנו, על הלוואה של 90,000 ש&quot;ח, עמלת
-              פתיחת תיק תעלה בין 450 ל-900 ש&quot;ח.
-            </p>
-            <p>
-              עמלה זו מתווספת לעלות הכוללת של ההלוואה ולכן חשוב להביא אותה בחשבון
-              בהשוואה בין הצעות. לפעמים ניתן לנהל משא ומתן על גובה העמלה, במיוחד
-              אם יש לכם הצעה מתחרה מגוף אחר. חלק מהבנקים מוותרים על העמלה
-              ללקוחות קיימים או במסגרת מבצעים.
-            </p>
+          <H3>1. הלוואה כנגד קרן השתלמות או קופת גמל</H3>
+          <p>
+            אם יש לכם קרן השתלמות, זו בדרך כלל האפשרות הזולה ביותר. הגוף שמנהל את הקרן מלווה לכם כסף, והקרן
+            משמשת בטוחה. הכסף בקרן נשאר מושקע וממשיך להרוויח. הריבית לרוב נמוכה משמעותית מהלוואה רגילה בבנק.
+            החיסרון: אפשר ללוות רק חלק מהסכום שצברתם.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              טיפים לחיסכון בהלוואה
-            </h2>
-            <p>
-              כדי לחסוך כסף על הלוואת הרכב שלכם, הנה מספר טיפים מעשיים שכדאי
-              ליישם:
-            </p>
-            <ul>
-              <li>
-                <strong>השוו בין בנקים וגופי מימון:</strong> אל תסתפקו בהצעה
-                הראשונה. קבלו הצעות מלפחות 2-3 גופים שונים והשוו את הריבית,
-                העמלות, והתנאים.
-              </li>
-              <li>
-                <strong>נהלו משא ומתן על הריבית:</strong> ברגע שיש לכם הצעה
-                מתחרה, אתם יכולים להשתמש בה כקלף מיקוח. בנקים רבים מוכנים להוריד
-                את הריבית כדי לזכות בעסקה.
-              </li>
-              <li>
-                <strong>תקופה קצרה יותר = פחות ריבית:</strong> ככל שתקופת ההלוואה
-                קצרה יותר, כך סך הריבית שתשלמו נמוך יותר. עם זאת, התשלום החודשי
-                יהיה גבוה יותר — ודאו שהתקציב שלכם מאפשר זאת.
-              </li>
-              <li>
-                <strong>הגדילו את ההון העצמי:</strong> ככל שתשלמו יותר מכסכם מראש,
-                כך ההלוואה תהיה קטנה יותר והריבית הכוללת תקטן בהתאם. שקלו לחסוך
-                קצת יותר לפני הרכישה.
-              </li>
-              <li>
-                <strong>היזהרו מעמלות פירעון מוקדם:</strong> חלק מההלוואות כוללות
-                קנס על פירעון מוקדם. בדקו את התנאים מראש, כי אם תרצו לסגור את
-                ההלוואה לפני הזמן, העמלה עלולה לבטל חלק מהחיסכון.
-              </li>
-              <li>
-                <strong>בדקו אם הריבית שווה את זה:</strong> לפעמים כדאי לשקול האם
-                עדיף לקחת הלוואה בריבית נמוכה ולהשקיע את המזומן בהשקעה שמניבה
-                תשואה גבוהה יותר, או להיפך — לשלם מזומן ולחסוך את הריבית. זה
-                תלוי בשיעור התשואה שאתם מצפים להשיג.
-              </li>
-            </ul>
+          <H3>2. הבנק שלכם</H3>
+          <p>
+            הבנק מכיר אתכם, והתהליך מהיר. הריבית תלויה בדירוג שלכם אצלו, והיא כמעט תמיד פתוחה למשא ומתן. אל
+            תקבלו את ההצעה הראשונה באפליקציה. דברו עם בנקאי, ותגידו שאתם בודקים גם במקומות אחרים.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              במחשבון CarCalc
-            </h2>
-            <p>
-              כשתזינו את פרטי הרכב והמצב הפיננסי שלכם, המחשבון יחשב אוטומטית את
-              גובה ההלוואה הנדרשת, התשלום החודשי, וסך הריבית שתשלמו. תוכלו לשחק
-              עם הפרמטרים ולראות איך שינוי בריבית או בתקופה משפיע על העלות
-              הכוללת.
-            </p>
+          <H3>3. בנק אחר</H3>
+          <p>
+            מותר לקחת הלוואה גם מבנק שאין לכם בו חשבון. בנקים רוצים לקוחות חדשים, ולפעמים ההצעה שלהם טובה
+            יותר משל הבנק שלכם. גם אם לא תיקחו אותה, היא קלף מיקוח.
+          </p>
 
-            <div className="mt-8 rounded-xl border border-brand-200 bg-brand-50 p-6 dark:border-brand-900 dark:bg-brand-950/30">
-              <p className="font-semibold text-brand-800 dark:text-brand-300">
-                רוצים לדעת כמה תשלמו על הלוואת רכב?
-              </p>
-              <p className="mt-1 text-brand-700 dark:text-brand-400">
-                <a href="/" className="underline hover:no-underline">
-                  הזינו את פרטי ההלוואה במחשבון וקבלו חישוב מדויק
-                </a>
-              </p>
-            </div>
-          </>
-        ) : (
-          <>
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              When Do You Need a Car Loan?
-            </h2>
-            <p>
-              Purchasing a car is one of the largest expenses an Israeli household
-              faces. It is not always possible to cover the full price of the car
-              with available capital, and in such cases, a loan is the most common
-              solution. A car loan becomes necessary when the price of the vehicle
-              exceeds your available funds — that is, the amount of cash you have
-              on hand plus the trade-in value of your existing car (if you are
-              selling or trading it in).
-            </p>
-            <p>
-              For example: suppose the new car you want costs 200,000 ILS. You
-              have 50,000 ILS in cash, and you can sell your old car for 60,000
-              ILS. That gives you a total of 110,000 ILS in available capital. This
-              means you will need a loan of 90,000 ILS to bridge the gap. This
-              loan amount is the basis for all the interest and payment
-              calculations we will cover in the rest of this guide.
-            </p>
-            <p>
-              It is important to understand: the larger the loan, the more
-              interest you will pay overall. For this reason, it is advisable to
-              evaluate how much equity you can put together before applying for a
-              loan.
-            </p>
+          <H3>4. מימון דרך הסוכנות או היבואן</H3>
+          <p>
+            הכי נוח: הכול נסגר במקום אחד. אבל הסוכנות מרוויחה על ההלוואה, והריבית שם לא תמיד תחרותית. כשמציעים
+            לכם מימון בסוכנות, בקשו את הריבית השנתית ואת העלות הכוללת, והשוו להצעה מהבנק. ההלוואה הזו כמעט
+            תמיד כוללת שעבוד של הרכב.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              Types of Car Loans
-            </h2>
-            <p>
-              In Israel, there are several sources of financing for purchasing a
-              car, each with its own advantages and disadvantages. It is important
-              to understand the options so you can choose the most cost-effective
-              loan for your situation.
-            </p>
-            <p>
-              <strong>Bank loans:</strong> The most common type of car loan.
-              Israeli banks typically offer car loans at interest rates ranging
-              from 4% to 6%. The exact rate depends on the borrower&apos;s
-              profile, credit history, and loan duration. The advantage is
-              relative transparency and the ability to compare offers across
-              banks. The downside is that the interest rate can sometimes be
-              higher than alternative financing options.
-            </p>
-            <p>
-              <strong>Manufacturer financing:</strong> Some car importers in
-              Israel offer financing directly through their leasing or finance
-              subsidiaries. You can sometimes find 0% interest promotions,
-              especially on models the manufacturer wants to push. Keep in mind
-              that 0% interest sometimes comes with a higher vehicle price, so it
-              is worth checking the total cost of ownership.
-            </p>
-            <p>
-              <strong>Private financing:</strong> Loans from non-bank entities
-              such as credit companies or private financial institutions. The
-              interest rate may be higher, but the loan terms are sometimes more
-              flexible. In Israel, the common loan term for a car ranges from 3 to
-              7 years, with 5 years being the most popular duration.
-            </p>
+          <H3>5. חברות כרטיסי האשראי</H3>
+          <p>
+            הלוואה מהירה, בלי קשר לבנק. הריבית בדרך כלל גבוהה יותר מאשר בבנק, אבל לפעמים יש מבצעים. מתאים
+            כשצריך להשלים סכום קטן.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              How to Calculate Loan Interest
-            </h2>
-            <p>
-              The monthly repayment is calculated using a standard amortization
-              formula (known in Israel as the &quot;Spitzer&quot; method). The
-              formula is:
-            </p>
-            <p className="font-mono text-sm bg-zinc-100 dark:bg-zinc-800 p-3 rounded-lg text-center">
-              Monthly Payment = P &times; r(1+r)<sup>n</sup> / ((1+r)<sup>n</sup>{" "}
-              - 1)
-            </p>
-            <p>
-              Where P is the loan principal, r is the monthly interest rate
-              (annual rate divided by 12), and n is the total number of payments.
-            </p>
-            <p>
-              Detailed example: a loan of 90,000 ILS at an annual interest rate of
-              4.5% over a period of 5 years (60 payments). The monthly interest
-              rate is 4.5% / 12 = 0.375%. Using the formula, the monthly payment
-              comes out to approximately 1,679 ILS. Over the 60-month term, you
-              will pay a total of approximately 100,740 ILS, meaning the total
-              interest paid is about 10,740 ILS. The total cost of the car becomes
-              200,000 + 10,740 = 210,740 ILS.
-            </p>
-            <p>
-              Note that even a small change in the interest rate can significantly
-              affect the total cost. For instance, a 1% difference in interest on
-              a 90,000 ILS loan over five years can save or cost you several
-              thousand shekels.
-            </p>
+          <H3>6. חברות מימון חוץ-בנקאיות</H3>
+          <p>
+            הן מאשרות גם מי שהבנק סירב לו, ולכן הריבית שלהן היא בדרך כלל הגבוהה ביותר. אם זו האפשרות היחידה
+            שלכם, שווה לעצור ולשאול אם הרכב הזה לא יקר מדי בשבילכם כרגע.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              Origination Fee
-            </h2>
-            <p>
-              In addition to interest, most lenders charge an origination fee — a
-              one-time payment collected at the beginning of the loan. This fee
-              typically ranges from 0.5% to 1% of the loan amount. In our example,
-              on a 90,000 ILS loan, the origination fee would be between 450 and
-              900 ILS.
-            </p>
-            <p>
-              This fee adds to the total cost of the loan and should be factored
-              into any comparison between offers. It is sometimes possible to
-              negotiate the fee down, especially if you have a competing offer from
-              another lender. Some banks waive the fee for existing customers or as
-              part of promotional campaigns.
-            </p>
+          <H2>כמה ההלוואה עולה: אותה הלוואה, ארבע תוצאות</H2>
+          <p>הנה הלוואה של 90,000 ₪ בתנאים שונים:</p>
+          <Table
+            head={["ריבית ותקופה", "החזר חודשי", "סך הריבית"]}
+            rows={[
+              ["7% לשלוש שנים", "2,779 ₪", "כ-10,000 ₪"],
+              ["7% לחמש שנים", "1,782 ₪", "כ-16,900 ₪"],
+              ["6% לחמש שנים", "1,740 ₪", "כ-14,400 ₪"],
+              ["9% לחמש שנים", "1,868 ₪", "כ-22,100 ₪"],
+            ]}
+          />
+          <p>שלושה דברים שכדאי לראות בטבלה:</p>
+          <Bullets>
+            <li>
+              <strong>תקופה ארוכה נראית זולה ועולה יותר.</strong> ההחזר לחמש שנים נמוך ב-1,000 ₪ בחודש, אבל
+              הריבית הכוללת גבוהה ב-6,900 ₪.
+            </li>
+            <li>
+              <strong>אחוז אחד שווה אלפי שקלים.</strong> ההבדל בין 6% ל-7% הוא רק 42 ₪ בחודש, אבל 2,500 ₪ על
+              כל התקופה.
+            </li>
+            <li>
+              <strong>ההחזר החודשי מטעה.</strong> בין ההלוואה הזולה ליקרה יש הפרש של 128 ₪ בחודש, ושל 7,700 ₪
+              בסך הכול.
+            </li>
+          </Bullets>
+          <p>הריביות בטבלה הן להמחשה. הריבית שתקבלו תלויה בריבית הפריים באותו זמן ובנתונים שלכם.</p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              Tips for Saving on Your Car Loan
-            </h2>
+          <H2>הלוואת בלון: החזר נמוך, חשבון גדול בסוף</H2>
+          <p>
+            בהלוואת בלון דוחים חלק מהקרן לסוף התקופה. ההחזר החודשי קטן, וזה מה שהופך אותה לקלה למכירה.
+          </p>
+          <Example title="אותן 90,000 ₪, עם בלון של 40,000 ₪">
             <p>
-              To save money on your car loan, here are some practical tips to
-              follow:
+              ב-7% לחמש שנים ההחזר החודשי יורד מ-1,782 ₪ ל-1,223 ₪. אבל בסוף חמש השנים אתם עדיין חייבים
+              40,000 ₪ בתשלום אחד, והריבית הכוללת עולה מ-16,900 ₪ ל-23,400 ₪.
             </p>
-            <ul>
-              <li>
-                <strong>Compare across banks and lenders:</strong> Do not settle
-                for the first offer you receive. Get quotes from at least 2-3
-                different institutions and compare interest rates, fees, and
-                terms.
-              </li>
-              <li>
-                <strong>Negotiate the interest rate:</strong> Once you have a
-                competing offer, you can use it as leverage. Many banks are
-                willing to lower their rate to win the deal.
-              </li>
-              <li>
-                <strong>Shorter term = less interest:</strong> The shorter the
-                loan period, the less total interest you will pay. However, the
-                monthly payment will be higher — make sure your budget can handle
-                it.
-              </li>
-              <li>
-                <strong>Make a larger down payment:</strong> The more you pay
-                upfront, the smaller the loan and the less interest you pay
-                overall. Consider saving a bit more before making the purchase.
-              </li>
-              <li>
-                <strong>Watch out for early repayment fees:</strong> Some loans
-                include a penalty for early repayment. Check the terms in advance,
-                because if you want to close the loan early, the fee could offset
-                part of your savings.
-              </li>
-              <li>
-                <strong>Evaluate whether the interest is worth it:</strong>{" "}
-                Sometimes it makes sense to consider whether you are better off
-                taking a low-interest loan and investing your cash in something
-                that yields a higher return, or conversely, paying in cash and
-                saving on the interest entirely. This depends on the rate of
-                return you expect to achieve.
-              </li>
-            </ul>
+          </Example>
+          <p>
+            בלון מתאים רק אם ברור לכם מאיפה יגיע הכסף בסוף. מי שמתכנן לשלם את הבלון ממכירת הרכב צריך לזכור
+            שהרכב יהיה שווה אז הרבה פחות. כמה פחות? זה מוסבר ב<Ref to="depreciation">מדריך הפחת</Ref>.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              In the CarCalc Calculator
-            </h2>
+          <H2>מימון ב-0% ריבית: איפה המלכוד</H2>
+          <p>אף אחד לא מלווה כסף בחינם. כשמציעים 0% ריבית, המחיר מסתתר במקום אחר:</p>
+          <Bullets>
+            <li>מחיר הרכב מלא, בלי ההנחה שהייתם מקבלים במזומן.</li>
+            <li>ה-0% חל רק על חלק מהסכום או על תקופה קצרה.</li>
+            <li>יש עמלת פתיחת תיק או דמי טיפול גבוהים.</li>
+          </Bullets>
+          <p>
+            הבדיקה פשוטה: שאלו כמה עולה הרכב במזומן, וכמה תשלמו בסך הכול במסלול ה-0%. ההפרש הוא הריבית
+            האמיתית.
+          </p>
+
+          <H2>שש שאלות לפני שחותמים</H2>
+          <Steps>
+            <li>מה הריבית השנתית, והאם היא קבועה או צמודה לפריים?</li>
+            <li>כמה אשלם בסך הכול עד סוף ההלוואה, כולל כל העמלות?</li>
+            <li>יש עמלת פתיחת תיק? כמה?</li>
+            <li>יש תשלום גדול בסוף (בלון)?</li>
+            <li>הרכב משועבד? ומה נדרש ממני בביטוח?</li>
+            <li>כמה יעלה לי לסגור את ההלוואה מוקדם?</li>
+          </Steps>
+          <p>
+            שאלה מספר 2 היא החשובה ביותר. מלווה חייב להציג לכם את העלות הכוללת של ההלוואה, ואיתה אפשר להשוות
+            בין הצעות שנראות שונות לגמרי.
+          </p>
+
+          <H2>הלוואה או מזומן?</H2>
+          <p>
+            אם יש לכם את הכסף, השאלה היא מה הוא עושה כשהוא לא ברכב. אם הוא יושב בעובר ושב, עדיף לשלם במזומן
+            ולחסוך את הריבית. אם הוא מושקע ומרוויח יותר מריבית ההלוואה, אולי עדיף להשאיר אותו שם. רק זכרו
+            שריבית על הלוואה היא ודאית, ורווח מהשקעה הוא לא.
+          </p>
+
+          <H2>ההלוואה במחשבון</H2>
+          <p>
+            ב<Calc>מחשבון</Calc> מזינים כמה כסף יש לכם וכמה שווה הרכב הישן, והוא מחשב לבד כמה הלוואה צריך.
+            אחר כך מזינים ריבית ותקופה, ורואים את ההחזר החודשי, את סך הריבית, ואיך ההלוואה משנה את ההשוואה מול
+            ליסינג.
+          </p>
+
+          <Note>
+            המדריך נותן מידע כללי ואינו ייעוץ פיננסי. תנאי הלוואות משתנים בין מלווים ולאורך זמן, וכדאי לבדוק
+            הצעות עדכניות.
+          </Note>
+
+          <CalcCta
+            title="כמה ההלוואה תוסיף למחיר הרכב?"
+            text="הזינו ריבית ותקופה, וראו את ההחזר החודשי, את סך הריבית, ואם ליסינג יוצא זול יותר."
+            button="למחשבון"
+          />
+        </>
+      ) : (
+        <>
+          <p>
+            A car loan is very easy to get and very easy to overpay for. A dealership will offer you financing
+            in minutes, and the only question it asks is “how much is comfortable per month”. That is exactly
+            the question that makes loans expensive.
+          </p>
+          <p>This guide explains where you can borrow, how to tell what a loan costs, and which questions save thousands of shekels.</p>
+
+          <CalcLink>Want to see what a loan adds to the cost of the car? Open the calculator</CalcLink>
+
+          <Terms
+            title="The terms, in plain language"
+            items={[
+              ["Financing (מימון)", "Another word for a loan to buy a car. When a dealership says “financing”, it means a loan."],
+              ["Principal", "The amount you borrowed. If you took 90,000 ILS, that is the principal."],
+              ["Interest", "The price of the loan. You pay it on top of the principal, and it is quoted as a yearly percentage."],
+              [
+                "Prime rate",
+                "The banks’ base rate: the Bank of Israel rate plus 1.5%. Many loans are priced as “prime plus something”, for example prime + 2%.",
+              ],
+              [
+                "Fixed and variable interest",
+                "A fixed rate does not change during the loan. A variable rate follows prime: if the Bank of Israel raises rates, your monthly repayment goes up.",
+              ],
+              [
+                "Spitzer schedule",
+                "The usual repayment method: the same amount every month. Early on most of the payment is interest, later most of it is principal.",
+              ],
+              [
+                "Balloon loan",
+                "A loan where a large part of the principal is not repaid monthly but in one big payment at the end. The monthly repayment is low, but you pay more interest.",
+              ],
+              [
+                "Lien (שעבוד)",
+                "A registration saying the car is collateral for the loan. You cannot sell a car with a lien without clearing the loan, and if you stop paying, the lender can take the car.",
+              ],
+              ["Origination fee", "A one-off charge for setting up the loan. It is part of the cost even though it is not called interest."],
+              ["Early repayment", "Closing the loan ahead of time. Some loans charge a fee for it."],
+              ["Trade-in", "Handing your old car to the dealership as part of the payment for the new one."],
+            ]}
+          />
+
+          <H2>How much do you need to borrow</H2>
+          <p>The sum is simple: the price of the car, minus the money you have, minus what you get for your old car.</p>
+          <Example title="Example">
             <p>
-              When you enter your vehicle details and financial situation, the
-              calculator will automatically compute the required loan amount, the
-              monthly payment, and the total interest you will pay. You can
-              experiment with the parameters and see how changing the interest
-              rate or the loan term affects the overall cost.
+              The car costs 150,000 ILS. You have 40,000 in savings and will sell your old car for 20,000. The
+              loan you need is <strong>90,000 ILS</strong>.
             </p>
+          </Example>
+          <p>
+            Every shekel you bring yourself is a shekel you pay no interest on. On the other hand, do not empty
+            all your savings and leave yourself without a cushion.
+          </p>
 
-            <div className="mt-8 rounded-xl border border-brand-200 bg-brand-50 p-6 dark:border-brand-900 dark:bg-brand-950/30">
-              <p className="font-semibold text-brand-800 dark:text-brand-300">
-                Want to know how much you&apos;ll pay on a car loan?
-              </p>
-              <p className="mt-1 text-brand-700 dark:text-brand-400">
-                <a href="/" className="underline hover:no-underline">
-                  Enter your loan details in the calculator for an exact
-                  calculation
-                </a>
-              </p>
-            </div>
-          </>
-        )}
-      </div>
-    </main>
+          <H2>Where to get a car loan</H2>
+          <p>
+            No single place is always cheapest. The rate depends on you: your income, your credit history and
+            whether there is collateral. So ask several sources. These are the options:
+          </p>
+
+          <H3>1. A loan against your study fund (קרן השתלמות) or provident fund</H3>
+          <p>
+            If you have a study fund, this is usually the cheapest option. The body that manages the fund lends
+            you money with the fund as collateral. The money stays invested and keeps earning. The rate is
+            usually well below an ordinary bank loan. The drawback: you can borrow only part of what you have
+            accumulated.
+          </p>
+
+          <H3>2. Your own bank</H3>
+          <p>
+            The bank knows you and the process is quick. The rate depends on your rating there and is almost
+            always negotiable. Do not accept the first offer in the app. Talk to a banker and say you are
+            checking elsewhere too.
+          </p>
+
+          <H3>3. Another bank</H3>
+          <p>
+            You can borrow from a bank where you have no account. Banks want new customers, and their offer is
+            sometimes better than your own bank’s. Even if you do not take it, it is a bargaining chip.
+          </p>
+
+          <H3>4. Financing through the dealership or importer</H3>
+          <p>
+            The most convenient: everything is settled in one place. But the dealership earns on the loan, and
+            its rate is not always competitive. When offered dealership financing, ask for the annual rate and
+            the total cost, and compare with a bank offer. This kind of loan almost always puts a lien on the car.
+          </p>
+
+          <H3>5. Credit card companies</H3>
+          <p>
+            A fast loan that does not involve your bank. The rate is usually higher than a bank’s, though there
+            are occasional promotions. Suitable for topping up a small amount.
+          </p>
+
+          <H3>6. Non-bank finance companies</H3>
+          <p>
+            They approve people the bank turned down, so their rate is usually the highest. If this is your
+            only option, it is worth pausing to ask whether this car is too expensive for you right now.
+          </p>
+
+          <H2>What the loan costs: one loan, four outcomes</H2>
+          <p>Here is a 90,000 ILS loan on different terms:</p>
+          <Table
+            head={["Rate and term", "Monthly repayment", "Total interest"]}
+            rows={[
+              ["7% over three years", "2,779", "about 10,000"],
+              ["7% over five years", "1,782", "about 16,900"],
+              ["6% over five years", "1,740", "about 14,400"],
+              ["9% over five years", "1,868", "about 22,100"],
+            ]}
+          />
+          <p>Three things worth noticing:</p>
+          <Bullets>
+            <li>
+              <strong>A long term looks cheap and costs more.</strong> The five-year repayment is 1,000 ILS a
+              month lower, but total interest is 6,900 ILS higher.
+            </li>
+            <li>
+              <strong>One percentage point is worth thousands.</strong> The gap between 6% and 7% is only 42
+              ILS a month, but 2,500 ILS over the whole term.
+            </li>
+            <li>
+              <strong>The monthly repayment misleads.</strong> The cheap and expensive loans differ by 128 ILS
+              a month, and by 7,700 ILS in total.
+            </li>
+          </Bullets>
+          <p>The rates in the table are illustrations. The rate you get depends on prime at the time and on your own profile.</p>
+
+          <H2>Balloon loans: low repayments, a big bill at the end</H2>
+          <p>A balloon loan pushes part of the principal to the end of the term. The monthly repayment is small, which is what makes it easy to sell.</p>
+          <Example title="The same 90,000 ILS, with a 40,000 balloon">
+            <p>
+              At 7% over five years the monthly repayment drops from 1,782 to 1,223 ILS. But after five years
+              you still owe 40,000 ILS in one payment, and total interest rises from 16,900 to 23,400 ILS.
+            </p>
+          </Example>
+          <p>
+            A balloon suits you only if you know where the final money will come from. If you plan to pay it by
+            selling the car, remember the car will be worth far less by then. How much less is covered in the{" "}
+            <Ref to="depreciation">depreciation guide</Ref>.
+          </p>
+
+          <H2>0% financing: where is the catch</H2>
+          <p>Nobody lends money for free. When you are offered 0% interest, the price is hiding somewhere else:</p>
+          <Bullets>
+            <li>The car is at full price, without the discount you would get for cash.</li>
+            <li>The 0% applies to only part of the amount or to a short period.</li>
+            <li>There is a high origination or handling fee.</li>
+          </Bullets>
+          <p>
+            The test is simple: ask what the car costs in cash and what you will pay in total on the 0% plan.
+            The difference is the real interest.
+          </p>
+
+          <H2>Six questions before you sign</H2>
+          <Steps>
+            <li>What is the annual rate, and is it fixed or linked to prime?</li>
+            <li>How much will I pay in total by the end of the loan, including all fees?</li>
+            <li>Is there an origination fee? How much?</li>
+            <li>Is there a large final payment (a balloon)?</li>
+            <li>Is there a lien on the car? What insurance must I hold?</li>
+            <li>What will it cost to close the loan early?</li>
+          </Steps>
+          <p>
+            Question 2 matters most. A lender must show you the total cost of the loan, and with it you can
+            compare offers that look completely different.
+          </p>
+
+          <H2>Loan or cash?</H2>
+          <p>
+            If you have the money, the question is what it does when it is not in the car. If it sits in a
+            current account, pay cash and save the interest. If it is invested and earning more than the loan
+            rate, it may be better left there. Just remember that loan interest is certain and investment
+            returns are not.
+          </p>
+
+          <H2>The loan in the calculator</H2>
+          <p>
+            In <Calc>the calculator</Calc> you enter how much money you have and what your old car is worth, and
+            it works out the loan you need. Then you enter a rate and a term and see the monthly repayment, the
+            total interest, and how the loan changes the comparison with leasing.
+          </p>
+
+          <Note>
+            This guide is general information, not financial advice. Loan terms vary between lenders and over
+            time, so check current offers.
+          </Note>
+
+          <CalcCta
+            title="How much will the loan add to the price of the car?"
+            text="Enter a rate and a term and see the monthly repayment, the total interest, and whether leasing comes out cheaper."
+            button="Open the calculator"
+          />
+        </>
+      )}
+    </GuideShell>
   );
 }

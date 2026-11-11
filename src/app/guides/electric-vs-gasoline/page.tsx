@@ -2,10 +2,14 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { defaultLocale } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
-import GuideHero from "@/components/GuideHero";
-import ArticleJsonLd from "@/components/ArticleJsonLd";
+import { GuideShell, H2, Calc, CalcLink, CalcCta, Terms, Example, Bullets, Table, Note, Ref } from "@/components/guide";
 
-export const metadata: Metadata = { alternates: { canonical: "/guides/electric-vs-gasoline" } };
+export const metadata: Metadata = {
+  title: "רכב חשמלי או בנזין: מה משתלם יותר, גם בליסינג | CarCalc",
+  description:
+    "השוואת עלויות בין רכב חשמלי לבנזין: כמה עולה קילומטר, טעינה בבית מול טעינה ציבורית, טיפולים, ירידת ערך, ומה משתלם יותר בקנייה ובליסינג.",
+  alternates: { canonical: "/guides/electric-vs-gasoline" },
+};
 
 export default async function ElectricVsGasolinePage() {
   const cookieStore = await cookies();
@@ -13,291 +17,379 @@ export default async function ElectricVsGasolinePage() {
   const isHe = locale === "he";
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12">
-      <ArticleJsonLd
-        locale={locale}
-        path="/guides/electric-vs-gasoline"
-        headline={isHe ? "רכב חשמלי מול בנזין — מה באמת משתלם?" : "Electric vs Gasoline — What Really Costs Less?"}
-        description={isHe ? "השוואת עלויות בין רכב חשמלי לרכב בנזין בישראל — דלק, אחזקה ופחת." : "Cost comparison between electric and gasoline cars in Israel."}
-      />
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-6">
-        {isHe
-          ? "רכב חשמלי מול בנזין — מה באמת משתלם?"
-          : "Electric vs Gasoline — What Really Costs Less?"}
-      </h1>
+    <GuideShell
+      locale={locale}
+      path="/guides/electric-vs-gasoline"
+      illustration="electric-vs-gasoline"
+      title={isHe ? "רכב חשמלי או בנזין: מה באמת משתלם יותר?" : "Electric or petrol: which really costs less?"}
+      description={
+        isHe
+          ? "כמה עולה קילומטר בחשמלי ובבנזין, טעינה, טיפולים וירידת ערך, בקנייה ובליסינג."
+          : "Cost per kilometre, charging, servicing and depreciation for electric and petrol cars, when buying and when leasing."
+      }
+    >
+      {isHe ? (
+        <>
+          <p>
+            רכב חשמלי זול מאוד לנסיעה ויקר יותר בירידת הערך. השאלה מה משתלם תלויה בעיקר בשני דברים: כמה אתם
+            נוסעים, והאם יש לכם איפה לטעון בבית.
+          </p>
+          <p>
+            המדריך עובר על כל סעיף בנפרד, עם מספרים, ובסוף מחבר אותם לחשבון אחד. יש גם פרק נפרד על ליסינג,
+            כי שם החשבון שונה.
+          </p>
 
-      <GuideHero illustration="electric-vs-gasoline" />
+          <CalcLink>רוצים להשוות על הרכב שלכם? למחשבון</CalcLink>
 
-      <div className="prose prose-zinc dark:prose-invert prose-sm max-w-none space-y-4 text-zinc-600 dark:text-zinc-400">
-        {isHe ? (
-          <>
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              המהפכה החשמלית בישראל
-            </h2>
-            <p>
-              בשנים האחרונות חלה מהפכה של ממש בשוק הרכב הישראלי. כלי רכב
-              חשמליים, שפעם נחשבו לנישה קטנה ויקרה, הפכו לחלק משמעותי מהמכירות
-              בישראל. הממשלה מעודדת את המעבר לרכב חשמלי באמצעות הטבות מס רכישה
-              משמעותיות — מס מופחת של 10% בלבד לעומת 83% לרכבי בנזין — מה שמוריד
-              את מחיר הרכישה בצורה דרמטית. בנוסף, מחירי הדלק בישראל ממשיכים
-              לעלות, ותחנות טעינה חדשות נפתחות כל יום ברחבי הארץ. אבל השאלה
-              הגדולה נשארת: האם רכב חשמלי באמת משתלם יותר כשמסתכלים על התמונה
-              הכוללת? כדי לענות על כך, צריך לבחון שלושה מרכיבים מרכזיים — עלויות
-              דלק, תחזוקה ופחת — ולהבין כיצד הם משתלבים יחד לאורך תקופת הבעלות
-              על הרכב.
-            </p>
+          <Terms
+            title="המושגים, בשפה פשוטה"
+            items={[
+              [
+                "קוט״ש (קילוואט-שעה)",
+                "יחידת המידה של חשמל, כמו ליטר בדלק. גודל הסוללה נמדד בקוט״ש, וגם חשבון החשמל.",
+              ],
+              [
+                "צריכה",
+                "כמה הרכב נוסע על יחידת אנרגיה. בבנזין: קילומטרים לליטר. בחשמלי: קילומטרים לקוט״ש. רכב חשמלי ממוצע נוסע בערך 6 ק״מ על כל קוט״ש.",
+              ],
+              ["טווח", "כמה קילומטרים הרכב נוסע בטעינה מלאה. בחורף, במהירות גבוהה ועם מזגן הטווח קצר יותר."],
+              [
+                "טעינה ביתית",
+                "עמדת טעינה בחניה פרטית או בבניין. משלמים תעריף חשמל ביתי, וזו הטעינה הזולה ביותר.",
+              ],
+              [
+                "טעינה ציבורית וטעינה מהירה",
+                "עמדות בקניונים, בתחנות דלק ובצידי הדרך. טעינה מהירה ממלאת את רוב הסוללה בפחות משעה, אבל המחיר לקוט״ש גבוה בהרבה מבבית.",
+              ],
+              [
+                "היברידי",
+                "רכב עם מנוע בנזין ומנוע חשמלי קטן שנטען לבד תוך כדי נסיעה. לא מחברים אותו לחשמל. הוא חוסך דלק, בעיקר בעיר.",
+              ],
+              [
+                "פלאג-אין",
+                "היברידי עם סוללה גדולה יותר שכן מחברים לחשמל. הוא נוסע כמה עשרות קילומטרים על חשמל בלבד, ואחר כך עובר לבנזין.",
+              ],
+              [
+                "בלימה רגנרטיבית",
+                "כשמרימים את הרגל מהגז, המנוע החשמלי מאט את הרכב ומחזיר חשמל לסוללה. בגלל זה הבלמים נשחקים לאט.",
+              ],
+              ["אחריות סוללה", "אחריות נפרדת של היצרן על הסוללה, בדרך כלל לכמה שנים טובות או למספר קילומטרים."],
+              [
+                "מס קנייה",
+                "מס שהמדינה גובה על כל רכב חדש, והוא חלק ממחיר המחירון. לרכב חשמלי יש שיעור מופחת, שעולה בהדרגה משנה לשנה.",
+              ],
+            ]}
+          />
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              עלויות דלק — יתרון ברור לחשמלי
-            </h2>
-            <p>
-              ההבדל הבולט ביותר בין רכב חשמלי לרכב בנזין הוא עלות האנרגיה
-              לקילומטר. רכב בנזין ממוצע צורך כליטר לכל 14 קילומטר, ועם מחיר של
-              כ-7.5 ש&quot;ח לליטר, העלות יוצאת כ-0.54 ש&quot;ח לקילומטר. לעומת
-              זאת, רכב חשמלי ממוצע נוסע כ-6 קילומטר על כל קוט&quot;ש, ועם מחיר
-              חשמל של כ-0.6 ש&quot;ח לקוט&quot;ש (טעינה ביתית), העלות היא כ-0.10
-              ש&quot;ח בלבד לקילומטר.
-            </p>
-            <p>
-              בואו נתרגם את זה למספרים מוחשיים. נניח נהיגה של 15,000 קילומטר
-              בשנה לאורך 3 שנים — סך הכל 45,000 קילומטר. עלות הדלק לרכב בנזין
-              תהיה כ-24,107 ש&quot;ח (45,000 ÷ 14 × 7.5). עלות הטעינה לרכב חשמלי
-              תהיה כ-4,500 ש&quot;ח בלבד (45,000 ÷ 6 × 0.6). ההפרש הוא כ-19,600
-              ש&quot;ח לטובת הרכב החשמלי! מדובר בחיסכון עצום שמורגש כל חודש
-              בארנק. ככל שנוהגים יותר קילומטרים בשנה, היתרון של הרכב החשמלי גדל
-              עוד יותר. לנהגים שנוסעים 25,000 קילומטר ומעלה בשנה, החיסכון יכול
-              להגיע לעשרות אלפי שקלים.
-            </p>
+          <H2>כמה עולה קילומטר</H2>
+          <p>זה היתרון הגדול של הרכב החשמלי, וכדאי לראות אותו במספרים:</p>
+          <Table
+            head={["", "מחיר האנרגיה", "עלות לק״מ", "עלות ל-15,000 ק״מ בשנה"]}
+            rows={[
+              ["בנזין (14 ק״מ לליטר)", "כ-7.2 ₪ לליטר", "51 אגורות", "כ-7,700 ₪"],
+              ["חשמלי, טעינה בבית", "כ-60 אגורות לקוט״ש", "10 אגורות", "כ-1,500 ₪"],
+              ["חשמלי, טעינה מהירה ציבורית", "כ-1.8 ₪ לקוט״ש", "30 אגורות", "כ-4,500 ₪"],
+            ]}
+          />
+          <p>
+            מי שטוען בבית חוסך כ-6,200 ₪ בשנה לעומת בנזין. מי שטוען רק בעמדות מהירות חוסך כ-3,200 ₪. ההבדל
+            הזה הוא הסיבה שהשאלה הראשונה לפני רכב חשמלי היא לא איזה דגם, אלא איפה תטענו אותו.
+          </p>
+          <p>
+            מחירי הדלק מתעדכנים כל חודש, ומחירי הטעינה הציבורית משתנים בין הרשתות. המחשבון מושך את מחיר הדלק
+            העדכני בעצמו.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              תחזוקה — עוד יתרון לחשמלי
-            </h2>
-            <p>
-              מנוע חשמלי הוא מנגנון פשוט בהרבה ממנוע בעירה פנימית. אין בו שמן
-              מנוע שצריך להחליף כל 10,000-15,000 קילומטר, אין רצועת תזמון שעלולה
-              להיקרע ולגרום לנזק כבד, אין מערכת פליטה מורכבת עם ממיר קטליטי, ואין
-              תיבת הילוכים מסורתית שדורשת תחזוקה. ברכב חשמלי, רוב הבלימה נעשית
-              באמצעות &quot;בלימה רגנרטיבית&quot; — המנוע החשמלי עצמו מאט את הרכב
-              ובמקביל טוען את הסוללה — ולכן גם רפידות הבלמים מחזיקות הרבה יותר
-              זמן.
-            </p>
-            <p>
-              בממוצע, עלות התחזוקה של רכב חשמלי נמוכה בכ-20% מעלות התחזוקה של רכב
-              בנזין מקביל. במחשבון CarCalc אנחנו משתמשים במכפיל 0.8 לרכב חשמלי
-              לעומת 1.0 לרכב בנזין כדי לשקף הבדל זה. על פני שלוש שנים, החיסכון
-              בתחזוקה יכול להגיע לכמה אלפי שקלים נוספים, בהתאם לרכב הספציפי
-              ולהיקף הנסיעה.
-            </p>
+          <H2>טיפולים ותחזוקה</H2>
+          <p>
+            במנוע חשמלי יש הרבה פחות חלקים נעים. אין שמן מנוע, אין מצמד, אין רצועת תזמון ואין מערכת פליטה.
+            הבלמים מחזיקים יותר זמן בגלל הבלימה הרגנרטיבית. לכן הטיפול התקופתי זול יותר.
+          </p>
+          <p>
+            מצד שני, רכב חשמלי כבד יותר, והצמיגים שלו נשחקים מהר יותר. בסך הכול החיסכון בתחזוקה אמיתי אבל
+            קטן: מאות שקלים בשנה, לא אלפים.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              פחת — החיסרון הגדול של חשמלי
-            </h2>
+          <H2>ירידת ערך: החיסרון הגדול</H2>
+          <p>
+            רכב חשמלי מאבד ערך מהר יותר. לפי הממוצעים שהמחשבון משתמש בהם, רכב בנזין שווה אחרי שלוש שנים בערך
+            67% ממחירו, ורכב חשמלי בערך 56%.
+          </p>
+          <Example title="רכב של 200,000 ₪ אחרי שלוש שנים">
             <p>
-              כאן מגיע הצד הפחות נעים של הבעלות על רכב חשמלי. שוק הרכב החשמלי
-              מתפתח במהירות: דגמים חדשים עם טווח ארוך יותר, טכנולוגיית סוללות
-              משופרת וירידת מחירים מתמדת. כל אלה גורמים לכך שרכב חשמלי משומש
-              מאבד מערכו מהר יותר מרכב בנזין.
+              רכב הבנזין שווה כ-134,600 ₪, כלומר איבד 65,400 ₪. הרכב החשמלי שווה כ-111,300 ₪, כלומר איבד 88,700
+              ₪. ההפרש: <strong>23,300 ₪ לרעת החשמלי</strong>.
             </p>
-            <p>
-              שיעורי הפחת הנהוגים בשוק הם כ-25% בשנה הראשונה, 20% בשנה השנייה
-              ו-15% בשנה השלישית לרכב חשמלי, לעומת 15%, 12% ו-10% בהתאמה לרכב
-              בנזין. בואו נראה דוגמה מספרית: נניח רכב בשווי 200,000 ש&quot;ח. רכב
-              בנזין: לאחר שנה — 170,000, לאחר שנתיים — 149,600, לאחר שלוש שנים —
-              134,640. סך הפחת: 65,360 ש&quot;ח. רכב חשמלי: לאחר שנה — 150,000,
-              לאחר שנתיים — 120,000, לאחר שלוש שנים — 102,000. סך הפחת: 98,000
-              ש&quot;ח. ההפרש הוא 32,640 ש&quot;ח לרעת הרכב החשמלי! זהו מספר
-              משמעותי שיכול לאיין חלק ניכר מהחיסכון בדלק ובתחזוקה.
-            </p>
+          </Example>
+          <p>
+            הסיבות מוסברות ב<Ref to="depreciation">מדריך הפחת</Ref>: טכנולוגיה שמתקדמת מהר, מחירים שיורדים,
+            וחשש של קונים ממצב הסוללה.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              סיכום ההשוואה
-            </h2>
-            <p>
-              אז מה באמת משתלם יותר? התשובה תלויה בנסיבות האישיות שלכם. רכב חשמלי
-              מנצח בבירור בעלויות הדלק — עם חיסכון של כ-19,600 ש&quot;ח על פני
-              שלוש שנים ב-15,000 קילומטר בשנה. גם בתחזוקה יש יתרון לחשמלי עם
-              חיסכון של כ-20%. אולם הפחת המואץ של הרכב החשמלי, שיכול להגיע
-              ל-32,640 ש&quot;ח יותר מרכב בנזין, מצמצם את הפער.
-            </p>
-            <p>
-              לנהגים שנוסעים הרבה — 20,000 קילומטר בשנה ומעלה — הרכב החשמלי
-              כמעט תמיד משתלם יותר, כי החיסכון בדלק גדל בהתאם לקילומטראז&#39;.
-              לנהגים שנוסעים מעט ומחליפים רכב כל שנתיים-שלוש, הפחת הגבוה עלול
-              להפוך את הרכב החשמלי ליקר יותר בסיכומו של דבר. גם מחיר הרכב משפיע:
-              ככל שהרכב יקר יותר, הפחת בערכים מוחלטים גדול יותר, ולכן ההפסד
-              מהפחת המואץ גדל.
-            </p>
+          <H2>החשבון המלא: שלוש שנים, רכב של 200,000 ₪</H2>
+          <p>נחבר את שלושת הסעיפים, בהנחה שטוענים בבית:</p>
+          <Table
+            head={["", "15,000 ק״מ בשנה", "25,000 ק״מ בשנה"]}
+            rows={[
+              ["חיסכון באנרגיה", "18,600 ₪", "31,100 ₪"],
+              ["חיסכון בטיפולים", "1,350 ₪", "2,250 ₪"],
+              ["ירידת ערך נוספת", "מינוס 23,300 ₪", "מינוס 23,300 ₪"],
+              [<strong key="a">השורה התחתונה</strong>, <strong key="b">הבנזין זול בכ-3,400 ₪</strong>, <strong key="c">החשמלי זול בכ-10,000 ₪</strong>],
+            ]}
+          />
+          <p>
+            המסקנה: בנסועה ממוצעת שני הרכבים קרובים מאוד, והפחת מוחק את רוב החיסכון בדלק. ככל שנוסעים יותר,
+            החשמלי מנצח בפער גדל. וככל שמחזיקים את הרכב יותר שנים, הפחת השנתי קטן והחיסכון בדלק ממשיך להצטבר.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              נסו את ההשוואה במחשבון
-            </h2>
+          <H2>ליסינג חשמלי מול ליסינג בנזין: מה משתלם יותר?</H2>
+          <p>
+            בליסינג תפעולי החשבון פשוט יותר, כי ירידת הערך היא לא שלכם. חברת הליסינג סופגת אותה, והיא כבר
+            מתומחרת בתשלום החודשי. גם הטיפולים כלולים. נשארים שני מספרים בלבד:
+          </p>
+          <Bullets>
+            <li>ההפרש בתשלום החודשי בין הדגם החשמלי לדגם הבנזין.</li>
+            <li>החיסכון החודשי באנרגיה.</li>
+          </Bullets>
+          <Example title="דוגמה">
             <p>
-              במחשבון CarCalc ניתן להשוות את אותו הרכב עם סוגי דלק שונים. הזינו
-              את הנתונים פעם אחת עם בנזין ופעם עם חשמלי, וראו את ההבדל בעלות
-              הכוללת. כך תוכלו לקבל תמונה מדויקת ומותאמת אישית, על בסיס המחיר
-              של הרכב שאתם שוקלים, היקף הנסיעה השנתי שלכם ותקופת הבעלות המתוכננת.
-              ההשוואה האישית היא הדרך הטובה ביותר לקבל החלטה מושכלת.
+              ליסינג לרכב חשמלי עולה 300 ₪ יותר בחודש מליסינג לרכב בנזין דומה. ב-15,000 ק״מ בשנה ועם טעינה
+              בבית, החיסכון באנרגיה הוא כ-520 ₪ בחודש. החשמלי משתלם ב-220 ₪ בחודש. בלי טעינה בבית החיסכון
+              יורד לכ-270 ₪ בחודש, והבנזין זול מעט יותר.
             </p>
+          </Example>
+          <p>
+            בגלל זה ליסינג הוא דרך נוחה לנסות רכב חשמלי: נהנים מהחיסכון בנסיעה, והסיכון של ירידת הערך נשאר
+            אצל חברת הליסינג. שימו לב רק למגבלת הקילומטרים בחוזה. מי שנוסע הרבה הוא בדיוק מי שמרוויח הכי
+            הרבה מחשמלי, וגם מי שעלול לחרוג ממנה.
+          </p>
 
-            <div className="mt-8 rounded-xl border border-brand-200 bg-brand-50 p-6 dark:border-brand-900 dark:bg-brand-950/30">
-              <p className="font-semibold text-brand-800 dark:text-brand-300">
-                רוצים להשוות חשמלי מול בנזין עם הנתונים שלכם?
-              </p>
-              <p className="mt-1 text-brand-700 dark:text-brand-400">
-                <a href="/" className="underline hover:no-underline">
-                  הריצו את המחשבון פעמיים — פעם לכל סוג דלק — והשוו
-                </a>
-              </p>
-            </div>
-          </>
-        ) : (
-          <>
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              The Electric Revolution in Israel
-            </h2>
-            <p>
-              In recent years, a genuine revolution has taken place in the Israeli
-              car market. Electric vehicles, once considered a small and expensive
-              niche, have become a significant portion of car sales in Israel. The
-              government encourages the transition to electric vehicles through
-              substantial purchase tax benefits — a reduced tax rate of just 10%
-              compared to 83% for gasoline cars — which dramatically lowers the
-              purchase price. On top of that, fuel prices in Israel continue to
-              climb, and new charging stations are opening every day across the
-              country. But the big question remains: is an electric car truly more
-              cost-effective when you look at the full picture? To answer that, we
-              need to examine three core components — fuel costs, maintenance, and
-              depreciation — and understand how they combine over the ownership
-              period.
-            </p>
+          <H2>ומה עם היברידי ופלאג-אין?</H2>
+          <p>
+            <strong>היברידי רגיל</strong> מתאים למי שאין לו איפה לטעון. הוא חוסך דלק בלי לשנות הרגלים, ושומר
+            על ערכו טוב יותר מכל סוג אחר.
+          </p>
+          <p>
+            <strong>פלאג-אין</strong> משתלם רק למי שטוען אותו באמת, כל יום. מי שלא טוען נוסע ברכב בנזין כבד
+            ויקר. במחשבון אפשר להגדיר איזה חלק מהנסיעות שלכם נעשה על חשמל.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              Fuel Costs — A Clear Advantage for Electric
-            </h2>
-            <p>
-              The most striking difference between an electric car and a gasoline
-              car is the energy cost per kilometer. An average gasoline car
-              consumes about one liter per 14 kilometers, and at a price of
-              approximately 7.5 ILS per liter, the cost works out to about 0.54
-              ILS per kilometer. By contrast, an average electric car travels
-              about 6 kilometers per kWh, and with an electricity price of about
-              0.6 ILS per kWh (home charging), the cost is only about 0.10 ILS
-              per kilometer.
-            </p>
-            <p>
-              Let&apos;s translate that into concrete numbers. Assume annual
-              driving of 15,000 kilometers over 3 years — a total of 45,000
-              kilometers. The fuel cost for a gasoline car would be approximately
-              24,107 ILS (45,000 / 14 x 7.5). The charging cost for an electric
-              car would be only about 4,500 ILS (45,000 / 6 x 0.6). The
-              difference is roughly 19,600 ILS in favor of the electric car!
-              That is an enormous saving that you feel in your wallet every single
-              month. The more kilometers you drive per year, the greater the
-              electric car&apos;s advantage grows. For drivers covering 25,000
-              kilometers or more annually, the savings can reach tens of thousands
-              of shekels over the ownership period.
-            </p>
+          <H2>למי חשמלי מתאים, ולמי פחות</H2>
+          <Bullets>
+            <li>
+              <strong>מתאים:</strong> יש חניה עם אפשרות טעינה, נוסעים הרבה, ומתכננים להחזיק את הרכב כמה שנים
+              או לקחת אותו בליסינג.
+            </li>
+            <li>
+              <strong>פחות מתאים:</strong> אין טעינה בבית או בעבודה, נוסעים מעט, ומחליפים רכב כל שנתיים-שלוש
+              בקנייה.
+            </li>
+          </Bullets>
+          <p>
+            עוד דבר שכדאי לדעת: המיסוי על רכב חשמלי משתנה. מס הקנייה עולה בהדרגה, ומדי פעם עולות הצעות למס על
+            נסועה. שינוי כזה משפיע גם על מחיר הרכב החדש וגם על שווי הרכב המשומש, אז כדאי לבדוק מה המצב העדכני
+            לפני שקונים.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              Maintenance — Another Win for Electric
-            </h2>
-            <p>
-              An electric motor is a far simpler mechanism than an internal
-              combustion engine. There is no engine oil that needs replacing every
-              10,000 to 15,000 kilometers, no timing belt that can snap and cause
-              severe damage, no complex exhaust system with a catalytic converter,
-              and no traditional gearbox requiring maintenance. In electric cars,
-              most braking is done through &quot;regenerative braking&quot; — the
-              electric motor itself slows the car while simultaneously charging
-              the battery — so brake pads also last significantly longer.
-            </p>
-            <p>
-              On average, the maintenance cost of an electric car is about 20%
-              lower than that of a comparable gasoline car. In the CarCalc
-              calculator, we use a multiplier of 0.8 for electric cars versus 1.0
-              for gasoline cars to reflect this difference. Over three years, the
-              maintenance savings can add up to several thousand shekels more,
-              depending on the specific vehicle and driving volume. Fewer trips to
-              the garage, fewer unexpected repair bills, and a generally simpler
-              ownership experience make electric cars attractive from a
-              maintenance perspective.
-            </p>
+          <H2>ההשוואה במחשבון</H2>
+          <p>
+            ב<Calc>מחשבון</Calc> בוחרים רכב מהרשימה, וסוג ההנעה והצריכה שלו נשלפים לבד מנתוני משרד התחבורה.
+            המחשבון מחשב את עלות האנרגיה לפי הנסועה שלכם, את הטיפולים ואת הפחת לפי סוג ההנעה. כדי להשוות
+            חשמלי לבנזין, הריצו אותו פעם אחת לכל רכב והשוו את העלות הכוללת.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              Depreciation — The Big Downside of Electric
-            </h2>
-            <p>
-              Here comes the less pleasant side of electric car ownership. The
-              electric vehicle market is evolving rapidly: new models with longer
-              range, improved battery technology, and continually falling prices.
-              All of these factors cause a used electric car to lose its value
-              faster than a gasoline car.
-            </p>
-            <p>
-              The depreciation rates common in the market are approximately 25%
-              in the first year, 20% in the second year, and 15% in the third
-              year for electric cars, compared to 15%, 12%, and 10% respectively
-              for gasoline cars. Let&apos;s look at a numerical example: assume a
-              car worth 200,000 ILS. Gasoline car: after one year — 170,000,
-              after two years — 149,600, after three years — 134,640. Total
-              depreciation: 65,360 ILS. Electric car: after one year — 150,000,
-              after two years — 120,000, after three years — 102,000. Total
-              depreciation: 98,000 ILS. The difference is 32,640 ILS to the
-              detriment of the electric car! This is a significant figure that can
-              offset a considerable portion of the fuel and maintenance savings.
-            </p>
+          <Note>
+            המספרים במדריך הם ממוצעים והערכות לצורך המחשה. צריכה, מחירי טעינה וירידת ערך משתנים בין דגמים
+            ולאורך זמן.
+          </Note>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              Comparison Summary
-            </h2>
-            <p>
-              So what really costs less? The answer depends on your personal
-              circumstances. Electric cars clearly win on fuel costs — with
-              savings of approximately 19,600 ILS over three years at 15,000
-              kilometers per year. Maintenance also favors electric with about 20%
-              lower costs. However, the accelerated depreciation of electric cars,
-              which can amount to 32,640 ILS more than a gasoline car, narrows the
-              gap considerably.
-            </p>
-            <p>
-              For high-mileage drivers — 20,000 kilometers per year and above —
-              the electric car is almost always more cost-effective, because the
-              fuel savings scale with mileage. For drivers who travel less and
-              trade in their car every two to three years, the high depreciation
-              may make the electric car more expensive overall. The car&apos;s
-              price also matters: the more expensive the car, the greater the
-              depreciation in absolute terms, so the loss from accelerated
-              depreciation grows accordingly. Each driver&apos;s break-even point
-              is different, making a personalized calculation essential.
-            </p>
+          <CalcCta
+            title="חשמלי או בנזין, עם המספרים שלכם"
+            text="בחרו את שני הרכבים שאתם שוקלים, וראו כמה כל אחד יעלה לכם בסך הכול, בקנייה ובליסינג."
+            button="למחשבון"
+          />
+        </>
+      ) : (
+        <>
+          <p>
+            An electric car is very cheap to drive and more expensive in lost value. Which comes out ahead
+            depends mainly on two things: how much you drive, and whether you can charge at home.
+          </p>
+          <p>
+            This guide takes each item separately, with numbers, and then combines them into one sum. Leasing
+            has its own section because the sum is different there.
+          </p>
 
-            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">
-              Try the Comparison in the Calculator
-            </h2>
-            <p>
-              In the CarCalc calculator, you can compare the same car with
-              different fuel types. Enter the data once with gasoline and once
-              with electric, and see the difference in total cost of ownership.
-              This way you can get an accurate, personalized picture based on the
-              price of the car you are considering, your annual driving distance,
-              and your planned ownership period. A personal comparison is the best
-              way to make an informed decision about which fuel type truly makes
-              more financial sense for your situation.
-            </p>
+          <CalcLink>Want to compare for your own car? Open the calculator</CalcLink>
 
-            <div className="mt-8 rounded-xl border border-brand-200 bg-brand-50 p-6 dark:border-brand-900 dark:bg-brand-950/30">
-              <p className="font-semibold text-brand-800 dark:text-brand-300">
-                Want to compare electric vs gasoline with your own numbers?
-              </p>
-              <p className="mt-1 text-brand-700 dark:text-brand-400">
-                <a href="/" className="underline hover:no-underline">
-                  Run the calculator twice — once for each fuel type — and compare
-                </a>
-              </p>
-            </div>
-          </>
-        )}
-      </div>
-    </main>
+          <Terms
+            title="The terms, in plain language"
+            items={[
+              ["kWh (kilowatt-hour)", "The unit of electricity, like a litre of fuel. Battery size is measured in kWh, and so is your electricity bill."],
+              [
+                "Consumption",
+                "How far the car goes on a unit of energy. Petrol: kilometres per litre. Electric: kilometres per kWh. An average electric car does roughly 6 km per kWh.",
+              ],
+              ["Range", "How far the car goes on a full charge. In winter, at high speed and with the air conditioning on, range is shorter."],
+              ["Home charging", "A charger in a private or building car park. You pay the household electricity rate, and it is the cheapest way to charge."],
+              [
+                "Public and fast charging",
+                "Chargers at malls, petrol stations and roadsides. Fast charging fills most of the battery in under an hour, but the price per kWh is far higher than at home.",
+              ],
+              [
+                "Hybrid",
+                "A car with a petrol engine and a small electric motor that charges itself while driving. You never plug it in. It saves fuel, mainly in town.",
+              ],
+              [
+                "Plug-in hybrid",
+                "A hybrid with a larger battery that you do plug in. It drives a few dozen kilometres on electricity alone, then switches to petrol.",
+              ],
+              [
+                "Regenerative braking",
+                "When you lift off the accelerator, the electric motor slows the car and feeds electricity back to the battery. That is why the brakes wear slowly.",
+              ],
+              ["Battery warranty", "A separate manufacturer warranty on the battery, usually for a good number of years or kilometres."],
+              [
+                "Purchase tax",
+                "A tax the state charges on every new car, built into the list price. Electric cars get a reduced rate that rises gradually each year.",
+              ],
+            ]}
+          />
+
+          <H2>What a kilometre costs</H2>
+          <p>This is the electric car’s big advantage, and it is worth seeing in numbers:</p>
+          <Table
+            head={["", "Energy price", "Cost per km", "Cost for 15,000 km a year"]}
+            rows={[
+              ["Petrol (14 km per litre)", "about 7.2 ILS a litre", "0.51 ILS", "about 7,700 ILS"],
+              ["Electric, home charging", "about 0.60 ILS per kWh", "0.10 ILS", "about 1,500 ILS"],
+              ["Electric, public fast charging", "about 1.8 ILS per kWh", "0.30 ILS", "about 4,500 ILS"],
+            ]}
+          />
+          <p>
+            Charging at home saves about 6,200 ILS a year against petrol. Charging only at fast chargers saves
+            about 3,200. That gap is why the first question before an electric car is not which model, but
+            where you will charge it.
+          </p>
+          <p>
+            Fuel prices are updated monthly and public charging prices vary between networks. The calculator
+            fetches the current fuel price itself.
+          </p>
+
+          <H2>Servicing and maintenance</H2>
+          <p>
+            An electric motor has far fewer moving parts. No engine oil, no clutch, no timing belt and no
+            exhaust system. The brakes last longer thanks to regenerative braking. So routine servicing is cheaper.
+          </p>
+          <p>
+            On the other hand an electric car is heavier and wears its tyres faster. Overall the maintenance
+            saving is real but small: hundreds of shekels a year, not thousands.
+          </p>
+
+          <H2>Depreciation: the big drawback</H2>
+          <p>
+            An electric car loses value faster. On the averages the calculator uses, a petrol car is worth
+            about 67% of its price after three years, and an electric car about 56%.
+          </p>
+          <Example title="A 200,000 ILS car after three years">
+            <p>
+              The petrol car is worth about 134,600 ILS, so it lost 65,400. The electric car is worth about
+              111,300, so it lost 88,700. The difference: <strong>23,300 ILS against the electric car</strong>.
+            </p>
+          </Example>
+          <p>
+            The reasons are in the <Ref to="depreciation">depreciation guide</Ref>: fast-moving technology,
+            falling prices, and buyers’ worries about battery condition.
+          </p>
+
+          <H2>The full sum: three years, a 200,000 ILS car</H2>
+          <p>Putting the three items together, assuming home charging:</p>
+          <Table
+            head={["", "15,000 km a year", "25,000 km a year"]}
+            rows={[
+              ["Energy saving", "18,600 ILS", "31,100 ILS"],
+              ["Servicing saving", "1,350 ILS", "2,250 ILS"],
+              ["Extra depreciation", "−23,300 ILS", "−23,300 ILS"],
+              [<strong key="a">Bottom line</strong>, <strong key="b">Petrol cheaper by about 3,400</strong>, <strong key="c">Electric cheaper by about 10,000</strong>],
+            ]}
+          />
+          <p>
+            The conclusion: at average mileage the two are very close, and depreciation wipes out most of the
+            fuel saving. The more you drive, the further ahead the electric car gets. And the longer you keep
+            the car, the smaller the yearly depreciation while the fuel saving keeps adding up.
+          </p>
+
+          <H2>Leasing electric vs. leasing petrol: which costs less?</H2>
+          <p>
+            In an operating lease the sum is simpler, because the loss in value is not yours. The leasing
+            company absorbs it and has already priced it into the monthly payment. Servicing is included too.
+            Only two numbers remain:
+          </p>
+          <Bullets>
+            <li>The difference in monthly payment between the electric model and the petrol one.</li>
+            <li>The monthly energy saving.</li>
+          </Bullets>
+          <Example title="Example">
+            <p>
+              Leasing an electric car costs 300 ILS a month more than a similar petrol car. At 15,000 km a year
+              with home charging, the energy saving is about 520 ILS a month. Electric wins by 220 a month.
+              Without home charging the saving drops to about 270 a month, and petrol is slightly cheaper.
+            </p>
+          </Example>
+          <p>
+            This is why leasing is a convenient way to try an electric car: you get the driving savings and the
+            depreciation risk stays with the leasing company. Just watch the mileage limit in the contract.
+            People who drive a lot gain most from electric, and are also the ones likely to exceed it.
+          </p>
+
+          <H2>What about hybrids and plug-ins?</H2>
+          <p>
+            <strong>A regular hybrid</strong> suits people with nowhere to charge. It saves fuel without
+            changing habits, and holds its value better than any other type.
+          </p>
+          <p>
+            <strong>A plug-in</strong> pays off only if you really charge it, every day. If you do not, you are
+            driving a heavy, expensive petrol car. In the calculator you can set what share of your driving is
+            done on electricity.
+          </p>
+
+          <H2>Who electric suits, and who it suits less</H2>
+          <Bullets>
+            <li>
+              <strong>Suits:</strong> you have parking where you can charge, you drive a lot, and you plan to
+              keep the car for several years or to lease it.
+            </li>
+            <li>
+              <strong>Suits less:</strong> no charging at home or work, low mileage, and you change cars every
+              two or three years when buying.
+            </li>
+          </Bullets>
+          <p>
+            One more thing: taxation of electric cars keeps changing. Purchase tax is rising gradually, and
+            proposals for a per-kilometre tax come up from time to time. Such changes affect both new-car
+            prices and used values, so check the current situation before buying.
+          </p>
+
+          <H2>The comparison in the calculator</H2>
+          <p>
+            In <Calc>the calculator</Calc> you pick a car from the list, and its powertrain and consumption are
+            pulled from Ministry of Transport data. The calculator works out the energy cost for your mileage,
+            servicing, and depreciation by powertrain. To compare electric with petrol, run it once for each
+            car and compare the total cost.
+          </p>
+
+          <Note>
+            The numbers here are averages and estimates for illustration. Consumption, charging prices and
+            depreciation vary between models and over time.
+          </Note>
+
+          <CalcCta
+            title="Electric or petrol, with your numbers"
+            text="Pick the two cars you are considering and see what each will cost you in total, buying and leasing."
+            button="Open the calculator"
+          />
+        </>
+      )}
+    </GuideShell>
   );
 }
