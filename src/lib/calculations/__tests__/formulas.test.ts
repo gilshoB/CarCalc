@@ -20,10 +20,10 @@ const market = getTestMarketData();
 
 describe("typicalDepreciationPct", () => {
   it("returns the standard cumulative loss per fuel type over 5 years", () => {
-    expect(typicalDepreciationPct("gasoline", 5)).toBe(45);
-    expect(typicalDepreciationPct("hybrid", 5)).toBe(42);
-    expect(typicalDepreciationPct("plugin_hybrid", 5)).toBe(52);
-    expect(typicalDepreciationPct("electric", 5)).toBe(58);
+    expect(typicalDepreciationPct("gasoline", 5)).toBe(40);
+    expect(typicalDepreciationPct("hybrid", 5)).toBe(38);
+    expect(typicalDepreciationPct("plugin_hybrid", 5)).toBe(45);
+    expect(typicalDepreciationPct("electric", 5)).toBe(53);
   });
 
   it("orders fuel types from best to worst value retention", () => {
@@ -42,20 +42,20 @@ describe("typicalDepreciationPct", () => {
 describe("calcDepreciation", () => {
   it("new gasoline car, 3 years", () => {
     const result = calcDepreciation(200000, 3, "gasoline", false);
-    // year 1: 200000 * 0.85 = 170000
-    // year 2: 170000 * 0.88 = 149600
-    // year 3: 149600 * 0.90 = 134640
-    expect(result.residualValue).toBe(Math.round(200000 * 0.85 * 0.88 * 0.90));
+    // year 1: 200000 * 0.89 = 178000
+    // year 2: 178000 * 0.90 = 160200
+    // year 3: 160200 * 0.91 = 145782
+    expect(result.residualValue).toBe(Math.round(200000 * 0.89 * 0.90 * 0.91));
     expect(result.totalDepreciation).toBe(200000 - result.residualValue);
     expect(result.yearlyValues).toHaveLength(3);
   });
 
   it("new electric car, 3 years — higher depreciation", () => {
     const result = calcDepreciation(200000, 3, "electric", false);
-    // year 1: 200000 * 0.78 = 156000
-    // year 2: 156000 * 0.82 = 127920
-    // year 3: 127920 * 0.87 = 111290
-    expect(result.residualValue).toBe(Math.round(200000 * 0.78 * 0.82 * 0.87));
+    // year 1: 200000 * 0.84 = 168000
+    // year 2: 168000 * 0.85 = 142800
+    // year 3: 142800 * 0.87 = 124236
+    expect(result.residualValue).toBe(Math.round(200000 * 0.84 * 0.85 * 0.87));
     expect(result.totalDepreciation).toBe(200000 - result.residualValue);
   });
 
@@ -69,18 +69,18 @@ describe("calcDepreciation", () => {
     expect(phev).toBeGreaterThan(electric);
   });
 
-  it("plug-in hybrid uses the 18/14/12 curve", () => {
+  it("plug-in hybrid uses the 14/12/10 curve", () => {
     const result = calcDepreciation(200000, 3, "plugin_hybrid", false);
-    expect(result.residualValue).toBe(Math.round(200000 * 0.82 * 0.86 * 0.88));
+    expect(result.residualValue).toBe(Math.round(200000 * 0.86 * 0.88 * 0.90));
   });
 
   it("used car (age 2) — starts at yr3Plus rate", () => {
     const result = calcDepreciation(100000, 3, "gasoline", true, 2);
     // car age 3,4,5 → all yr3Plus (0.10)
-    // year 1: 100000 * 0.90 = 90000
-    // year 2: 90000 * 0.90 = 81000
-    // year 3: 81000 * 0.90 = 72900
-    expect(result.residualValue).toBe(Math.round(100000 * 0.9 * 0.9 * 0.9));
+    // year 1: 100000 * 0.91 = 91000
+    // year 2: 91000 * 0.91 = 82810
+    // year 3: 82810 * 0.91 = 75357
+    expect(result.residualValue).toBe(Math.round(100000 * 0.91 * 0.91 * 0.91));
   });
 
   it("used car (age 0, really new) — same as new", () => {
@@ -100,7 +100,7 @@ describe("calcDepreciation", () => {
 
   it("1 year period", () => {
     const result = calcDepreciation(100000, 1, "gasoline", false);
-    expect(result.residualValue).toBe(Math.round(100000 * 0.85));
+    expect(result.residualValue).toBe(Math.round(100000 * 0.89));
     expect(result.yearlyValues).toHaveLength(1);
   });
 

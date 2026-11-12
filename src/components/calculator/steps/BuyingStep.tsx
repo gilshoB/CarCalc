@@ -87,6 +87,21 @@ export default function BuyingStep({
   // Show the detail fields only once a car is picked or the user chose manual entry.
   const showFields = manualMode || buy.vehicle != null;
 
+  // Under each auto-filled field: where the value came from and how it was derived.
+  const a = t.form.autoHints;
+  const consumptionAutoHint = !vehicleAutoFilled
+    ? undefined
+    : buy.vehicle?.kmPerLiter && buy.vehicle?.co2WltpGramsPerKm
+      ? a.consumptionWltp.replace("{co2}", String(buy.vehicle.co2WltpGramsPerKm))
+      : buy.fuelType === "electric"
+        ? a.consumptionEv
+        : buy.fuelType === "plugin_hybrid"
+          ? a.consumptionPhev
+          : a.consumptionDefault;
+  const carAgeAutoHint = vehicleAutoFilled && buy.vehicle?.modelYear
+    ? a.carAge.replace("{year}", String(buy.vehicle.modelYear))
+    : undefined;
+
   return (
     <div className="space-y-7">
       <div>
@@ -134,7 +149,7 @@ export default function BuyingStep({
           />
         </FormField>
 
-        <FormField label={f.catalogPrice} hint={f.catalogPriceHint}>
+        <FormField label={f.catalogPrice} hint={catalogAutoFilled ? a.catalogPrice : f.catalogPriceHint}>
           <NumberInput
             value={buy.catalogPrice ?? 0}
             onChange={(v) => onChange("buy.catalogPrice", v || undefined)}
@@ -148,7 +163,7 @@ export default function BuyingStep({
       {/* Fuel type + consumption — auto-filled by the picker but always editable
           so the user can override (e.g. petrol vs. diesel within the same trim). */}
       <div className="grid gap-4 sm:grid-cols-2">
-        <FormField label={f.fuelType}>
+        <FormField label={f.fuelType} hint={vehicleAutoFilled ? a.fuelType : undefined}>
           <Select
             value={buy.fuelType}
             onChange={handleFuelTypeChange}
@@ -160,9 +175,11 @@ export default function BuyingStep({
 
         <FormField
           label={`${f.consumption} (${consumptionLabel})`}
+          hint={consumptionAutoHint}
           error={errors["buy.consumptionKmPerUnit"]}
           required
-         validationMessages={t.form.validation}>
+          validationMessages={t.form.validation}
+        >
           <NumberInput
             value={buy.consumptionKmPerUnit}
             onChange={(v) => onChange("buy.consumptionKmPerUnit", v)}
@@ -202,7 +219,7 @@ export default function BuyingStep({
             <p className="mt-0.5 text-[13px] text-muted">{t.form.usedCar.sectionHint}</p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <FormField label={f.usedCarAge} hint={f.usedCarAgeHint} error={errors["buy.usedCarAge"]} required validationMessages={t.form.validation}>
+            <FormField label={f.usedCarAge} hint={carAgeAutoHint ? `${carAgeAutoHint} ${f.usedCarAgeHint}` : f.usedCarAgeHint} error={errors["buy.usedCarAge"]} required validationMessages={t.form.validation}>
               <NumberInput
                 value={buy.usedCarAge ?? 0}
                 onChange={(v) => onChange("buy.usedCarAge", v)}

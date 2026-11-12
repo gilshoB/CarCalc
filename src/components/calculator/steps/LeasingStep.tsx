@@ -87,6 +87,21 @@ export default function LeasingStep({
   // Show the detail fields only once a car is picked or manual entry is chosen.
   const showFields = manualMode || lease.vehicle != null;
 
+  // Under each auto-filled field: where the value came from and how it was derived.
+  const a = t.form.autoHints;
+  const consumptionAutoHint = !vehicleAutoFilled
+    ? undefined
+    : lease.vehicle?.kmPerLiter && lease.vehicle?.co2WltpGramsPerKm
+      ? a.consumptionWltp.replace("{co2}", String(lease.vehicle.co2WltpGramsPerKm))
+      : lease.fuelType === "electric"
+        ? a.consumptionEv
+        : lease.fuelType === "plugin_hybrid"
+          ? a.consumptionPhev
+          : a.consumptionDefault;
+  const carAgeAutoHint = vehicleAutoFilled && lease.vehicle?.modelYear
+    ? a.carAge.replace("{year}", String(lease.vehicle.modelYear))
+    : undefined;
+
   return (
     <div className="space-y-7">
       <h2 className="text-[34px] sm:text-[40px] font-extrabold leading-[1.05] tracking-[-0.035em]">{f.title}</h2>
@@ -152,7 +167,7 @@ export default function LeasingStep({
           />
         </FormField>
 
-        <FormField label={f.carAge} hint={f.carAgeHint}>
+        <FormField label={f.carAge} hint={carAgeAutoHint ?? f.carAgeHint}>
           <NumberInput
             value={lease.leaseCarAge ?? 0}
             onChange={(v) => onChange("lease.leaseCarAge", v)}
@@ -166,7 +181,7 @@ export default function LeasingStep({
 
       {/* Fuel type + consumption — auto-filled by the picker but always editable. */}
       <div className="grid gap-4 sm:grid-cols-2">
-        <FormField label={f.fuelType}>
+        <FormField label={f.fuelType} hint={vehicleAutoFilled ? a.fuelType : undefined}>
           <Select
             value={lease.fuelType}
             onChange={handleFuelTypeChange}
@@ -178,9 +193,11 @@ export default function LeasingStep({
 
         <FormField
           label={`${f.consumption} (${consumptionLabel})`}
+          hint={consumptionAutoHint}
           error={errors["lease.consumptionKmPerUnit"]}
           required
-         validationMessages={t.form.validation}>
+          validationMessages={t.form.validation}
+        >
           <NumberInput
             value={lease.consumptionKmPerUnit}
             onChange={(v) => onChange("lease.consumptionKmPerUnit", v)}

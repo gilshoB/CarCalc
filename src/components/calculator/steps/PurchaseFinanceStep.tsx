@@ -75,13 +75,13 @@ export default function PurchaseFinanceStep({
         {!loanNeeded ? (
           <p className="rounded-[14px] bg-brand-100 px-4 py-3 text-sm font-medium text-ink">✓ {buy.loanNotNeeded}</p>
         ) : (
-          <div className="space-y-4 rounded-[18px] bg-ink p-5 sm:p-6 text-white [&_.text-red-700]:text-red-300">
+          <div className="space-y-4 rounded-[18px] bg-ink p-5 sm:p-6 text-white [&_.text-red-700]:text-red-300 [&_.text-muted]:text-[#c8c8c1]">
             <p className="text-sm text-[#c8c8c1]">{buy.loanExplain}</p>
             <p className="text-xl font-extrabold">
               {buy.loanAmount}: <span className="text-lime">{formatNumber(loanAmount, locale)} ₪</span>
             </p>
             <div className="grid gap-4 sm:grid-cols-2">
-              <FormField label={buy.interestRate} error={errors["financing.interestRate"]} validationMessages={t.form.validation}>
+              <FormField label={buy.interestRate} hint={t.form.autoHints.interestRate} error={errors["financing.interestRate"]} validationMessages={t.form.validation}>
                 <NumberInput
                   value={interestRate}
                   onChange={(v) => onChange("financing.interestRate", v)}
@@ -90,7 +90,7 @@ export default function PurchaseFinanceStep({
                   error={!!errors["financing.interestRate"]}
                 />
               </FormField>
-              <FormField label={buy.loanTerm} error={errors["financing.loanTermYears"]} validationMessages={t.form.validation}>
+              <FormField label={buy.loanTerm} hint={t.form.autoHints.loanTerm} error={errors["financing.loanTermYears"]} validationMessages={t.form.validation}>
                 <NumberInput
                   value={loanTermYears}
                   onChange={(v) => onChange("financing.loanTermYears", v)}

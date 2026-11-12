@@ -72,19 +72,19 @@ export default async function DepreciationGuidePage() {
           <H2>טבלת ירידת ערך לפי שנים</H2>
           <p>
             הטבלה מראה כמה אחוזים ממחיר הקנייה הרכב עדיין שווה בסוף כל שנה. אלה ממוצעים שהמחשבון שלנו משתמש
-            בהם. רכב מסוים יכול להיות מעל או מתחת, לפי הדגם והמצב שלו.
+            בהם, והם מבוססים על מחירי רכבים משומשים בישראל. רכב מסוים יכול להיות מעל או מתחת, לפי הדגם והמצב שלו.
           </p>
           <Table
             head={["סוג הנעה", "אחרי שנה", "אחרי שנתיים", "אחרי 3 שנים", "אחרי 4 שנים", "אחרי 5 שנים"]}
             rows={[
-              ["בנזין או דיזל", "85%", "75%", "67%", "61%", "55%"],
-              ["היברידי", "87%", "77%", "70%", "64%", "58%"],
-              ["פלאג-אין", "82%", "71%", "62%", "55%", "48%"],
-              ["חשמלי", "78%", "64%", "56%", "48%", "42%"],
+              ["בנזין או דיזל", "89%", "80%", "73%", "66%", "60%"],
+              ["היברידי", "89%", "80%", "74%", "68%", "62%"],
+              ["פלאג-אין", "86%", "76%", "68%", "61%", "55%"],
+              ["חשמלי", "84%", "71%", "62%", "54%", "47%"],
             ]}
           />
           <p>
-            שני דברים בולטים בטבלה. הראשון: השנה הראשונה היא היקרה ביותר, ואחריה הקצב נרגע. השני: רכב חשמלי
+            שני דברים בולטים בטבלה. הראשון: השנים הראשונות הן היקרות ביותר, ואחריהן הקצב נרגע. השני: רכב חשמלי
             מאבד ערך מהר יותר מרכב בנזין, ורכב היברידי רגיל שומר על ערכו הכי טוב.
           </p>
 
@@ -92,14 +92,14 @@ export default async function DepreciationGuidePage() {
           <Table
             head={["", "ביום הקנייה", "אחרי שנה", "אחרי 3 שנים", "אחרי 5 שנים"]}
             rows={[
-              ["בנזין", "150,000 ₪", "127,500 ₪", "101,000 ₪", "81,800 ₪"],
-              ["היברידי", "150,000 ₪", "130,500 ₪", "105,700 ₪", "87,500 ₪"],
-              ["חשמלי", "150,000 ₪", "117,000 ₪", "83,500 ₪", "63,200 ₪"],
+              ["בנזין", "150,000 ₪", "133,500 ₪", "109,300 ₪", "90,500 ₪"],
+              ["היברידי", "150,000 ₪", "133,500 ₪", "110,500 ₪", "93,600 ₪"],
+              ["חשמלי", "150,000 ₪", "126,000 ₪", "93,200 ₪", "70,500 ₪"],
             ]}
           />
           <p>
-            רכב הבנזין איבד 49,000 ₪ בשלוש שנים. זה כ-1,360 ₪ בכל חודש, יותר ממה שרוב האנשים מוציאים על דלק.
-            הרכב החשמלי איבד 66,500 ₪ באותו זמן, שהם כ-1,850 ₪ לחודש.
+            רכב הבנזין איבד 40,700 ₪ בשלוש שנים. זה כ-1,130 ₪ בכל חודש, יותר ממה שרוב האנשים מוציאים על דלק.
+            הרכב החשמלי איבד 56,800 ₪ באותו זמן, שהם כ-1,580 ₪ לחודש.
           </p>
 
           <H2>למה רכב חשמלי מאבד ערך מהר יותר</H2>
@@ -147,17 +147,17 @@ export default async function DepreciationGuidePage() {
           </p>
           <Example title="אותו רכב, שני קונים">
             <p>
-              <strong>קונה א׳</strong> קונה רכב בנזין חדש ב-150,000 ₪ ומוכר אחרי שלוש שנים ב-101,000 ₪. הפחת
-              עלה לו 49,000 ₪.
+              <strong>קונה א׳</strong> קונה רכב בנזין חדש ב-150,000 ₪ ומוכר אחרי שלוש שנים ב-109,300 ₪. הפחת
+              עלה לו 40,700 ₪.
             </p>
             <p>
-              <strong>קונה ב׳</strong> קונה ממנו את הרכב ב-101,000 ₪ ומחזיק בו שלוש שנים נוספות. בסופן הרכב
-              שווה כ-73,600 ₪. הפחת עלה לו 27,400 ₪, קצת יותר מחצי.
+              <strong>קונה ב׳</strong> קונה ממנו את הרכב ב-109,300 ₪ ומחזיק בו שלוש שנים נוספות. בסופן הרכב
+              שווה כ-82,400 ₪. הפחת עלה לו 26,900 ₪, כשני שלישים.
             </p>
           </Example>
           <p>
             המחיר של יד שנייה הוא יותר טיפולים ותיקונים, פחות אחריות יצרן, וצורך לבדוק את הרכב היטב לפני
-            הקנייה. אבל בחשבון של פחת בלבד, יד שנייה מנצחת כמעט תמיד.
+            הקנייה. אבל בחשבון של פחת בלבד, יד שנייה זולה יותר.
           </p>
 
           <H2>ומה עם פחת בליסינג?</H2>
@@ -236,20 +236,20 @@ export default async function DepreciationGuidePage() {
           <H2>Depreciation table by year</H2>
           <p>
             The table shows what percentage of the purchase price a car is still worth at the end of each year.
-            These are the averages our calculator uses. A particular car can be above or below them depending
+            These are the averages our calculator uses, based on used-car prices in Israel. A particular car can be above or below them depending
             on model and condition.
           </p>
           <Table
             head={["Powertrain", "After 1 year", "After 2", "After 3", "After 4", "After 5"]}
             rows={[
-              ["Petrol or diesel", "85%", "75%", "67%", "61%", "55%"],
-              ["Hybrid", "87%", "77%", "70%", "64%", "58%"],
-              ["Plug-in hybrid", "82%", "71%", "62%", "55%", "48%"],
-              ["Electric", "78%", "64%", "56%", "48%", "42%"],
+              ["Petrol or diesel", "89%", "80%", "73%", "66%", "60%"],
+              ["Hybrid", "89%", "80%", "74%", "68%", "62%"],
+              ["Plug-in hybrid", "86%", "76%", "68%", "61%", "55%"],
+              ["Electric", "84%", "71%", "62%", "54%", "47%"],
             ]}
           />
           <p>
-            Two things stand out. First, year one is the most expensive and the pace eases after that. Second,
+            Two things stand out. First, the early years are the most expensive and the pace eases after that. Second,
             an electric car loses value faster than a petrol car, and a regular hybrid holds its value best.
           </p>
 
@@ -257,14 +257,14 @@ export default async function DepreciationGuidePage() {
           <Table
             head={["", "Day of purchase", "After 1 year", "After 3 years", "After 5 years"]}
             rows={[
-              ["Petrol", "150,000", "127,500", "101,000", "81,800"],
-              ["Hybrid", "150,000", "130,500", "105,700", "87,500"],
-              ["Electric", "150,000", "117,000", "83,500", "63,200"],
+              ["Petrol", "150,000", "133,500", "109,300", "90,500"],
+              ["Hybrid", "150,000", "133,500", "110,500", "93,600"],
+              ["Electric", "150,000", "126,000", "93,200", "70,500"],
             ]}
           />
           <p>
-            The petrol car lost 49,000 ILS in three years. That is about 1,360 ILS every month, more than most
-            people spend on fuel. The electric car lost 66,500 ILS in the same time, about 1,850 a month.
+            The petrol car lost 40,700 ILS in three years. That is about 1,130 ILS every month, more than most
+            people spend on fuel. The electric car lost 56,800 ILS in the same time, about 1,580 a month.
           </p>
 
           <H2>Why electric cars lose value faster</H2>
@@ -313,16 +313,16 @@ export default async function DepreciationGuidePage() {
           <Example title="Same car, two buyers">
             <p>
               <strong>Buyer A</strong> buys a new petrol car for 150,000 ILS and sells it three years later for
-              101,000. Depreciation cost them 49,000 ILS.
+              109,300. Depreciation cost them 40,700 ILS.
             </p>
             <p>
-              <strong>Buyer B</strong> buys that car for 101,000 ILS and keeps it another three years, after
-              which it is worth about 73,600. Depreciation cost them 27,400 ILS, a little over half.
+              <strong>Buyer B</strong> buys that car for 109,300 ILS and keeps it another three years, after
+              which it is worth about 82,400. Depreciation cost them 26,900 ILS, about two thirds.
             </p>
           </Example>
           <p>
             The price of buying used is more servicing and repairs, less manufacturer warranty, and the need to
-            inspect the car carefully first. But on depreciation alone, used almost always wins.
+            inspect the car carefully first. But on depreciation alone, used is cheaper.
           </p>
 
           <H2>What about depreciation when leasing?</H2>

@@ -9,19 +9,21 @@ import type {
 
 // ---- Depreciation ----
 
+// Calibrated to the Israeli used-car market: yad2 price-list values (Nov 2026)
+// for the same sub-model across model years — Mazda 2, Skoda Octavia (petrol,
+// diesel, plug-in), Toyota Corolla hybrid, Tesla Model 3, BYD Atto 3, Geely
+// Geometry C, Kia EV6. Israeli cars hold value better than the US figures
+// this table used before. Re-check yearly; see docs/assumptions-and-upkeep.md.
 const DEPRECIATION_CURVES: Record<FuelType, { yr1: number; yr2: number; yr3Plus: number }> = {
-  gasoline: { yr1: 0.15, yr2: 0.12, yr3Plus: 0.10 },
-  diesel: { yr1: 0.15, yr2: 0.12, yr3Plus: 0.10 },
-  // Regular (self-charging) hybrids hold value best of all — Toyota et al.
-  // ~42% over 5 years, a touch better than plain ICE.
-  hybrid: { yr1: 0.13, yr2: 0.11, yr3Plus: 0.09 },
-  // Plug-in hybrids depreciate faster than a regular hybrid but not as hard as
-  // a full EV — complexity + shrinking incentives. ~52% over 5 years.
-  plugin_hybrid: { yr1: 0.18, yr2: 0.14, yr3Plus: 0.12 },
-  // EVs depreciate faster than ICE but less severely than the 2023 panic:
-  // ~58% over 5 years (iSeeCars 2025), vs ~45% for ICE. Declining-balance
-  // 22/18/13 lands 5-year loss at ~58%.
-  electric: { yr1: 0.22, yr2: 0.18, yr3Plus: 0.13 },
+  // ~27% over 3 years, ~40% over 5.
+  gasoline: { yr1: 0.11, yr2: 0.10, yr3Plus: 0.09 },
+  diesel: { yr1: 0.11, yr2: 0.10, yr3Plus: 0.09 },
+  // Regular hybrids track petrol early on and hold slightly better later.
+  hybrid: { yr1: 0.11, yr2: 0.10, yr3Plus: 0.08 },
+  // Thin sample (one model) — between petrol and electric.
+  plugin_hybrid: { yr1: 0.14, yr2: 0.12, yr3Plus: 0.10 },
+  // EVs lose value fastest: ~38% over 3 years, ~53% over 5.
+  electric: { yr1: 0.16, yr2: 0.15, yr3Plus: 0.13 },
 };
 
 export interface DepreciationAdjustments {

@@ -192,7 +192,7 @@ const en = {
       investmentExplain: "Investment amount: old car value + available cash minus lease down payment",
       investmentAmount: "Amount available to invest",
       investmentReturn: "Expected Annual Return (%)",
-      investmentHint: "Default: 5-year S&P 500 average return. Capital-gains tax (25%) is deducted automatically in the final table.",
+      investmentHint: "Default: the actual average annual return of the S&P 500 over the last five years. Capital-gains tax (25%) is deducted from the gain, and the amount in the results table is after tax.",
     },
     buying: {
       title: "Car to buy",
@@ -229,6 +229,17 @@ const en = {
     consumptionUnit: {
       kmPerLiter: "km/L",
       kmPerKwh: "km/kWh",
+    },
+    autoHints: {
+      fuelType: "From the car's registration in the Ministry of Transport database.",
+      consumptionWltp: "Calculated from the car's official emissions figure in the Ministry of Transport database ({co2} g CO₂/km, WLTP). Real-world consumption is usually a little higher.",
+      consumptionEv: "The Ministry of Transport does not publish electricity consumption. This is a typical figure for an electric car; update it from the manufacturer's data.",
+      consumptionPhev: "A typical figure for a plug-in running on petrol only. The electric share is calculated separately, from the percentage below.",
+      consumptionDefault: "No figure for this car in the database. This is a typical value for the powertrain; update it if you can.",
+      catalogPrice: "Median list price for this model and year in the Ministry of Transport importers' database. Used for the registration fee.",
+      carAge: "Calculated from the model year ({year}).",
+      interestRate: "Default: prime plus about 1.75%. Update it to the offer you received.",
+      loanTerm: "Default: 5 years. Update it to the offer you received.",
     },
     vehiclePicker: {
       title: "Select vehicle",
@@ -311,7 +322,7 @@ const en = {
       resetBtn: "Reset",
       taxBenefits: "Tax Benefits",
       workplaceBenefit: "Workplace Reimbursement",
-      investmentResult: "Investment Result",
+      investmentResult: "Investment result (net, after capital-gains tax)",
       total: "Total",
       monthlyCost: "Monthly Cost",
       groupVehicle: "Vehicle Cost",

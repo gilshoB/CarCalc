@@ -139,11 +139,11 @@ export default async function BuyVsLeasePage() {
             <Table
               head={["סעיף", "עלות לשלוש שנים"]}
               rows={[
-                ["פחת (הרכב שווה כ-101,000 ₪ בסוף)", "49,000 ₪"],
+                ["פחת (הרכב שווה כ-109,300 ₪ בסוף)", "40,700 ₪"],
                 ["ביטוח חובה ומקיף (6,000 ₪ בשנה)", "18,000 ₪"],
                 ["אגרת רישוי", "5,800 ₪"],
                 ["טיפולים", "6,750 ₪"],
-                [<strong key="t">סך הכול</strong>, <strong key="v">כ-79,600 ₪, שהם כ-2,200 ₪ לחודש</strong>],
+                [<strong key="t">סך הכול</strong>, <strong key="v">כ-71,300 ₪, שהם כ-2,000 ₪ לחודש</strong>],
               ]}
             />
           </Example>
@@ -154,13 +154,13 @@ export default async function BuyVsLeasePage() {
             </p>
           </Example>
           <p>
-            לפי החשבון הזה הקנייה זולה בכ-25,000 ₪. אבל חסר בו דבר אחד: מי שקנה שם 150,000 ₪ על הרכב. מי שלקח
+            לפי החשבון הזה הקנייה זולה בכ-33,000 ₪. אבל חסר בו דבר אחד: מי שקנה שם 150,000 ₪ על הרכב. מי שלקח
             ליסינג השאיר את הכסף אצלו. אם הכסף הזה מושקע ומרוויח 6% בשנה, אחרי שלוש שנים ומס על הרווח נוספו לו
-            כ-21,500 ₪. עכשיו הפער הוא כ-3,000 ₪ בלבד.
+            כ-21,500 ₪. עכשיו הפער הוא כ-11,500 ₪.
           </p>
           <p>
-            ומה אם הרכב יימכר ב-95,000 ₪ במקום 101,000 ₪? או אם הקנייה ממומנת בהלוואה בריבית של 7%? הליסינג כבר
-            יוצא זול יותר. זו הנקודה: התשובה תלויה במספרים שלכם, ושינוי קטן באחד מהם הופך את התוצאה. בשביל זה
+            ומה אם הרכב יימכר ב-100,000 ₪ במקום 109,000 ₪, וחלק מהקנייה ממומן בהלוואה בריבית של 7%? הפער
+            נמחק, והליסינג יכול לצאת זול יותר. זו הנקודה: התשובה תלויה במספרים שלכם, ושינוי קטן באחד מהם הופך את התוצאה. בשביל זה
             בנינו את <Calc>המחשבון</Calc>.
           </p>
 
@@ -345,11 +345,11 @@ export default async function BuyVsLeasePage() {
             <Table
               head={["Item", "Cost over three years"]}
               rows={[
-                ["Depreciation (car worth about 101,000 ILS at the end)", "49,000 ILS"],
+                ["Depreciation (car worth about 109,300 ILS at the end)", "40,700 ILS"],
                 ["Mandatory and comprehensive insurance (6,000 a year)", "18,000 ILS"],
                 ["Registration fee", "5,800 ILS"],
                 ["Servicing", "6,750 ILS"],
-                [<strong key="t">Total</strong>, <strong key="v">about 79,600 ILS, roughly 2,200 a month</strong>],
+                [<strong key="t">Total</strong>, <strong key="v">about 71,300 ILS, roughly 2,000 a month</strong>],
               ]}
             />
           </Example>
@@ -360,13 +360,13 @@ export default async function BuyVsLeasePage() {
             </p>
           </Example>
           <p>
-            On these numbers buying is about 25,000 ILS cheaper. But one thing is missing: the buyer put 150,000
+            On these numbers buying is about 33,000 ILS cheaper. But one thing is missing: the buyer put 150,000
             ILS into the car. The lessee kept that money. Invested at 6% a year, after three years and tax on
-            the gain it has grown by about 21,500 ILS. Now the gap is only about 3,000 ILS.
+            the gain it has grown by about 21,500 ILS. Now the gap is about 11,500 ILS.
           </p>
           <p>
-            What if the car sells for 95,000 ILS instead of 101,000? Or the purchase is financed at 7%
-            interest? Leasing is now cheaper. That is the point: the answer depends on your numbers, and a small
+            What if the car sells for 100,000 ILS instead of 109,000, and part of the purchase is financed at 7%
+            interest? The gap disappears and leasing can come out cheaper. That is the point: the answer depends on your numbers, and a small
             change in one of them flips the result. That is what <Calc>the calculator</Calc> is for.
           </p>
 

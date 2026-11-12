@@ -113,12 +113,12 @@ export default async function ElectricVsGasolinePage() {
           <H2>ירידת ערך: החיסרון הגדול</H2>
           <p>
             רכב חשמלי מאבד ערך מהר יותר. לפי הממוצעים שהמחשבון משתמש בהם, רכב בנזין שווה אחרי שלוש שנים בערך
-            67% ממחירו, ורכב חשמלי בערך 56%.
+            73% ממחירו, ורכב חשמלי בערך 62%.
           </p>
           <Example title="רכב של 200,000 ₪ אחרי שלוש שנים">
             <p>
-              רכב הבנזין שווה כ-134,600 ₪, כלומר איבד 65,400 ₪. הרכב החשמלי שווה כ-111,300 ₪, כלומר איבד 88,700
-              ₪. ההפרש: <strong>23,300 ₪ לרעת החשמלי</strong>.
+              רכב הבנזין שווה כ-145,800 ₪, כלומר איבד 54,200 ₪. הרכב החשמלי שווה כ-124,200 ₪, כלומר איבד 75,800
+              ₪. ההפרש: <strong>21,600 ₪ לרעת החשמלי</strong>.
             </p>
           </Example>
           <p>
@@ -133,8 +133,8 @@ export default async function ElectricVsGasolinePage() {
             rows={[
               ["חיסכון באנרגיה", "20,400 ₪", "34,100 ₪"],
               ["חיסכון בטיפולים", "1,350 ₪", "2,250 ₪"],
-              ["ירידת ערך נוספת", "מינוס 23,300 ₪", "מינוס 23,300 ₪"],
-              [<strong key="a">השורה התחתונה</strong>, <strong key="b">הבנזין זול בכ-1,500 ₪</strong>, <strong key="c">החשמלי זול בכ-13,000 ₪</strong>],
+              ["ירידת ערך נוספת", "מינוס 21,600 ₪", "מינוס 21,600 ₪"],
+              [<strong key="a">השורה התחתונה</strong>, <strong key="b">כמעט שוויון</strong>, <strong key="c">החשמלי זול בכ-14,700 ₪</strong>],
             ]}
           />
           <p>
@@ -289,12 +289,12 @@ export default async function ElectricVsGasolinePage() {
           <H2>Depreciation: the big drawback</H2>
           <p>
             An electric car loses value faster. On the averages the calculator uses, a petrol car is worth
-            about 67% of its price after three years, and an electric car about 56%.
+            about 73% of its price after three years, and an electric car about 62%.
           </p>
           <Example title="A 200,000 ILS car after three years">
             <p>
-              The petrol car is worth about 134,600 ILS, so it lost 65,400. The electric car is worth about
-              111,300, so it lost 88,700. The difference: <strong>23,300 ILS against the electric car</strong>.
+              The petrol car is worth about 145,800 ILS, so it lost 54,200. The electric car is worth about
+              124,200, so it lost 75,800. The difference: <strong>21,600 ILS against the electric car</strong>.
             </p>
           </Example>
           <p>
@@ -309,8 +309,8 @@ export default async function ElectricVsGasolinePage() {
             rows={[
               ["Energy saving", "20,400 ILS", "34,100 ILS"],
               ["Servicing saving", "1,350 ILS", "2,250 ILS"],
-              ["Extra depreciation", "−23,300 ILS", "−23,300 ILS"],
-              [<strong key="a">Bottom line</strong>, <strong key="b">Petrol cheaper by about 1,500</strong>, <strong key="c">Electric cheaper by about 13,000</strong>],
+              ["Extra depreciation", "−21,600 ILS", "−21,600 ILS"],
+              [<strong key="a">Bottom line</strong>, <strong key="b">Almost even</strong>, <strong key="c">Electric cheaper by about 14,700</strong>],
             ]}
           />
           <p>

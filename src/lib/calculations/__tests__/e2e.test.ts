@@ -67,9 +67,9 @@ describe("e2e — exact numerical outputs", () => {
     expect(buy.breakdown.carPayment).toBe(170000);
     // Capital fully covers the price → no loan auto-triggered.
     expect(buy.breakdown.loanInterest).toBe(0);
-    // Depreciation: 170000 → yr1 (0.85) → yr2 (0.88) → yr3 (0.90)
-    // 170000 * 0.85 = 144500, * 0.88 = 127160, * 0.90 = 114444
-    expect(buy.breakdown.residualValue).toBe(Math.round(170000 * 0.85 * 0.88 * 0.90));
+    // Depreciation: 170000 → yr1 (0.89) → yr2 (0.90) → yr3 (0.91)
+    // 170000 * 0.89 * 0.90 * 0.91
+    expect(buy.breakdown.residualValue).toBe(Math.round(170000 * 0.89 * 0.90 * 0.91));
     expect(buy.breakdown.depreciation).toBe(170000 - buy.breakdown.residualValue);
     // Insurance: (1500 + 5000) * 3 = 19500
     expect(buy.breakdown.mandatoryInsurance).toBe(4500);
@@ -121,8 +121,8 @@ describe("e2e — exact numerical outputs", () => {
 
     // Depreciation: used car age 2, hybrid curve yr3Plus = 0.09
     // Ages 3, 4, 5 → all yr3Plus (0.09)
-    // 170000 * 0.91 * 0.91 * 0.91 = 128107
-    expect(buy.breakdown.residualValue).toBe(Math.round(170000 * 0.91 * 0.91 * 0.91));
+    // 170000 * 0.92 * 0.92 * 0.92
+    expect(buy.breakdown.residualValue).toBe(Math.round(170000 * 0.92 * 0.92 * 0.92));
 
     // Lease: 3500*36 + 7900 = 133900
     expect(lease.breakdown.carPayment).toBe(133900);
@@ -242,9 +242,9 @@ describe("e2e — exact numerical outputs", () => {
       includeInvestment: false,
     });
 
-    // Electric depreciation: yr1=22%, yr2=18%, yr3+=13%
-    // 250000 * 0.78 * 0.82 * 0.87 * 0.87 * 0.87
-    const expectedResidual = Math.round(250000 * 0.78 * 0.82 * 0.87 * 0.87 * 0.87);
+    // Electric depreciation: yr1=16%, yr2=15%, yr3+=13%
+    // 250000 * 0.84 * 0.85 * 0.87 * 0.87 * 0.87
+    const expectedResidual = Math.round(250000 * 0.84 * 0.85 * 0.87 * 0.87 * 0.87);
     expect(buy.breakdown.residualValue).toBe(expectedResidual);
 
     // Fuel: (15000/6) * 0.64 * 5
@@ -334,8 +334,8 @@ describe("e2e — exact numerical outputs", () => {
     // Car so cheap relative to lease that buy must win by a lot
     expect(comparison.savingsAmount).toBeGreaterThan(50000);
 
-    // Used car age 5 → all yr3Plus (10%)
-    expect(buy.breakdown.residualValue).toBe(Math.round(60000 * 0.9 * 0.9 * 0.9));
+    // Used car age 5 → all yr3Plus (9%)
+    expect(buy.breakdown.residualValue).toBe(Math.round(60000 * 0.91 * 0.91 * 0.91));
 
     // Test fees: age 5, all 3 years need test (ages 6,7,8 > 3)
     expect(buy.breakdown.testFees).toBeCloseTo(126.19 * 3, 0);
@@ -394,8 +394,8 @@ describe("e2e — exact numerical outputs", () => {
       comparisonPeriodYears: 3,
     });
 
-    // Default: 200000 * 0.85 * 0.88 * 0.90
-    expect(defaultResult.buy.breakdown.residualValue).toBe(Math.round(200000 * 0.85 * 0.88 * 0.90));
+    // Default: 200000 * 0.89 * 0.90 * 0.91
+    expect(defaultResult.buy.breakdown.residualValue).toBe(Math.round(200000 * 0.89 * 0.90 * 0.91));
     // Override: 200000 * 0.80 * 0.85 * 0.88
     expect(overrideResult.buy.breakdown.residualValue).toBe(Math.round(200000 * 0.80 * 0.85 * 0.88));
 
