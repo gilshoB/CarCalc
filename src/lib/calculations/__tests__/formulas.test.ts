@@ -263,23 +263,23 @@ describe("calcTestFee", () => {
 
   it("new car, 5 years — 2 years of fees (years 4-5)", () => {
     const result = calcTestFee(5, 0, "gasoline", testFees, 3);
-    expect(result).toBeCloseTo(117.6 * 2, 1);
+    expect(result).toBeCloseTo(126.19 * 2, 1);
   });
 
   it("used car age 2, 3 years — 2 years of fees", () => {
     // ages: 3, 4, 5 — ages 4 and 5 are > 3
     const result = calcTestFee(3, 2, "gasoline", testFees, 3);
-    expect(result).toBeCloseTo(117.6 * 2, 1);
+    expect(result).toBeCloseTo(126.19 * 2, 1);
   });
 
   it("electric car — lower fee", () => {
     const result = calcTestFee(5, 0, "electric", testFees, 3);
-    expect(result).toBeCloseTo(99.95 * 2, 1);
+    expect(result).toBeCloseTo(106.32 * 2, 1);
   });
 
   it("old car (age 5) — every year needs test", () => {
     const result = calcTestFee(3, 5, "gasoline", testFees, 3);
-    expect(result).toBeCloseTo(117.6 * 3, 1);
+    expect(result).toBeCloseTo(126.19 * 3, 1);
   });
 });
 

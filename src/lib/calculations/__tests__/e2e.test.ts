@@ -129,7 +129,7 @@ describe("e2e — exact numerical outputs", () => {
 
     // Test fees: car age starts at 2, so ages 3, 4, 5
     // Ages > 3: years 4 and 5 → 2 years of test fees
-    expect(buy.breakdown.testFees).toBeCloseTo(117.6 * 2, 0);
+    expect(buy.breakdown.testFees).toBeCloseTo(126.19 * 2, 0);
 
     // Maintenance: hybrid multiplier 1.2
     expect(buy.breakdown.maintenance).toBe(Math.round(15000 * 0.15 * 1.2 * 3));
@@ -258,7 +258,7 @@ describe("e2e — exact numerical outputs", () => {
 
     // Test fees: new car, 5 years → ages 1-5, only ages > 3 count
     // Years 4 and 5, electric rate
-    expect(buy.breakdown.testFees).toBeCloseTo(99.95 * 2, 0);
+    expect(buy.breakdown.testFees).toBeCloseTo(106.32 * 2, 0);
 
     // Loan: 250000 - (100000 + 50000) = 100000
     expect(buy.breakdown.loanInterest).toBeGreaterThan(0);
@@ -338,7 +338,7 @@ describe("e2e — exact numerical outputs", () => {
     expect(buy.breakdown.residualValue).toBe(Math.round(60000 * 0.9 * 0.9 * 0.9));
 
     // Test fees: age 5, all 3 years need test (ages 6,7,8 > 3)
-    expect(buy.breakdown.testFees).toBeCloseTo(117.6 * 3, 0);
+    expect(buy.breakdown.testFees).toBeCloseTo(126.19 * 3, 0);
   });
 
   /**
