@@ -86,13 +86,13 @@ export default async function ElectricVsGasolinePage() {
           <Table
             head={["", "מחיר האנרגיה", "עלות לק״מ", "עלות ל-15,000 ק״מ בשנה"]}
             rows={[
-              ["בנזין (14 ק״מ לליטר)", "כ-7.2 ₪ לליטר", "51 אגורות", "כ-7,700 ₪"],
-              ["חשמלי, טעינה בבית", "כ-60 אגורות לקוט״ש", "10 אגורות", "כ-1,500 ₪"],
+              ["בנזין (14 ק״מ לליטר)", "כ-7.85 ₪ לליטר", "56 אגורות", "כ-8,400 ₪"],
+              ["חשמלי, טעינה בבית", "כ-64 אגורות לקוט״ש", "11 אגורות", "כ-1,600 ₪"],
               ["חשמלי, טעינה מהירה ציבורית", "כ-1.8 ₪ לקוט״ש", "30 אגורות", "כ-4,500 ₪"],
             ]}
           />
           <p>
-            מי שטוען בבית חוסך כ-6,200 ₪ בשנה לעומת בנזין. מי שטוען רק בעמדות מהירות חוסך כ-3,200 ₪. ההבדל
+            מי שטוען בבית חוסך כ-6,800 ₪ בשנה לעומת בנזין. מי שטוען רק בעמדות מהירות חוסך כ-3,900 ₪. ההבדל
             הזה הוא הסיבה שהשאלה הראשונה לפני רכב חשמלי היא לא איזה דגם, אלא איפה תטענו אותו.
           </p>
           <p>
@@ -131,10 +131,10 @@ export default async function ElectricVsGasolinePage() {
           <Table
             head={["", "15,000 ק״מ בשנה", "25,000 ק״מ בשנה"]}
             rows={[
-              ["חיסכון באנרגיה", "18,600 ₪", "31,100 ₪"],
+              ["חיסכון באנרגיה", "20,400 ₪", "34,100 ₪"],
               ["חיסכון בטיפולים", "1,350 ₪", "2,250 ₪"],
               ["ירידת ערך נוספת", "מינוס 23,300 ₪", "מינוס 23,300 ₪"],
-              [<strong key="a">השורה התחתונה</strong>, <strong key="b">הבנזין זול בכ-3,400 ₪</strong>, <strong key="c">החשמלי זול בכ-10,000 ₪</strong>],
+              [<strong key="a">השורה התחתונה</strong>, <strong key="b">הבנזין זול בכ-1,500 ₪</strong>, <strong key="c">החשמלי זול בכ-13,000 ₪</strong>],
             ]}
           />
           <p>
@@ -154,8 +154,8 @@ export default async function ElectricVsGasolinePage() {
           <Example title="דוגמה">
             <p>
               ליסינג לרכב חשמלי עולה 300 ₪ יותר בחודש מליסינג לרכב בנזין דומה. ב-15,000 ק״מ בשנה ועם טעינה
-              בבית, החיסכון באנרגיה הוא כ-520 ₪ בחודש. החשמלי משתלם ב-220 ₪ בחודש. בלי טעינה בבית החיסכון
-              יורד לכ-270 ₪ בחודש, והבנזין זול מעט יותר.
+              בבית, החיסכון באנרגיה הוא כ-570 ₪ בחודש. החשמלי משתלם ב-270 ₪ בחודש. בלי טעינה בבית החיסכון
+              יורד לכ-325 ₪ בחודש, והיתרון כמעט נעלם.
             </p>
           </Example>
           <p>
@@ -261,14 +261,14 @@ export default async function ElectricVsGasolinePage() {
           <Table
             head={["", "Energy price", "Cost per km", "Cost for 15,000 km a year"]}
             rows={[
-              ["Petrol (14 km per litre)", "about 7.2 ILS a litre", "0.51 ILS", "about 7,700 ILS"],
-              ["Electric, home charging", "about 0.60 ILS per kWh", "0.10 ILS", "about 1,500 ILS"],
+              ["Petrol (14 km per litre)", "about 7.85 ILS a litre", "0.56 ILS", "about 8,400 ILS"],
+              ["Electric, home charging", "about 0.64 ILS per kWh", "0.11 ILS", "about 1,600 ILS"],
               ["Electric, public fast charging", "about 1.8 ILS per kWh", "0.30 ILS", "about 4,500 ILS"],
             ]}
           />
           <p>
-            Charging at home saves about 6,200 ILS a year against petrol. Charging only at fast chargers saves
-            about 3,200. That gap is why the first question before an electric car is not which model, but
+            Charging at home saves about 6,800 ILS a year against petrol. Charging only at fast chargers saves
+            about 3,900. That gap is why the first question before an electric car is not which model, but
             where you will charge it.
           </p>
           <p>
@@ -307,10 +307,10 @@ export default async function ElectricVsGasolinePage() {
           <Table
             head={["", "15,000 km a year", "25,000 km a year"]}
             rows={[
-              ["Energy saving", "18,600 ILS", "31,100 ILS"],
+              ["Energy saving", "20,400 ILS", "34,100 ILS"],
               ["Servicing saving", "1,350 ILS", "2,250 ILS"],
               ["Extra depreciation", "−23,300 ILS", "−23,300 ILS"],
-              [<strong key="a">Bottom line</strong>, <strong key="b">Petrol cheaper by about 3,400</strong>, <strong key="c">Electric cheaper by about 10,000</strong>],
+              [<strong key="a">Bottom line</strong>, <strong key="b">Petrol cheaper by about 1,500</strong>, <strong key="c">Electric cheaper by about 13,000</strong>],
             ]}
           />
           <p>
@@ -332,8 +332,8 @@ export default async function ElectricVsGasolinePage() {
           <Example title="Example">
             <p>
               Leasing an electric car costs 300 ILS a month more than a similar petrol car. At 15,000 km a year
-              with home charging, the energy saving is about 520 ILS a month. Electric wins by 220 a month.
-              Without home charging the saving drops to about 270 a month, and petrol is slightly cheaper.
+              with home charging, the energy saving is about 570 ILS a month. Electric wins by 270 a month.
+              Without home charging the saving drops to about 325 a month, and the advantage almost disappears.
             </p>
           </Example>
           <p>

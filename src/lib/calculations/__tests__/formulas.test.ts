@@ -162,31 +162,31 @@ describe("calcDepreciation", () => {
 
 describe("calcFuelCost", () => {
   it("gasoline — uses benzine95 price", () => {
-    // 15000 km/yr / 14 km/L * 7.13 ILS/L * 3 years
-    const expected = Math.round((15000 / 14) * 7.13 * 3);
+    // 15000 km/yr / 14 km/L * 7.85 ILS/L * 3 years
+    const expected = Math.round((15000 / 14) * 7.85 * 3);
     expect(calcFuelCost(15000, 3, "gasoline", 14, market.fuelPrices)).toBe(expected);
   });
 
   it("electric — uses electricity price", () => {
-    // 15000 km/yr / 6 km/kWh * 0.55 ILS/kWh * 3 years
-    const expected = Math.round((15000 / 6) * 0.55 * 3);
+    // 15000 km/yr / 6 km/kWh * 0.64 ILS/kWh * 3 years
+    const expected = Math.round((15000 / 6) * 0.64 * 3);
     expect(calcFuelCost(15000, 3, "electric", 6, market.fuelPrices)).toBe(expected);
   });
 
   it("diesel — uses diesel price", () => {
-    const expected = Math.round((15000 / 16) * 9.37 * 3);
+    const expected = Math.round((15000 / 16) * 12.05 * 3);
     expect(calcFuelCost(15000, 3, "diesel", 16, market.fuelPrices)).toBe(expected);
   });
 
   it("hybrid — uses benzine95 price", () => {
-    const expected = Math.round((15000 / 18) * 7.13 * 3);
+    const expected = Math.round((15000 / 18) * 7.85 * 3);
     expect(calcFuelCost(15000, 3, "hybrid", 18, market.fuelPrices)).toBe(expected);
   });
 
   it("plug-in hybrid — blends electricity + gasoline (default 50%)", () => {
-    // 50% of 15000 km on electricity (5.5 km/kWh, 0.55) + 50% on gasoline (14 km/L, 7.13)
-    const elec = (15000 * 0.5 / 5.5) * 0.55;
-    const gas = (15000 * 0.5 / 14) * 7.13;
+    // 50% of 15000 km on electricity (5.5 km/kWh, 0.64) + 50% on gasoline (14 km/L, 7.85)
+    const elec = (15000 * 0.5 / 5.5) * 0.64;
+    const gas = (15000 * 0.5 / 14) * 7.85;
     const expected = Math.round((elec + gas) * 3);
     expect(calcFuelCost(15000, 3, "plugin_hybrid", 14, market.fuelPrices)).toBe(expected);
   });

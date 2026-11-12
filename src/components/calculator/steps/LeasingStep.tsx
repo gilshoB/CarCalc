@@ -18,7 +18,8 @@ const CONSUMPTION_DEFAULTS: Record<string, number> = {
   gasoline: 14,
   diesel: 16,
   hybrid: 18,
-  plugin_hybrid: 20,
+  // Petrol-only economy (battery empty). The electric share is priced separately.
+  plugin_hybrid: 16,
   electric: 6,
 };
 
@@ -61,7 +62,10 @@ export default function LeasingStep({
   const handleResolve = (v: VehicleIdentity) => {
     onChange("lease.vehicle", v);
     if (v.fuelType) onChange("lease.fuelType", v.fuelType);
-    if (v.kmPerLiter) onChange("lease.consumptionKmPerUnit", v.kmPerLiter);
+    // gov.il gives no usable consumption for electric and plug-in cars, so
+    // those start from the typical figure for their type (still editable).
+    const consumption = v.kmPerLiter ?? (v.fuelType ? CONSUMPTION_DEFAULTS[v.fuelType] : undefined);
+    if (consumption) onChange("lease.consumptionKmPerUnit", consumption);
     // Auto-derive the lease car's age from the picked model year.
     if (v.modelYear) {
       onChange("lease.leaseCarAge", Math.max(0, new Date().getFullYear() - v.modelYear));

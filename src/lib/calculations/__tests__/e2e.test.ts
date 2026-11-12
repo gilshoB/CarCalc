@@ -74,8 +74,8 @@ describe("e2e — exact numerical outputs", () => {
     // Insurance: (1500 + 5000) * 3 = 19500
     expect(buy.breakdown.mandatoryInsurance).toBe(4500);
     expect(buy.breakdown.comprehensiveInsurance).toBe(15000);
-    // Fuel: (15000/14) * 7.13 * 3
-    expect(buy.breakdown.fuel).toBe(Math.round((15000 / 14) * 7.13 * 3));
+    // Fuel: (15000/14) * 7.85 * 3
+    expect(buy.breakdown.fuel).toBe(Math.round((15000 / 14) * 7.85 * 3));
     // Maintenance: 15000 * 0.15 * 1.0 * 3 = 6750
     expect(buy.breakdown.maintenance).toBe(6750);
 
@@ -247,8 +247,8 @@ describe("e2e — exact numerical outputs", () => {
     const expectedResidual = Math.round(250000 * 0.78 * 0.82 * 0.87 * 0.87 * 0.87);
     expect(buy.breakdown.residualValue).toBe(expectedResidual);
 
-    // Fuel: (15000/6) * 0.55 * 5
-    expect(buy.breakdown.fuel).toBe(Math.round((15000 / 6) * 0.55 * 5));
+    // Fuel: (15000/6) * 0.64 * 5
+    expect(buy.breakdown.fuel).toBe(Math.round((15000 / 6) * 0.64 * 5));
 
     // Maintenance: 15000 * 0.15 * 0.8 * 5 = 9000
     expect(buy.breakdown.maintenance).toBe(9000);

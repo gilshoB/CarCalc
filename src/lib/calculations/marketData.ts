@@ -6,15 +6,21 @@ let cachedMarketData: MarketData | null = null;
 let cacheTimestamp = 0;
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
-// ---- Hardcoded Fallbacks (Feb 2026) ----
+// ---- Hardcoded Fallbacks (Nov 2026) ----
 
 const FALLBACK_FUEL_PRICES: FuelPrices = {
-  benzine95: 7.13,
-  benzine98: 9.20,
-  diesel: 9.37,
+  benzine95: 7.85, // regulated self-service price
+  benzine98: 10.16,
+  diesel: 12.05,
   lpg: 3.78,
-  electricityPerKwh: 0.55,
+  // Household tariff incl. VAT (Electricity Authority, 63.52 ag. from July 2026).
+  // Not scraped — update when the tariff changes (usually January, sometimes mid-year).
+  electricityPerKwh: 0.64,
 };
+
+// delek.co.il lists 95-octane at the full-service price. Most drivers fill up
+// self-service, so we take off the regulated full-service surcharge.
+const FULL_SERVICE_SURCHARGE = 0.26;
 
 const FALLBACK_INVESTMENT_RETURN = 10.5; // 5-year S&P 500 avg ~10.5%
 
@@ -53,7 +59,10 @@ async function fetchFuelPrices(): Promise<FuelPrices> {
 
     // Try to extract fuel prices from the page
     // Delek.co.il typically shows prices in a structured format
-    const benzine95 = extractPrice(html, /בנזין\s*95[^]*?(\d+\.\d+)/i) ?? FALLBACK_FUEL_PRICES.benzine95;
+    const scraped95 = extractPrice(html, /בנזין\s*95[^]*?(\d+\.\d+)/i);
+    const benzine95 = scraped95 != null
+      ? Math.round((scraped95 - FULL_SERVICE_SURCHARGE) * 100) / 100
+      : FALLBACK_FUEL_PRICES.benzine95;
     const benzine98 = extractPrice(html, /בנזין\s*98[^]*?(\d+\.\d+)/i) ?? FALLBACK_FUEL_PRICES.benzine98;
     const diesel = extractPrice(html, /סולר[^]*?(\d+\.\d+)/i) ?? FALLBACK_FUEL_PRICES.diesel;
     const lpg = extractPrice(html, /גפ"מ|LPG[^]*?(\d+\.\d+)/i) ?? FALLBACK_FUEL_PRICES.lpg;

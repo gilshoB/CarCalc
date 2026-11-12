@@ -74,7 +74,14 @@ async function fetchGovSql(sql: string, tag: string): Promise<DatastoreRecord[]>
 
 const WLTP_TABLE = `"${WLTP_RESOURCE}"`;
 
-function mapFuelType(raw: string | undefined): FuelType | undefined {
+function mapFuelType(raw: string | undefined, tech?: string): FuelType | undefined {
+  // The drive technology column is the reliable hybrid signal: gov.il lists a
+  // regular hybrid's fuel as plain "בנזין", with technologiat_hanaa_nm
+  // "היברידי רגיל". Fuel name alone would file every hybrid under gasoline.
+  const t = (tech ?? "").trim();
+  if (t.includes("PLUG")) return "plugin_hybrid";
+  if (t.includes("היבריד")) return "hybrid";
+  if (t.includes("חשמלי")) return "electric";
   if (!raw) return undefined;
   const h = raw.trim();
   // Plug-in hybrid first: gov.il marks these as "נטען"/"פלאג" or a "חשמל/בנזין"
@@ -118,14 +125,17 @@ function avg(nums: number[]): number | undefined {
  * Derive km/L from CO2 emissions (g/km).
  *  - Gasoline: 1 L of gasoline produces ~2310 g CO2 → km/L ≈ 2310 / CO2(g/km)
  *  - Diesel: 1 L produces ~2680 g CO2 → km/L ≈ 2680 / CO2
- *  - Hybrid / plug-in hybrid: gasoline factor (the WLTP CO2 already reflects
- *    the hybrid system).
+ *  - Hybrid: gasoline factor (the WLTP CO2 already reflects the hybrid system).
+ *  - Plug-in hybrid: not derivable. Its WLTP CO2 (~30–50 g/km) is a weighted
+ *    figure that assumes most driving is electric, so it would give ~60–80
+ *    km/L. The calculator prices the electric share separately and needs the
+ *    petrol-only economy, so the form falls back to its default instead.
  *  - Electric: no CO2 emissions; can't derive km/kWh from CO2.
  */
 function deriveKmPerLiter(co2: number | undefined, fuelType: FuelType | undefined): number | undefined {
   if (!co2 || co2 <= 0) return undefined;
   if (fuelType === "diesel") return Math.round((2680 / co2) * 10) / 10;
-  if (fuelType === "gasoline" || fuelType === "hybrid" || fuelType === "plugin_hybrid") return Math.round((2310 / co2) * 10) / 10;
+  if (fuelType === "gasoline" || fuelType === "hybrid") return Math.round((2310 / co2) * 10) / 10;
   return undefined;
 }
 
@@ -258,7 +268,10 @@ async function opResolve(
   // Aggregate WLTP fields
   const fuelTypesRaw = wltpRecords.map((r) => String(r.delek_nm ?? ""));
   const fuelTypeRaw = mostCommon(fuelTypesRaw.filter(Boolean)).value;
-  const fuelType = mapFuelType(fuelTypeRaw);
+  const techRaw = mostCommon(
+    wltpRecords.map((r) => String(r.technologiat_hanaa_nm ?? "")).filter(Boolean),
+  ).value;
+  const fuelType = mapFuelType(fuelTypeRaw, techRaw);
 
   const feeGroups = wltpRecords
     .map((r) => Number(r.kvuzat_agra_cd))

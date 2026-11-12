@@ -35,7 +35,7 @@ export const DEFAULT_INPUT: CalculatorInput = {
   isBusinessUse: false,
   useLoan: true,
   financing: {
-    interestRate: 4.5,
+    interestRate: 6.5, // roughly prime + 1.75% (prime 4.75%, Nov 2026)
     loanTermYears: 5,
     originationFee: 0,
   },
