@@ -88,7 +88,30 @@ export default async function CarLoansGuidePage() {
           <H2>איפה כדאי לקחת הלוואה לרכב</H2>
           <p>
             אין מקום אחד שהוא תמיד הזול ביותר. הריבית תלויה בכם: בהכנסה, בהיסטוריית האשראי, ובשאלה אם יש
-            בטוחה. לכן כדאי לבקש הצעות מכמה מקורות. אלה האפשרויות:
+            בטוחה. לכן כדאי לבקש הצעות מכמה מקורות.
+          </p>
+
+          <Example title="התשובה הקצרה">
+            <p>אם יש לכם קרן השתלמות, התחילו מהלוואה כנגדה. היא בדרך כלל הזולה
+            ביותר. אם אין, בקשו הצעה מהבנק שלכם ומבנק נוסף, והשוו אותן להצעת הסוכנות לפי העלות הכוללת, לא לפי
+            ההחזר החודשי.
+          </p>
+          </Example>
+
+          <Table
+            head={["מאיפה", "ריבית, בערך", "יתרון", "חיסרון"]}
+            rows={[
+              ["קרן השתלמות או גמל", "סביב הפריים, לפעמים פחות", "בדרך כלל הזולה ביותר", "רק חלק מהסכום שצברתם"],
+              ["הבנק שלכם", "פריים + 1% עד 3%", "מהיר, פתוח למשא ומתן", "ההצעה הראשונה לרוב לא הטובה"],
+              ["בנק אחר", "דומה, לפעמים פחות", "קלף מיקוח מול הבנק שלכם", "עוד קצת ניירת"],
+              ["סוכנות או יבואן", "מ-0% במבצעים ועד פריים + 3% ומעלה", "נוח, הכול במקום אחד", "שעבוד, ו-0% מגולם במחיר"],
+              ["חברות כרטיסי אשראי", "פריים + 2% עד 6%", "מהיר, בלי קשר לבנק", "בדרך כלל יקר מהבנק"],
+              ["חברות מימון חוץ-בנקאיות", "פריים + 4% ומעלה", "מאשרות גם אחרי סירוב בבנק", "היקרה ביותר"],
+            ]}
+          />
+          <p>
+            הטווחים בטבלה הם הערכה כללית, כדי להבין את הסדר בין האפשרויות. הריבית שתקבלו בפועל תלויה בכם
+            ובריבית הפריים באותו זמן. עכשיו קצת יותר על כל אחת:
           </p>
 
           <H3>1. הלוואה כנגד קרן השתלמות או קופת גמל</H3>
@@ -127,6 +150,23 @@ export default async function CarLoansGuidePage() {
           <p>
             הן מאשרות גם מי שהבנק סירב לו, ולכן הריבית שלהן היא בדרך כלל הגבוהה ביותר. אם זו האפשרות היחידה
             שלכם, שווה לעצור ולשאול אם הרכב הזה לא יקר מדי בשבילכם כרגע.
+          </p>
+
+          <H3>איך עושים סקר הצעות, בשלושה צעדים</H3>
+          <Steps>
+            <li>
+              בקשו לפחות שלוש הצעות לאותו סכום ולאותה תקופה: מקרן ההשתלמות (אם יש), מהבנק שלכם ומעוד בנק או
+              מהסוכנות.
+            </li>
+            <li>מכל הצעה רשמו שני מספרים: הריבית השנתית והסכום הכולל שתחזירו עד הסוף, כולל עמלות.</li>
+            <li>
+              חזרו לבנק שלכם עם ההצעה הזולה ביותר ובקשו שישווה אותה. הרבה פעמים הוא יוריד את הריבית כדי לא
+              לאבד אתכם.
+            </li>
+          </Steps>
+          <p>
+            את ההצעה שבחרתם אפשר להכניס ל<Calc>מחשבון</Calc>, ולראות כמה היא מוסיפה לעלות הרכב לעומת ליסינג או
+            תשלום במזומן.
           </p>
 
           <H2>כמה ההלוואה עולה: אותה הלוואה, ארבע תוצאות</H2>
@@ -282,7 +322,30 @@ export default async function CarLoansGuidePage() {
           <H2>Where to get a car loan</H2>
           <p>
             No single place is always cheapest. The rate depends on you: your income, your credit history and
-            whether there is collateral. So ask several sources. These are the options:
+            whether there is collateral. So ask several sources.
+          </p>
+
+          <Example title="The short answer">
+            <p>If you have a study fund, start with a loan against it. It is
+            usually the cheapest. If not, get an offer from your bank and from one more bank, and compare them
+            with the dealership’s offer by total cost, not by the monthly repayment.
+          </p>
+          </Example>
+
+          <Table
+            head={["Where", "Rate, roughly", "Upside", "Downside"]}
+            rows={[
+              ["Study or provident fund", "Around prime, sometimes less", "Usually the cheapest", "Only part of what you saved"],
+              ["Your bank", "Prime + 1% to 3%", "Quick, negotiable", "The first offer is rarely the best"],
+              ["Another bank", "Similar, sometimes less", "Leverage with your bank", "A bit more paperwork"],
+              ["Dealership or importer", "From 0% on promotions to prime + 3% or more", "Convenient, one stop", "Lien on the car; 0% is priced in"],
+              ["Credit card companies", "Prime + 2% to 6%", "Fast, independent of your bank", "Usually pricier than a bank"],
+              ["Non-bank lenders", "Prime + 4% or more", "Approve after a bank refusal", "The most expensive"],
+            ]}
+          />
+          <p>
+            The ranges are a rough guide to how the options rank. The rate you actually get depends on you and
+            on the prime rate at the time. Now a little more on each:
           </p>
 
           <H3>1. A loan against your study fund (קרן השתלמות) or provident fund</H3>
@@ -323,6 +386,23 @@ export default async function CarLoansGuidePage() {
           <p>
             They approve people the bank turned down, so their rate is usually the highest. If this is your
             only option, it is worth pausing to ask whether this car is too expensive for you right now.
+          </p>
+
+          <H3>How to shop for offers, in three steps</H3>
+          <Steps>
+            <li>
+              Get at least three offers for the same amount and term: from your study fund (if you have one),
+              your bank, and another bank or the dealership.
+            </li>
+            <li>For each offer write down two numbers: the annual rate and the total you will repay, fees included.</li>
+            <li>
+              Take the cheapest offer back to your bank and ask them to match it. They often lower the rate to
+              keep you.
+            </li>
+          </Steps>
+          <p>
+            Put the offer you chose into the <Calc>calculator</Calc> to see how much it adds to the cost of the
+            car compared with leasing or paying cash.
           </p>
 
           <H2>What the loan costs: one loan, four outcomes</H2>
