@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { defaultLocale } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
+import LoanMiniCalc from "@/components/LoanMiniCalc";
 import { GuideShell, H2, H3, Calc, CalcLink, CalcCta, Terms, Example, Bullets, Steps, Table, Note, Ref } from "@/components/guide";
 
 export const metadata: Metadata = {
@@ -170,44 +171,33 @@ export default async function CarLoansGuidePage() {
             תשלום במזומן.
           </p>
 
-          <H2>כמה ההלוואה עולה: אותה הלוואה, ארבע תוצאות</H2>
-          <p>הנה הלוואה של 90,000 ₪ בתנאים שונים:</p>
-          <Table
-            head={["ריבית ותקופה", "החזר חודשי", "סך הריבית"]}
-            rows={[
-              ["7% לשלוש שנים", "2,779 ₪", "כ-10,000 ₪"],
-              ["7% לחמש שנים", "1,782 ₪", "כ-16,900 ₪"],
-              ["6% לחמש שנים", "1,740 ₪", "כ-14,400 ₪"],
-              ["9% לחמש שנים", "1,868 ₪", "כ-22,100 ₪"],
-            ]}
-          />
-          <p>שלושה דברים שכדאי לראות בטבלה:</p>
+          <H2>כמה ההלוואה תעלה לכם: חשבו בעצמכם</H2>
+          <p>
+            הכניסו את הסכום, הריבית והתקופה מההצעה שקיבלתם. בחרו ״הלוואת בלון״ כדי לראות מה קורה כשדוחים חלק
+            מהקרן לסוף.
+          </p>
+          <LoanMiniCalc locale={locale} />
+          <p>שלושה דברים שכדאי לנסות במחשבון:</p>
           <Bullets>
             <li>
-              <strong>תקופה ארוכה נראית זולה ועולה יותר.</strong> ההחזר לחמש שנים נמוך ב-1,000 ₪ בחודש, אבל
-              הריבית הכוללת גבוהה ב-6,900 ₪.
+              <strong>תקופה ארוכה נראית זולה ועולה יותר.</strong> שנו את התקופה מ-5 שנים ל-3: ההחזר החודשי
+              עולה, אבל סך הריבית יורד באלפי שקלים.
             </li>
             <li>
-              <strong>אחוז אחד שווה אלפי שקלים.</strong> ההבדל בין 6% ל-7% הוא רק 42 ₪ בחודש, אבל 2,500 ₪ על
-              כל התקופה.
+              <strong>אחוז אחד שווה אלפי שקלים.</strong> שנו את הריבית ב-1%: ההחזר החודשי כמעט לא זז, אבל סך
+              הריבית כן.
             </li>
             <li>
-              <strong>ההחזר החודשי מטעה.</strong> בין ההלוואה הזולה ליקרה יש הפרש של 128 ₪ בחודש, ושל 7,700 ₪
-              בסך הכול.
+              <strong>ההחזר החודשי מטעה.</strong> כשמשווים בין הצעות, הסתכלו על סך הריבית ולא על ההחזר.
             </li>
           </Bullets>
-          <p>הריביות בטבלה הן להמחשה. הריבית שתקבלו תלויה בריבית הפריים באותו זמן ובנתונים שלכם.</p>
 
-          <H2>הלוואת בלון: החזר נמוך, חשבון גדול בסוף</H2>
+          <H3>הלוואת בלון: החזר נמוך, חשבון גדול בסוף</H3>
           <p>
-            בהלוואת בלון דוחים חלק מהקרן לסוף התקופה. ההחזר החודשי קטן, וזה מה שהופך אותה לקלה למכירה.
+            בהלוואת בלון דוחים חלק מהקרן לסוף התקופה. ההחזר החודשי קטן, וזה מה שהופך אותה לקלה למכירה. אבל
+            על הבלון משלמים ריבית לאורך כל התקופה, ובסוף צריך לשלם אותו בבת אחת. במחשבון למעלה רואים בדיוק כמה
+            זה עולה.
           </p>
-          <Example title="אותן 90,000 ₪, עם בלון של 40,000 ₪">
-            <p>
-              ב-7% לחמש שנים ההחזר החודשי יורד מ-1,782 ₪ ל-1,223 ₪. אבל בסוף חמש השנים אתם עדיין חייבים
-              40,000 ₪ בתשלום אחד, והריבית הכוללת עולה מ-16,900 ₪ ל-23,400 ₪.
-            </p>
-          </Example>
           <p>
             בלון מתאים רק אם ברור לכם מאיפה יגיע הכסף בסוף. מי שמתכנן לשלם את הבלון ממכירת הרכב צריך לזכור
             שהרכב יהיה שווה אז הרבה פחות. כמה פחות? זה מוסבר ב<Ref to="depreciation">מדריך הפחת</Ref>.
@@ -408,42 +398,34 @@ export default async function CarLoansGuidePage() {
             car compared with leasing or paying cash.
           </p>
 
-          <H2>What the loan costs: one loan, four outcomes</H2>
-          <p>Here is a 90,000 ILS loan on different terms:</p>
-          <Table
-            head={["Rate and term", "Monthly repayment", "Total interest"]}
-            rows={[
-              ["7% over three years", "2,779", "about 10,000"],
-              ["7% over five years", "1,782", "about 16,900"],
-              ["6% over five years", "1,740", "about 14,400"],
-              ["9% over five years", "1,868", "about 22,100"],
-            ]}
-          />
-          <p>Three things worth noticing:</p>
+          <H2>What your loan will cost: work it out</H2>
+          <p>
+            Enter the amount, rate and term from the offer you got. Pick “Balloon loan” to see what happens when
+            part of the principal is pushed to the end.
+          </p>
+          <LoanMiniCalc locale={locale} />
+          <p>Three things worth trying in the calculator:</p>
           <Bullets>
             <li>
-              <strong>A long term looks cheap and costs more.</strong> The five-year repayment is 1,000 ILS a
-              month lower, but total interest is 6,900 ILS higher.
+              <strong>A long term looks cheap and costs more.</strong> Change the term from 5 years to 3: the
+              monthly repayment rises, but total interest drops by thousands.
             </li>
             <li>
-              <strong>One percentage point is worth thousands.</strong> The gap between 6% and 7% is only 42
-              ILS a month, but 2,500 ILS over the whole term.
+              <strong>One percentage point is worth thousands.</strong> Change the rate by 1%: the monthly
+              repayment barely moves, total interest does.
             </li>
             <li>
-              <strong>The monthly repayment misleads.</strong> The cheap and expensive loans differ by 128 ILS
-              a month, and by 7,700 ILS in total.
+              <strong>The monthly repayment misleads.</strong> When comparing offers, look at total interest,
+              not the repayment.
             </li>
           </Bullets>
-          <p>The rates in the table are illustrations. The rate you get depends on prime at the time and on your own profile.</p>
 
-          <H2>Balloon loans: low repayments, a big bill at the end</H2>
-          <p>A balloon loan pushes part of the principal to the end of the term. The monthly repayment is small, which is what makes it easy to sell.</p>
-          <Example title="The same 90,000 ILS, with a 40,000 balloon">
-            <p>
-              At 7% over five years the monthly repayment drops from 1,782 to 1,223 ILS. But after five years
-              you still owe 40,000 ILS in one payment, and total interest rises from 16,900 to 23,400 ILS.
-            </p>
-          </Example>
+          <H3>Balloon loans: low repayments, a big bill at the end</H3>
+          <p>
+            A balloon loan pushes part of the principal to the end of the term. The monthly repayment is small,
+            which is what makes it easy to sell. But you pay interest on the balloon for the whole term, and then
+            pay it off in one go. The calculator above shows exactly what that costs.
+          </p>
           <p>
             A balloon suits you only if you know where the final money will come from. If you plan to pay it by
             selling the car, remember the car will be worth far less by then. How much less is covered in the{" "}

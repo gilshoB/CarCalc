@@ -13,11 +13,7 @@ export default async function AboutPage() {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-12">
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-6">
-        {isHe ? "אודות CarCalc" : "About CarCalc"}
-      </h1>
-
-      <GuideHero illustration="about" />
+      <GuideHero illustration="about" title={isHe ? "אודות CarCalc" : "About CarCalc"} />
 
       <div className="prose prose-zinc dark:prose-invert prose-sm max-w-none space-y-4 text-zinc-600 dark:text-zinc-400">
         {isHe ? (

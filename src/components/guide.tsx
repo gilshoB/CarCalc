@@ -25,10 +25,7 @@ export function GuideShell({
   return (
     <main className="mx-auto max-w-3xl px-4 py-12">
       <ArticleJsonLd locale={locale} path={path} headline={title} description={description} />
-      <h1 className="mb-6 text-[30px] sm:text-[40px] font-extrabold leading-[1.12] tracking-[-0.03em] text-ink text-balance">
-        {title}
-      </h1>
-      <GuideHero illustration={illustration} />
+      <GuideHero illustration={illustration} title={title} />
       <div className="space-y-4 text-[17px] leading-[1.75] text-[#3d3d38]">{children}</div>
     </main>
   );
