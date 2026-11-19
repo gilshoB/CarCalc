@@ -20,14 +20,14 @@ const imageMap: Record<GuideHeroProps["illustration"], { src: string; alt: strin
 export default function GuideHero({ illustration }: GuideHeroProps) {
   const { src, alt } = imageMap[illustration];
   return (
-    <div className="mb-8">
+    <div className="mb-8 max-w-[300px] sm:max-w-[400px]">
       <Image
         src={src}
         alt={alt}
         width={1440}
         height={960}
-        sizes="(min-width: 768px) 720px, 100vw"
-        className="w-full h-auto rounded-[28px]"
+        sizes="(min-width: 640px) 400px, 300px"
+        className="w-full h-auto rounded-[20px]"
         priority
       />
     </div>
