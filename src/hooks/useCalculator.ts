@@ -4,6 +4,20 @@ import { useState, useCallback, useRef } from "react";
 import type { CalculatorInput, CalculatorOutput } from "@/types/calculator";
 import type { FormErrors, DepreciationOverrideValues, MaintenanceOverrideValues } from "@/types/form";
 import { DEFAULT_INPUT } from "@/lib/defaults";
+import { pageview } from "@vercel/analytics";
+
+// Custom events need a paid Vercel plan, so funnel steps are recorded as virtual
+// page views. They show up under "Pages" in Vercel Analytics.
+const trackedSteps = new Set<string>();
+function trackStep(name: "calc-started" | "calc-completed") {
+  if (trackedSteps.has(name)) return; // once per page load
+  trackedSteps.add(name);
+  try {
+    pageview({ route: `/_funnel/${name}`, path: `/_funnel/${name}` });
+  } catch {
+    // analytics must never break the calculator
+  }
+}
 
 export interface UseCalculatorReturn {
   input: CalculatorInput;
@@ -136,6 +150,7 @@ export function useCalculator(): UseCalculatorReturn {
       return false;
     }
     setErrors({});
+    if (currentStep === 1) trackStep("calc-started");
     setCurrentStep((s) => Math.min(s + 1, 8));
     return true;
   }, [currentStep, input]);
@@ -186,6 +201,7 @@ export function useCalculator(): UseCalculatorReturn {
       const output: CalculatorOutput = await response.json();
       setResults(output);
       setShowResults(true);
+      trackStep("calc-completed");
 
       setTimeout(() => {
         document.getElementById("results")?.scrollIntoView({ behavior: "smooth" });
