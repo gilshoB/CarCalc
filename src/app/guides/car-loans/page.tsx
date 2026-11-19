@@ -101,17 +101,18 @@ export default async function CarLoansGuidePage() {
           <Table
             head={["מאיפה", "ריבית, בערך", "יתרון", "חיסרון"]}
             rows={[
-              ["קרן השתלמות או גמל", "סביב הפריים, לפעמים פחות", "בדרך כלל הזולה ביותר", "רק חלק מהסכום שצברתם"],
-              ["הבנק שלכם", "פריים + 1% עד 3%", "מהיר, פתוח למשא ומתן", "ההצעה הראשונה לרוב לא הטובה"],
+              ["קרן השתלמות או גמל", "פריים פחות 0.5% עד פריים", "בדרך כלל הזולה ביותר", "רק חלק מהסכום שצברתם"],
+              ["הבנק שלכם", "מפורסם החל מפריים + 0.2% לרכב חדש. בפועל לרוב פריים + 1% עד 3%", "מהיר, פתוח למשא ומתן", "ההצעה הראשונה לרוב לא הטובה"],
               ["בנק אחר", "דומה, לפעמים פחות", "קלף מיקוח מול הבנק שלכם", "עוד קצת ניירת"],
-              ["סוכנות או יבואן", "מ-0% במבצעים ועד פריים + 3% ומעלה", "נוח, הכול במקום אחד", "שעבוד, ו-0% מגולם במחיר"],
-              ["חברות כרטיסי אשראי", "פריים + 2% עד 6%", "מהיר, בלי קשר לבנק", "בדרך כלל יקר מהבנק"],
-              ["חברות מימון חוץ-בנקאיות", "פריים + 4% ומעלה", "מאשרות גם אחרי סירוב בבנק", "היקרה ביותר"],
+              ["סוכנות או יבואן", "0% עד כ-5% במבצעים. בלי מבצע, בערך כמו בבנק", "נוח, הכול במקום אחד", "שעבוד, ו-0% מגולם במחיר"],
+              ["חברות כרטיסי אשראי", "החל מפריים + 1.6% לרכב חדש, ויותר ממשומש", "מהיר, בלי קשר לבנק", "בדרך כלל יקר מהבנק"],
+              ["חברות מימון חוץ-בנקאיות", "בערך 6% עד 9%, ולפעמים יותר", "מאשרות גם אחרי סירוב בבנק", "בדרך כלל היקרה ביותר"],
             ]}
           />
           <p>
-            הטווחים בטבלה הם הערכה כללית, כדי להבין את הסדר בין האפשרויות. הריבית שתקבלו בפועל תלויה בכם
-            ובריבית הפריים באותו זמן. עכשיו קצת יותר על כל אחת:
+            הנתונים נבדקו בנובמבר 2026, כשהפריים עמד על 4.75%. שימו לב: ״החל מ״ בפרסומות של הבנקים הוא הריבית
+            ללקוחות הטובים ביותר, ברכב חדש ובשעבוד. הממוצע שהבנקים גבו בפועל בהלוואות בריבית פריים היה 7.95%
+            באוקטובר 2026, לפי נתוני בנק ישראל. הריבית שתקבלו תלויה בכם. עכשיו קצת יותר על כל אחת:
           </p>
 
           <H3>1. הלוואה כנגד קרן השתלמות או קופת גמל</H3>
@@ -335,17 +336,19 @@ export default async function CarLoansGuidePage() {
           <Table
             head={["Where", "Rate, roughly", "Upside", "Downside"]}
             rows={[
-              ["Study or provident fund", "Around prime, sometimes less", "Usually the cheapest", "Only part of what you saved"],
-              ["Your bank", "Prime + 1% to 3%", "Quick, negotiable", "The first offer is rarely the best"],
+              ["Study or provident fund", "Prime minus 0.5% to prime", "Usually the cheapest", "Only part of what you saved"],
+              ["Your bank", "Advertised from prime + 0.2% for a new car; in practice often prime + 1% to 3%", "Quick, negotiable", "The first offer is rarely the best"],
               ["Another bank", "Similar, sometimes less", "Leverage with your bank", "A bit more paperwork"],
-              ["Dealership or importer", "From 0% on promotions to prime + 3% or more", "Convenient, one stop", "Lien on the car; 0% is priced in"],
-              ["Credit card companies", "Prime + 2% to 6%", "Fast, independent of your bank", "Usually pricier than a bank"],
-              ["Non-bank lenders", "Prime + 4% or more", "Approve after a bank refusal", "The most expensive"],
+              ["Dealership or importer", "0% to about 5% on promotions; otherwise about bank level", "Convenient, one stop", "Lien on the car; 0% is priced in"],
+              ["Credit card companies", "From prime + 1.6% for a new car, more for used", "Fast, independent of your bank", "Usually pricier than a bank"],
+              ["Non-bank lenders", "Roughly 6% to 9%, sometimes more", "Approve after a bank refusal", "Usually the most expensive"],
             ]}
           />
           <p>
-            The ranges are a rough guide to how the options rank. The rate you actually get depends on you and
-            on the prime rate at the time. Now a little more on each:
+            Checked in November 2026, with prime at 4.75%. Note that a bank’s advertised “from” rate is for its
+            best customers, on a new car with a lien. The average rate banks actually charged on prime-based
+            loans was 7.95% in October 2026, according to Bank of Israel data. Your rate depends on you. Now a
+            little more on each:
           </p>
 
           <H3>1. A loan against your study fund (קרן השתלמות) or provident fund</H3>
