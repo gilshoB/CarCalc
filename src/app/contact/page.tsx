@@ -6,6 +6,7 @@ import ContactForm from "@/components/ContactForm";
 
 export const metadata: Metadata = {
   title: "צרו קשר | CarCalc",
+  description: "שאלה, הערה או רעיון לשיפור המחשבון? כתבו לנו ונחזור אליכם.",
   alternates: { canonical: "/contact" },
 };
 

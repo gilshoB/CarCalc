@@ -11,7 +11,8 @@ type IllustrationName =
   | "about";
 
 type GuideHeroProps = {
-  illustration: IllustrationName;
+  /** Optional: a guide without its own illustration shows just the title. */
+  illustration?: IllustrationName;
   /** The page title, shown beside the illustration in one strip. */
   title: ReactNode;
 };
@@ -34,6 +35,13 @@ const imageMap: Record<IllustrationName, { src: string; alt: string }> = {
  * and the title beside it, sized to the illustration's height.
  */
 export default function GuideHero({ illustration, title }: GuideHeroProps) {
+  if (!illustration) {
+    return (
+      <h1 className="mb-10 text-[30px] sm:text-[44px] font-extrabold leading-[1.1] tracking-[-0.03em] text-ink text-balance">
+        {title}
+      </h1>
+    );
+  }
   const { src, alt } = imageMap[illustration];
   return (
     <div className="mb-10 flex items-center gap-4 sm:gap-7">

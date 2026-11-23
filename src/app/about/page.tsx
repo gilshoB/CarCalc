@@ -4,7 +4,11 @@ import { defaultLocale } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import GuideHero from "@/components/GuideHero";
 
-export const metadata: Metadata = { alternates: { canonical: "/about" } };
+export const metadata: Metadata = {
+  title: "אודות CarCalc: מחשבון קנייה מול ליסינג | CarCalc",
+  description: "מה זה CarCalc, איך המחשבון מחשב את העלות האמיתית של רכב, ומאיפה מגיעים הנתונים.",
+  alternates: { canonical: "/about" },
+};
 
 export default async function AboutPage() {
   const cookieStore = await cookies();

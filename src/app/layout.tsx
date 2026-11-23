@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { GUIDES } from "@/lib/guides";
 import { Rubik } from "next/font/google";
 import { cookies } from "next/headers";
 import { defaultLocale, getDirection, getTranslations } from "@/i18n/config";
@@ -86,12 +87,11 @@ export default async function RootLayout({
                     <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
                   </summary>
                   <div className="absolute end-0 top-full mt-2 w-60 rounded-2xl bg-white shadow-xl ring-1 ring-black/5 z-50 p-2">
-                    <a href="/guides/buy-vs-lease" className="block rounded-xl px-4 py-2.5 text-sm text-ink hover:bg-soft">{t.nav.guideBuyVsLease}</a>
-                    <a href="/guides/depreciation" className="block rounded-xl px-4 py-2.5 text-sm text-ink hover:bg-soft">{t.nav.guideDepreciation}</a>
-                    <a href="/guides/car-loans" className="block rounded-xl px-4 py-2.5 text-sm text-ink hover:bg-soft">{t.nav.guideCarLoans}</a>
-                    <a href="/guides/insurance" className="block rounded-xl px-4 py-2.5 text-sm text-ink hover:bg-soft">{t.nav.guideInsurance}</a>
-                    <a href="/guides/electric-vs-gasoline" className="block rounded-xl px-4 py-2.5 text-sm text-ink hover:bg-soft">{t.nav.guideElectricVsGasoline}</a>
-                    <a href="/guides/tax-benefits" className="block rounded-xl px-4 py-2.5 text-sm text-ink hover:bg-soft">{t.nav.guideTaxBenefits}</a>
+                    {GUIDES.map((g) => (
+                      <a key={g.slug} href={`/guides/${g.slug}`} className="block rounded-xl px-4 py-2.5 text-sm text-ink hover:bg-soft">{locale === "en" ? g.en.nav : g.he.nav}</a>
+                    ))}
+                    <div className="mx-3 my-1 border-t border-line" />
+                    <a href="/guides" className="block rounded-xl px-4 py-2.5 text-sm font-bold text-ink hover:bg-soft">{locale === "en" ? "All guides" : "כל המדריכים"}</a>
                   </div>
                 </details>
                 <a href="/about" className="rounded-xl px-3 py-2 text-[15px] font-medium text-ink hover:bg-white transition-colors">
@@ -114,12 +114,10 @@ export default async function RootLayout({
                   <a href="/" className="block rounded-xl px-4 py-2.5 text-sm text-ink hover:bg-soft">{t.nav.calculator}</a>
                   <div className="mx-3 my-1 border-t border-line" />
                   <p className="px-4 py-1.5 text-xs font-semibold text-muted">{t.nav.guides}</p>
-                  <a href="/guides/buy-vs-lease" className="block rounded-xl px-6 py-2 text-sm text-ink hover:bg-soft">{t.nav.guideBuyVsLease}</a>
-                  <a href="/guides/depreciation" className="block rounded-xl px-6 py-2 text-sm text-ink hover:bg-soft">{t.nav.guideDepreciation}</a>
-                  <a href="/guides/car-loans" className="block rounded-xl px-6 py-2 text-sm text-ink hover:bg-soft">{t.nav.guideCarLoans}</a>
-                  <a href="/guides/insurance" className="block rounded-xl px-6 py-2 text-sm text-ink hover:bg-soft">{t.nav.guideInsurance}</a>
-                  <a href="/guides/electric-vs-gasoline" className="block rounded-xl px-6 py-2 text-sm text-ink hover:bg-soft">{t.nav.guideElectricVsGasoline}</a>
-                  <a href="/guides/tax-benefits" className="block rounded-xl px-6 py-2 text-sm text-ink hover:bg-soft">{t.nav.guideTaxBenefits}</a>
+                  {GUIDES.map((g) => (
+                    <a key={g.slug} href={`/guides/${g.slug}`} className="block rounded-xl px-6 py-2 text-sm text-ink hover:bg-soft">{locale === "en" ? g.en.nav : g.he.nav}</a>
+                  ))}
+                  <a href="/guides" className="block rounded-xl px-6 py-2 text-sm font-bold text-ink hover:bg-soft">{locale === "en" ? "All guides" : "כל המדריכים"}</a>
                   <div className="mx-3 my-1 border-t border-line" />
                   <a href="/about" className="block rounded-xl px-4 py-2.5 text-sm text-ink hover:bg-soft">{t.nav.about}</a>
                   <a href="/contact" className="block rounded-xl px-4 py-2.5 text-sm text-ink hover:bg-soft">{t.nav.contact}</a>
@@ -141,7 +139,9 @@ export default async function RootLayout({
             <nav aria-label="footer" className="flex flex-wrap items-center gap-5 text-sm">
               <a href="/about" className="text-white hover:text-lime">{t.nav.about}</a>
               <a href="/contact" className="text-white hover:text-lime">{t.nav.contact}</a>
+              <a href="/guides" className="text-white hover:text-lime">{t.nav.guides}</a>
               <a href="/privacy" className="text-white hover:text-lime">{t.nav.privacy}</a>
+              <a href="/terms" className="text-white hover:text-lime">{locale === "en" ? "Terms of Use" : "תנאי שימוש"}</a>
               <span>&copy; {new Date().getFullYear()} CarCalc</span>
             </nav>
           </div>

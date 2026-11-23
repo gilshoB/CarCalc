@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import GuideHero from "@/components/GuideHero";
 import ArticleJsonLd from "@/components/ArticleJsonLd";
 
-type Illustration = Parameters<typeof GuideHero>[0]["illustration"];
+type Illustration = NonNullable<Parameters<typeof GuideHero>[0]["illustration"]>;
 
 // Shared building blocks for the guide pages, so every guide reads and looks
 // the same: title, definitions box, examples, tables and calculator links.
@@ -19,7 +19,7 @@ export function GuideShell({
   path: string;
   title: string;
   description: string;
-  illustration: Illustration;
+  illustration?: Illustration;
   children: ReactNode;
 }) {
   return (
