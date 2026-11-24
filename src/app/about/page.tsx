@@ -32,6 +32,22 @@ export default async function AboutPage() {
               האישיים שלכם.
             </p>
 
+            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">מי בנה את CarCalc?</h2>
+            <p>
+              את CarCalc בניתי לבד, כאדם פרטי. אין לי רקע בפיננסים או בענף הרכב, ואין לאתר קשר לחברת ליסינג,
+              לבנק או ליבואן רכב.
+            </p>
+            <p>
+              המחשבון נולד מתוך צורך אישי להבין איך באמת מחשבים את השאלה ״לקנות או לקחת ליסינג?״. כל הצעה
+              הציגה תשלום חודשי אחר, ואף אחת לא הראתה את התמונה המלאה. אז ישבתי ללמוד איך מחשבים את זה נכון:
+              ירידת ערך, ריבית, ביטוח, אגרות, ומה הכסף יכול היה להרוויח במקום אחר. מהחישובים האלה נבנה המחשבון,
+              ומהשאלות שעלו בדרך נכתבו המדריכים.
+            </p>
+            <p>
+              המטרה פשוטה: לעזור לכם לקבל החלטה מושכלת לפי המספרים שלכם, בלי שאף אחד ינסה למכור לכם משהו.
+              מצאתם טעות או יש לכם רעיון? אשמח לשמוע דרך <a href="/contact" className="font-bold text-zinc-800 dark:text-zinc-200 underline underline-offset-4">עמוד צור קשר</a>.
+            </p>
+
             <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">למה יצרנו את CarCalc?</h2>
             <p>
               שוק הרכב בישראל מורכב במיוחד. רוב האנשים כשהם מחליטים בין קנייה לליסינג משווים רק
@@ -113,6 +129,24 @@ export default async function AboutPage() {
               ownership. Unlike other calculators that focus only on the monthly payment, CarCalc reveals
               all the hidden costs and allows you to make an informed decision based on your personal
               financial data.
+            </p>
+
+            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">Who built CarCalc?</h2>
+            <p>
+              I built CarCalc on my own, as a private person. I have no background in finance or the car
+              industry, and the site has no ties to any leasing company, bank or car importer.
+            </p>
+            <p>
+              The calculator grew out of a personal need to understand how to really answer “buy or lease?”.
+              Every offer showed a different monthly payment, and none showed the full picture. So I sat down to
+              learn how to calculate it properly: depreciation, interest, insurance, fees, and what the money could
+              have earned elsewhere. Those calculations became the calculator, and the questions along the way
+              became the guides.
+            </p>
+            <p>
+              The goal is simple: help you make an informed decision based on your own numbers, without anyone
+              trying to sell you something. Found a mistake or have an idea? I&apos;d love to hear it through the{" "}
+              <a href="/contact" className="font-bold text-zinc-800 dark:text-zinc-200 underline underline-offset-4">contact page</a>.
             </p>
 
             <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mt-6">Why did we create CarCalc?</h2>
